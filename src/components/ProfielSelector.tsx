@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { UserProfile } from './LesWizard'
 import ProfielBeheer from './ProfielBeheer'
 
@@ -24,24 +24,107 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
 
   const [showProfielBeheer, setShowProfielBeheer] = useState(false)
   const [showCombiGroepen, setShowCombiGroepen] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  // Update profiel when currentProfile changes - FIXED
+  // CRITICAL FIX: Proper initialization and state management
   useEffect(() => {
-    if (currentProfile) {
-      console.log('📥 ProfielSelector: Received currentProfile:', currentProfile)
+    if (currentProfile && !isInitialized) {
+      console.log('🔄 Initializing profile from currentProfile:', currentProfile)
       setProfiel({
         groep: currentProfile.groep || '',
-        vakgebied: currentProfile.vakgebied || [],
+        vakgebied: [...(currentProfile.vakgebied || [])],
         ervaring: currentProfile.ervaring || '',
-        focus: currentProfile.focus || [],
-        voorkeuren: currentProfile.voorkeuren || {
-          instructiemodel: [],
-          werkvormen: [],
-          selFocus: []
+        focus: [...(currentProfile.focus || [])],
+        voorkeuren: {
+          instructiemodel: [...(currentProfile.voorkeuren?.instructiemodel || [])],
+          werkvormen: [...(currentProfile.voorkeuren?.werkvormen || [])],
+          selFocus: [...(currentProfile.voorkeuren?.selFocus || [])]
         }
       })
+      setIsInitialized(true)
     }
-  }, [currentProfile])
+  }, [currentProfile, isInitialized])
+
+  // Prevent state resets by using useCallback for handlers
+  const handleProfileLoad = useCallback((loadedProfile: UserProfile) => {
+    console.log('📥 Loading profile from ProfielBeheer:', loadedProfile)
+    setProfiel({
+      groep: loadedProfile.groep || '',
+      vakgebied: [...(loadedProfile.vakgebied || [])],
+      ervaring: loadedProfile.ervaring || '',
+      focus: [...(loadedProfile.focus || [])],
+      voorkeuren: {
+        instructiemodel: [...(loadedProfile.voorkeuren?.instructiemodel || [])],
+        werkvormen: [...(loadedProfile.voorkeuren?.werkvormen || [])],
+        selFocus: [...(loadedProfile.voorkeuren?.selFocus || [])]
+      }
+    })
+    setShowProfielBeheer(false)
+    setIsInitialized(true)
+  }, [])
+
+  const handleGroepSelect = useCallback((groepId: string) => {
+    console.log('🎯 Groep selected:', groepId)
+    setProfiel(prev => ({
+      ...prev,
+      groep: groepId
+    }))
+  }, [])
+
+  const handleVakgebiedToggle = useCallback((vakId: string) => {
+    console.log('📚 Vakgebied toggled:', vakId)
+    setProfiel(prev => ({
+      ...prev,
+      vakgebied: prev.vakgebied.includes(vakId)
+        ? prev.vakgebied.filter(v => v !== vakId)
+        : [...prev.vakgebied, vakId]
+    }))
+  }, [])
+
+  const handleErvaringSelect = useCallback((ervaringId: string) => {
+    console.log('💼 Ervaring selected:', ervaringId)
+    setProfiel(prev => ({
+      ...prev,
+      ervaring: ervaringId
+    }))
+  }, [])
+
+  const handleFocusToggle = useCallback((focusId: string) => {
+    console.log('🎯 Focus toggled:', focusId)
+    setProfiel(prev => ({
+      ...prev,
+      focus: prev.focus.includes(focusId)
+        ? prev.focus.filter(f => f !== focusId)
+        : [...prev.focus, focusId]
+    }))
+  }, [])
+
+  const handleRemoveVakgebied = useCallback((vakId: string) => {
+    setProfiel(prev => ({
+      ...prev,
+      vakgebied: prev.vakgebied.filter(v => v !== vakId)
+    }))
+  }, [])
+
+  const handleRemoveFocus = useCallback((focusId: string) => {
+    setProfiel(prev => ({
+      ...prev,
+      focus: prev.focus.filter(f => f !== focusId)
+    }))
+  }, [])
+
+  const handleSubmit = useCallback(() => {
+    if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
+      console.log('✅ Submitting complete profile:', profiel)
+      onComplete(profiel)
+    } else {
+      console.log('❌ Profile incomplete:', {
+        groep: profiel.groep,
+        vakgebiedCount: profiel.vakgebied.length,
+        ervaring: profiel.ervaring
+      })
+    }
+  }, [profiel, onComplete])
 
   const individueleGroepen = [
     { id: 'groep1', label: 'Groep 1', description: '4-5 jaar', kleur: 'bg-red-100 text-red-800' },
@@ -98,95 +181,14 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     { id: 'duurzaamheid', label: 'Duurzaamheid', icon: '🌱' }
   ]
 
-  const handleProfileLoad = (loadedProfile: UserProfile) => {
-    console.log('📥 ProfielSelector: Loading profile from ProfielBeheer:', loadedProfile)
-    setProfiel(loadedProfile)
-    setShowProfielBeheer(false)
-  }
-
-  const handleGroepSelect = (groepId: string) => {
-    console.log('🎯 ProfielSelector: Groep selected:', groepId)
-    setProfiel(prev => {
-      const updated = { ...prev, groep: groepId }
-      console.log('📝 ProfielSelector: Updated profiel after groep select:', updated)
-      return updated
-    })
-  }
-
-  const handleVakgebiedToggle = (vakId: string) => {
-    console.log('📚 ProfielSelector: Vakgebied toggled:', vakId)
-    setProfiel(prev => {
-      const updated = {
-        ...prev,
-        vakgebied: prev.vakgebied.includes(vakId)
-          ? prev.vakgebied.filter(v => v !== vakId)
-          : [...prev.vakgebied, vakId]
-      }
-      console.log('📝 ProfielSelector: Updated profiel after vakgebied toggle:', updated)
-      return updated
-    })
-  }
-
-  const handleErvaringSelect = (ervaringId: string) => {
-    console.log('💼 ProfielSelector: Ervaring selected:', ervaringId)
-    setProfiel(prev => {
-      const updated = { ...prev, ervaring: ervaringId }
-      console.log('📝 ProfielSelector: Updated profiel after ervaring select:', updated)
-      return updated
-    })
-  }
-
-  const handleFocusToggle = (focusId: string) => {
-    console.log('🎯 ProfielSelector: Focus toggled:', focusId)
-    setProfiel(prev => {
-      const updated = {
-        ...prev,
-        focus: prev.focus.includes(focusId)
-          ? prev.focus.filter(f => f !== focusId)
-          : [...prev.focus, focusId]
-      }
-      console.log('📝 ProfielSelector: Updated profiel after focus toggle:', updated)
-      return updated
-    })
-  }
-
-  // NEW: Remove function for easy deselection
-  const handleRemoveVakgebied = (vakId: string) => {
-    setProfiel(prev => ({
-      ...prev,
-      vakgebied: prev.vakgebied.filter(v => v !== vakId)
-    }))
-  }
-
-  const handleRemoveFocus = (focusId: string) => {
-    setProfiel(prev => ({
-      ...prev,
-      focus: prev.focus.filter(f => f !== focusId)
-    }))
-  }
-
-  const handleSubmit = () => {
-    if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
-      console.log('✅ ProfielSelector: Submitting complete profile:', profiel)
-      onComplete(profiel)
-    } else {
-      console.log('❌ ProfielSelector: Profile incomplete:', {
-        groep: profiel.groep,
-        vakgebiedCount: profiel.vakgebied.length,
-        ervaring: profiel.ervaring
-      })
-    }
-  }
-
   const isValid = profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring
 
-  const getVakgebiedLabels = () => {
-    return profiel.vakgebied.map(id => vakgebieden.find(v => v.id === id)?.label).join(', ')
-  }
-
-  const getFocusLabels = () => {
-    return profiel.focus.map(id => focusgebieden.find(f => f.id === id)?.label).join(', ')
-  }
+  console.log('🔄 ProfielSelector render:', {
+    profiel,
+    isValid,
+    isInitialized,
+    currentProfile: !!currentProfile
+  })
 
   return (
     <div className="p-6">
@@ -318,6 +320,9 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 >
                   <div className="font-bold text-sm">{groep.label}</div>
                   <div className="text-xs text-gray-600">{groep.description}</div>
+                  {profiel.groep === groep.id && (
+                    <div className="text-xs text-blue-600 mt-1">✓ Geselecteerd</div>
+                  )}
                 </button>
               ))}
             </div>
@@ -349,6 +354,9 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                   >
                     <div className="font-semibold text-sm">{groep.label}</div>
                     <div className="text-xs text-gray-600">{groep.description}</div>
+                    {profiel.groep === groep.id && (
+                      <div className="text-xs text-blue-600 mt-1">✓ Geselecteerd</div>
+                    )}
                   </button>
                 ))}
               </div>
