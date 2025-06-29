@@ -21,8 +21,8 @@ interface LesplanGeneratorProps {
 
 export default function LesplanGenerator({ lesplanData, onBack }: LesplanGeneratorProps) {
   const [lesonderwerp, setLesonderwerp] = useState('')
-  const [lesdoelen, setLesdoelen] = useState<string[]>([''])
-  const [tijdsduur, setTijdsduur] = useState(45)
+  const [lesdoelen, setLesdoelen] = useState<string[]>([])
+  const [tijdsduur, setTijdsduur] = useState(60) // Standaard 1 uur
   const [aanvullendeWensen, setAanvullendeWensen] = useState('')
   const [savedLesplannen, setSavedLesplannen] = useState<any[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
@@ -40,8 +40,7 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
     { label: '📚 Standaard les', value: 45, description: 'Volledige lesstructuur' },
     { label: '⏰ Lange les', value: 60, description: 'Uitgebreide behandeling' },
     { label: '🔄 Dubbele les', value: 90, description: 'Project of onderzoek' },
-    { label: '🎯 Workshop', value: 120, description: 'Intensieve training' },
-    { label: '🎨 Creatieve sessie', value: 75, description: 'Expressie & maken' }
+    { label: '🎯 Workshop', value: 120, description: 'Intensieve training' }
   ]
 
   // Genereer intelligente lesdoelen suggesties
@@ -156,45 +155,31 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
   }
 
   const addSuggestedDoel = (suggestion: ProfielBasedDoel) => {
-    console.log('Adding suggested doel:', suggestion.titel)
+    console.log('🎯 Adding suggested doel:', suggestion.titel)
     
     // Check if this goal already exists
-    const existingGoals = lesdoelen.filter(d => d.trim())
-    if (!existingGoals.includes(suggestion.titel)) {
-      // Remove empty goals and add the new one
-      const newGoals = [...existingGoals, suggestion.titel]
+    if (!lesdoelen.includes(suggestion.titel)) {
+      const newGoals = [...lesdoelen, suggestion.titel]
       setLesdoelen(newGoals)
-      console.log('Updated goals:', newGoals)
+      console.log('✅ Updated goals:', newGoals)
     } else {
-      console.log('Goal already exists')
+      console.log('⚠️ Goal already exists')
     }
   }
 
   const addCustomDoel = () => {
     if (customDoelenInput.trim()) {
-      const existingGoals = lesdoelen.filter(d => d.trim())
-      if (!existingGoals.includes(customDoelenInput.trim())) {
-        const newGoals = [...existingGoals, customDoelenInput.trim()]
+      if (!lesdoelen.includes(customDoelenInput.trim())) {
+        const newGoals = [...lesdoelen, customDoelenInput.trim()]
         setLesdoelen(newGoals)
         setCustomDoelenInput('')
       }
     }
   }
 
-  const addLesdoel = () => {
-    setLesdoelen([...lesdoelen, ''])
-  }
-
-  const updateLesdoel = (index: number, value: string) => {
-    const newLesdoelen = [...lesdoelen]
-    newLesdoelen[index] = value
-    setLesdoelen(newLesdoelen)
-  }
-
   const removeLesdoel = (index: number) => {
-    if (lesdoelen.length > 1) {
-      setLesdoelen(lesdoelen.filter((_, i) => i !== index))
-    }
+    const newGoals = lesdoelen.filter((_, i) => i !== index)
+    setLesdoelen(newGoals)
   }
 
   const setTimePreset = (minutes: number) => {
@@ -227,7 +212,7 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
     const newLesplan = {
       id: Date.now().toString(),
       onderwerp: lesonderwerp,
-      doelen: lesdoelen.filter(d => d.trim()),
+      doelen: lesdoelen,
       tijdsduur,
       content: lesplanContent,
       profiel: lesplanData.profiel,
@@ -268,7 +253,7 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
 **LES INFORMATIE:**
 - Onderwerp: ${lesonderwerp}
 - Tijdsduur: ${formatTime(tijdsduur)}
-- Lesdoelen: ${lesdoelen.filter(doel => doel.trim()).map((doel, i) => `${i + 1}. ${doel}`).join('\n')}
+- Lesdoelen: ${lesdoelen.map((doel, i) => `${i + 1}. ${doel}`).join('\n')}
 
 **SLO-DOELEN:**
 ${sloDoelen.map(doel => `- ${doel.code}: ${doel.titel}\n  ${doel.beschrijving}`).join('\n')}
@@ -304,7 +289,7 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
 
   // Automatisch lesplan genereren
   const generateLesplan = async () => {
-    if (!lesonderwerp.trim() || !lesdoelen.some(doel => doel.trim())) {
+    if (!lesonderwerp.trim() || lesdoelen.length === 0) {
       alert('Vul minimaal een lesonderwerp en één lesdoel in.')
       return
     }
@@ -332,7 +317,7 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
     setSavedLesplannen(loadSavedLesplannen())
   })
 
-  const canGenerate = lesonderwerp.trim() && lesdoelen.some(doel => doel.trim())
+  const canGenerate = lesonderwerp.trim() && lesdoelen.length > 0
 
   return (
     <div className="p-8">
@@ -451,14 +436,10 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                 {suggestedDoelen.map((suggestion) => (
-                  <button
+                  <div
                     key={suggestion.id}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      addSuggestedDoel(suggestion)
-                    }}
-                    className="p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer text-left"
+                    onClick={() => addSuggestedDoel(suggestion)}
+                    className="p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer text-left group"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -481,13 +462,13 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
                         <p className="font-medium text-gray-900 text-sm">{suggestion.titel}</p>
                         <p className="text-gray-600 text-xs mt-1">{suggestion.beschrijving}</p>
                       </div>
-                      <div className="ml-2 text-blue-600 hover:text-blue-800">
+                      <div className="ml-2 text-blue-600 group-hover:text-blue-800">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                       </div>
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
 
@@ -515,39 +496,39 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
             </div>
           )}
 
-          {/* Huidige lesdoelen */}
-          <div className="space-y-2">
-            {lesdoelen.map((doel, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={doel}
-                  onChange={(e) => updateLesdoel(index, e.target.value)}
-                  placeholder={`Lesdoel ${index + 1}: Leerlingen kunnen...`}
-                  className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {lesdoelen.length > 1 && (
-                  <button
-                    onClick={() => removeLesdoel(index)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                )}
+          {/* Huidige lesdoelen lijst */}
+          {lesdoelen.length > 0 && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h4 className="font-medium text-green-900 mb-3">📝 Geselecteerde lesdoelen ({lesdoelen.length})</h4>
+              <div className="space-y-2">
+                {lesdoelen.map((doel, index) => (
+                  <div key={index} className="flex items-start justify-between p-3 bg-white border border-green-200 rounded-lg">
+                    <div className="flex-1">
+                      <span className="text-green-700 font-medium text-sm">{index + 1}. </span>
+                      <span className="text-gray-900 text-sm">{doel}</span>
+                    </div>
+                    <button
+                      onClick={() => removeLesdoel(index)}
+                      className="ml-2 p-1 text-red-600 hover:bg-red-50 rounded"
+                      title="Verwijder lesdoel"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-            <button
-              onClick={addLesdoel}
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              <span>Lesdoel toevoegen</span>
-            </button>
-          </div>
+            </div>
+          )}
+
+          {lesdoelen.length === 0 && (
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-yellow-800 text-sm">
+                ⚠️ Nog geen lesdoelen geselecteerd. Klik op "Slimme suggesties" hierboven of voeg handmatig toe.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Verfijnde tijdsduur */}
@@ -591,19 +572,19 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
             </div>
           )}
 
-          {/* Custom tijdsduur slider */}
+          {/* Custom tijdsduur slider - GEFIXTE VERSIE */}
           <div className="space-y-3">
             <div className="flex items-center space-x-4">
               <input
                 type="range"
                 min="15"
-                max="180"
+                max="120"
                 step="5"
                 value={tijdsduur}
                 onChange={(e) => setTijdsduur(Number(e.target.value))}
                 className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 style={{
-                  background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((tijdsduur - 15) / (180 - 15)) * 100}%, #E5E7EB ${((tijdsduur - 15) / (180 - 15)) * 100}%, #E5E7EB 100%)`
+                  background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((tijdsduur - 15) / (120 - 15)) * 100}%, #E5E7EB ${((tijdsduur - 15) / (120 - 15)) * 100}%, #E5E7EB 100%)`
                 }}
               />
               <div className="min-w-[100px] text-right">
@@ -611,12 +592,11 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
               </div>
             </div>
             
-            {/* Tijdsindicatoren */}
+            {/* Tijdsindicatoren - GEFIXTE VERSIE */}
             <div className="flex justify-between text-xs text-gray-500">
               <span>15 min</span>
               <span>1 uur</span>
               <span>2 uur</span>
-              <span>3 uur</span>
             </div>
 
             {/* Tijdsduur feedback */}
