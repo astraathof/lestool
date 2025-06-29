@@ -64,15 +64,12 @@ export default function LesWizard() {
     tijdsduur: 45
   })
 
-  // Load saved data on component mount
+  // CRITICAL: Load saved data on component mount with proper error handling
   useEffect(() => {
     console.log('🔄 LesWizard: Loading saved data...')
     try {
+      // Load profile
       const savedProfile = localStorage.getItem('leswizard_current_profile')
-      const savedLesplanData = localStorage.getItem('leswizard_current_lesplan')
-      const savedDocumenten = localStorage.getItem('leswizard_current_documenten')
-      const savedStep = localStorage.getItem('leswizard_current_step')
-      
       if (savedProfile) {
         const profile = JSON.parse(savedProfile)
         console.log('✅ LesWizard: Loaded profile:', profile)
@@ -80,12 +77,16 @@ export default function LesWizard() {
         setLesplanData(prev => ({ ...prev, profiel: profile }))
       }
       
+      // Load lesplan data
+      const savedLesplanData = localStorage.getItem('leswizard_current_lesplan')
       if (savedLesplanData) {
         const data = JSON.parse(savedLesplanData)
         console.log('✅ LesWizard: Loaded lesplan data:', data)
         setLesplanData(prev => ({ ...prev, ...data }))
       }
       
+      // Load documents
+      const savedDocumenten = localStorage.getItem('leswizard_current_documenten')
       if (savedDocumenten) {
         const docs = JSON.parse(savedDocumenten).map((doc: any) => ({
           ...doc,
@@ -95,6 +96,8 @@ export default function LesWizard() {
         setSchoolDocumenten(docs)
       }
 
+      // Load current step
+      const savedStep = localStorage.getItem('leswizard_current_step')
       if (savedStep) {
         const step = parseInt(savedStep)
         console.log('✅ LesWizard: Loaded step:', step)
@@ -102,30 +105,48 @@ export default function LesWizard() {
       }
     } catch (error) {
       console.error('❌ LesWizard: Error loading saved data:', error)
+      // Reset to step 1 if there's an error
+      setCurrentStep(1)
     }
   }, [])
 
-  // Save data whenever it changes
+  // CRITICAL: Save data whenever it changes with proper error handling
   useEffect(() => {
-    if (userProfile) {
-      console.log('💾 LesWizard: Saving profile:', userProfile)
-      localStorage.setItem('leswizard_current_profile', JSON.stringify(userProfile))
+    if (userProfile && userProfile.groep) {
+      try {
+        console.log('💾 LesWizard: Saving profile:', userProfile)
+        localStorage.setItem('leswizard_current_profile', JSON.stringify(userProfile))
+      } catch (error) {
+        console.error('❌ LesWizard: Error saving profile:', error)
+      }
     }
   }, [userProfile])
 
   useEffect(() => {
-    console.log('💾 LesWizard: Saving lesplan data')
-    localStorage.setItem('leswizard_current_lesplan', JSON.stringify(lesplanData))
+    try {
+      console.log('💾 LesWizard: Saving lesplan data')
+      localStorage.setItem('leswizard_current_lesplan', JSON.stringify(lesplanData))
+    } catch (error) {
+      console.error('❌ LesWizard: Error saving lesplan data:', error)
+    }
   }, [lesplanData])
 
   useEffect(() => {
-    console.log('💾 LesWizard: Saving documents')
-    localStorage.setItem('leswizard_current_documenten', JSON.stringify(schoolDocumenten))
+    try {
+      console.log('💾 LesWizard: Saving documents')
+      localStorage.setItem('leswizard_current_documenten', JSON.stringify(schoolDocumenten))
+    } catch (error) {
+      console.error('❌ LesWizard: Error saving documents:', error)
+    }
   }, [schoolDocumenten])
 
   useEffect(() => {
-    console.log('💾 LesWizard: Saving current step:', currentStep)
-    localStorage.setItem('leswizard_current_step', currentStep.toString())
+    try {
+      console.log('💾 LesWizard: Saving current step:', currentStep)
+      localStorage.setItem('leswizard_current_step', currentStep.toString())
+    } catch (error) {
+      console.error('❌ LesWizard: Error saving step:', error)
+    }
   }, [currentStep])
 
   const steps = [
@@ -139,10 +160,21 @@ export default function LesWizard() {
     { id: 8, title: 'Lesplan', icon: '📋', description: 'Genereer je lesplan', color: 'from-emerald-500 to-emerald-600' }
   ]
 
+  // CRITICAL: Improved event handlers with proper state management
   const handleProfileComplete = (profile: UserProfile) => {
     console.log('🎯 LesWizard: Profile completed:', profile)
+    
+    // Update both userProfile and lesplanData.profiel
     setUserProfile(profile)
     setLesplanData(prev => ({ ...prev, profiel: profile }))
+    
+    // Save to localStorage immediately
+    try {
+      localStorage.setItem('leswizard_current_profile', JSON.stringify(profile))
+    } catch (error) {
+      console.error('❌ LesWizard: Error saving profile:', error)
+    }
+    
     setCurrentStep(2)
   }
 
@@ -289,7 +321,7 @@ export default function LesWizard() {
               {/* Progress Line */}
               <div className="absolute top-6 left-6 right-6 h-1 bg-gray-200 rounded-full">
                 <div 
-                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-700 ease-out"
+                  className="h-full progress-bar rounded-full transition-all duration-700 ease-out"
                   style={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
                 ></div>
               </div>
@@ -371,7 +403,7 @@ export default function LesWizard() {
           <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-orange-400/10 rounded-full blur-2xl"></div>
           
           {/* Content Card */}
-          <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/10 border border-white/20 overflow-hidden">
+          <div className="relative card glass overflow-hidden">
             {/* Card Header */}
             <div className={`h-2 bg-gradient-to-r ${steps[currentStep - 1]?.color || 'from-blue-500 to-purple-500'}`}></div>
             
@@ -450,7 +482,7 @@ export default function LesWizard() {
                   </p>
                   <button
                     onClick={() => setCurrentStep(1)}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+                    className="btn-primary"
                   >
                     Terug naar Profiel
                   </button>
