@@ -25,11 +25,21 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
   const [showProfielBeheer, setShowProfielBeheer] = useState(false)
   const [showCombiGroepen, setShowCombiGroepen] = useState(false)
 
-  // Update profiel when currentProfile changes
+  // Update profiel when currentProfile changes - FIXED
   useEffect(() => {
     if (currentProfile) {
       console.log('📥 ProfielSelector: Received currentProfile:', currentProfile)
-      setProfiel(currentProfile)
+      setProfiel({
+        groep: currentProfile.groep || '',
+        vakgebied: currentProfile.vakgebied || [],
+        ervaring: currentProfile.ervaring || '',
+        focus: currentProfile.focus || [],
+        voorkeuren: currentProfile.voorkeuren || {
+          instructiemodel: [],
+          werkvormen: [],
+          selFocus: []
+        }
+      })
     }
   }, [currentProfile])
 
@@ -140,6 +150,21 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     })
   }
 
+  // NEW: Remove function for easy deselection
+  const handleRemoveVakgebied = (vakId: string) => {
+    setProfiel(prev => ({
+      ...prev,
+      vakgebied: prev.vakgebied.filter(v => v !== vakId)
+    }))
+  }
+
+  const handleRemoveFocus = (focusId: string) => {
+    setProfiel(prev => ({
+      ...prev,
+      focus: prev.focus.filter(f => f !== focusId)
+    }))
+  }
+
   const handleSubmit = () => {
     if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
       console.log('✅ ProfielSelector: Submitting complete profile:', profiel)
@@ -186,24 +211,74 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
           </button>
         </div>
 
-        {/* Current Profile Summary - Compact */}
+        {/* Current Profile Summary - Enhanced with easy removal */}
         {profiel.groep && (
           <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+            <div className="flex items-start space-x-3">
+              <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <div className="font-semibold text-green-900">
+                <div className="font-semibold text-green-900 mb-2">
                   {[...individueleGroepen, ...combinatieGroepen].find(g => g.id === profiel.groep)?.label} • 
                   {ervaringsniveaus.find(e => e.id === profiel.ervaring)?.label}
                 </div>
-                <div className="text-green-700 text-sm">
-                  {profiel.vakgebied.length > 0 && `Vakken: ${getVakgebiedLabels()}`}
-                  {profiel.focus.length > 0 && ` • Focus: ${getFocusLabels()}`}
-                </div>
+                
+                {/* Selected Vakgebieden with remove buttons */}
+                {profiel.vakgebied.length > 0 && (
+                  <div className="mb-2">
+                    <span className="text-green-700 text-sm font-medium">Vakken: </span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {profiel.vakgebied.map(vakId => {
+                        const vak = vakgebieden.find(v => v.id === vakId)
+                        return (
+                          <span
+                            key={vakId}
+                            className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                          >
+                            {vak?.icon} {vak?.label}
+                            <button
+                              onClick={() => handleRemoveVakgebied(vakId)}
+                              className="ml-1 text-green-600 hover:text-green-800"
+                              title="Verwijder vak"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Selected Focus with remove buttons */}
+                {profiel.focus.length > 0 && (
+                  <div>
+                    <span className="text-green-700 text-sm font-medium">Focus: </span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {profiel.focus.map(focusId => {
+                        const focus = focusgebieden.find(f => f.id === focusId)
+                        return (
+                          <span
+                            key={focusId}
+                            className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                          >
+                            {focus?.icon} {focus?.label}
+                            <button
+                              onClick={() => handleRemoveFocus(focusId)}
+                              className="ml-1 text-blue-600 hover:text-blue-800"
+                              title="Verwijder focus"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -299,6 +374,9 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
               >
                 <div className="text-2xl mb-2">{vak.icon}</div>
                 <div className="font-semibold text-sm">{vak.label}</div>
+                {profiel.vakgebied.includes(vak.id) && (
+                  <div className="text-xs text-blue-600 mt-1">✓ Geselecteerd</div>
+                )}
               </button>
             ))}
           </div>
@@ -323,6 +401,9 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 <div className="text-2xl mb-2">{niveau.icon}</div>
                 <div className="font-semibold text-sm">{niveau.label}</div>
                 <div className="text-xs text-gray-600">{niveau.description}</div>
+                {profiel.ervaring === niveau.id && (
+                  <div className="text-xs text-blue-600 mt-1">✓ Geselecteerd</div>
+                )}
               </button>
             ))}
           </div>
@@ -346,6 +427,9 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
               >
                 <div className="text-xl mb-1">{focus.icon}</div>
                 <div className="font-semibold text-xs">{focus.label}</div>
+                {profiel.focus.includes(focus.id) && (
+                  <div className="text-xs text-green-600 mt-1">✓ Geselecteerd</div>
+                )}
               </button>
             ))}
           </div>
