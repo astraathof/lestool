@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { UserProfile } from './LesWizard'
+import { werkvormenDatabase, Werkvorm } from '../data/werkvormen'
 
 interface WerkvormenProps {
   userProfile: UserProfile
@@ -9,269 +10,10 @@ interface WerkvormenProps {
   selectedWerkvormen: any[]
 }
 
-const werkvormenDatabase = [
-  {
-    id: 'klassengesprek',
-    naam: 'Klassengesprek',
-    beschrijving: 'Gezamenlijke discussie met de hele klas',
-    icon: '💬',
-    categorie: 'Discussie',
-    tijdsduur: '10-20 minuten',
-    groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'wereldoriëntatie', 'burgerschap'],
-    instructiemodellen: ['directe_instructie', 'onderzoekend_leren'],
-    voorbereiding: 'Laag',
-    materialen: ['Geen specifieke materialen nodig'],
-    stappen: [
-      'Stel een duidelijke vraag of stelling',
-      'Geef leerlingen denktijd',
-      'Laat verschillende leerlingen reageren',
-      'Vat samen en trek conclusies'
-    ],
-    tips: [
-      'Gebruik de 3-seconden regel',
-      'Betrek alle leerlingen',
-      'Stel open vragen',
-      'Bouw voort op antwoorden'
-    ],
-    differentiatie: [
-      'Geef steekwoorden aan zwakkere leerlingen',
-      'Laat sterke leerlingen doorvragen',
-      'Gebruik visuele ondersteuning'
-    ]
-  },
-  {
-    id: 'denken_delen_uitwisselen',
-    naam: 'Denken-Delen-Uitwisselen',
-    beschrijving: 'Individueel nadenken, in tweetallen bespreken, dan klassikaal delen',
-    icon: '🤔',
-    categorie: 'Coöperatief',
-    tijdsduur: '15-25 minuten',
-    groepsgrootte: 'Individueel → Tweetallen → Klas',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'rekenen', 'wereldoriëntatie'],
-    instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
-    voorbereiding: 'Laag',
-    materialen: ['Werkblad of vraag', 'Timer'],
-    stappen: [
-      'Stel een vraag of probleem',
-      'Leerlingen denken individueel na (2-3 min)',
-      'Bespreking in tweetallen (5-10 min)',
-      'Delen van inzichten met de klas'
-    ],
-    tips: [
-      'Geef duidelijke tijdslimieten',
-      'Wissel de tweetallen regelmatig',
-      'Controleer of iedereen meedoet',
-      'Vat de belangrijkste punten samen'
-    ],
-    differentiatie: [
-      'Pas de complexiteit van vragen aan',
-      'Koppel sterke aan zwakkere leerlingen',
-      'Geef extra denktijd waar nodig'
-    ]
-  },
-  {
-    id: 'jigsaw',
-    naam: 'Jigsaw Methode',
-    beschrijving: 'Leerlingen worden expert in een deelonderwerp en onderwijzen elkaar',
-    icon: '🧩',
-    categorie: 'Coöperatief',
-    tijdsduur: '45-90 minuten',
-    groepsgrootte: '4-6 leerlingen per groep',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['wereldoriëntatie', 'nederlands', 'burgerschap'],
-    instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
-    voorbereiding: 'Hoog',
-    materialen: ['Verschillende teksten/bronnen', 'Expertbladen', 'Evaluatieformulieren'],
-    stappen: [
-      'Verdeel de stof in deelonderwerpen',
-      'Vorm thuisgroepen en expertgroepen',
-      'Expertgroepen bestuderen hun onderwerp',
-      'Experts keren terug naar thuisgroep',
-      'Experts onderwijzen hun groepsgenoten',
-      'Evaluatie en toetsing'
-    ],
-    tips: [
-      'Zorg voor gelijkwaardige deelonderwerpen',
-      'Geef duidelijke rollen en taken',
-      'Monitor de expertgroepen',
-      'Evalueer zowel proces als product'
-    ],
-    differentiatie: [
-      'Pas de moeilijkheid van teksten aan',
-      'Geef verschillende rollen binnen groepen',
-      'Bied extra ondersteuning aan experts'
-    ]
-  },
-  {
-    id: 'stations_leren',
-    naam: 'Stations/Rouleren',
-    beschrijving: 'Leerlingen werken in kleine groepen aan verschillende stations',
-    icon: '🔄',
-    categorie: 'Zelfstandig',
-    tijdsduur: '30-60 minuten',
-    groepsgrootte: '3-5 leerlingen per station',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['rekenen', 'nederlands', 'expressie', 'bewegingsonderwijs'],
-    instructiemodellen: ['gepersonaliseerd_leren', 'spelend_leren'],
-    voorbereiding: 'Hoog',
-    materialen: ['Verschillende materialen per station', 'Instructiekaarten', 'Timer'],
-    stappen: [
-      'Stel verschillende stations in',
-      'Leg de opdrachten per station uit',
-      'Verdeel leerlingen over stations',
-      'Laat groepen rouleren na afgesproken tijd',
-      'Sluit af met reflectie'
-    ],
-    tips: [
-      'Maak duidelijke instructies per station',
-      'Zorg voor variatie in activiteiten',
-      'Houd rekening met verschillende niveaus',
-      'Plan voldoende tijd per station'
-    ],
-    differentiatie: [
-      'Maak stations op verschillende niveaus',
-      'Geef keuze in volgorde van stations',
-      'Bied extra uitdaging of ondersteuning'
-    ]
-  },
-  {
-    id: 'rollenspel',
-    naam: 'Rollenspel',
-    beschrijving: 'Leerlingen spelen verschillende rollen om situaties na te bootsen',
-    icon: '🎭',
-    categorie: 'Dramatisering',
-    tijdsduur: '20-45 minuten',
-    groepsgrootte: 'Variabel',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'burgerschap', 'wereldoriëntatie', 'engels'],
-    instructiemodellen: ['spelend_leren', 'coöperatief_leren'],
-    voorbereiding: 'Gemiddeld',
-    materialen: ['Rolkaarten', 'Eventueel kostuums/attributen', 'Scenario\'s'],
-    stappen: [
-      'Introduceer de situatie/het probleem',
-      'Verdeel de rollen',
-      'Geef voorbereidingstijd',
-      'Voer het rollenspel uit',
-      'Bespreek en reflecteer'
-    ],
-    tips: [
-      'Kies herkenbare situaties',
-      'Geef duidelijke rolbeschrijvingen',
-      'Creëer een veilige sfeer',
-      'Bespreek altijd na afloop'
-    ],
-    differentiatie: [
-      'Pas rollen aan op persoonlijkheid',
-      'Geef meer of minder complexe scenario\'s',
-      'Laat leerlingen zelf rollen kiezen'
-    ]
-  },
-  {
-    id: 'webquest',
-    naam: 'WebQuest',
-    beschrijving: 'Gestructureerd internetonderzoek met duidelijke opdrachten',
-    icon: '🌐',
-    categorie: 'ICT',
-    tijdsduur: '60-120 minuten',
-    groepsgrootte: '2-4 leerlingen',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['wereldoriëntatie', 'ict', 'nederlands'],
-    instructiemodellen: ['onderzoekend_leren', 'projectonderwijs'],
-    voorbereiding: 'Hoog',
-    materialen: ['Computers/tablets', 'WebQuest template', 'Geselecteerde websites'],
-    stappen: [
-      'Introduceer het onderwerp en de vraag',
-      'Leg de opdracht en criteria uit',
-      'Laat leerlingen onderzoek doen',
-      'Begeleid het proces',
-      'Presentatie van resultaten',
-      'Evaluatie'
-    ],
-    tips: [
-      'Selecteer betrouwbare websites vooraf',
-      'Geef duidelijke zoekstrategieën',
-      'Monitor de voortgang',
-      'Leer kritisch kijken naar bronnen'
-    ],
-    differentiatie: [
-      'Geef verschillende onderzoeksvragen',
-      'Varieer in complexiteit van bronnen',
-      'Bied verschillende presentatievormen'
-    ]
-  },
-  {
-    id: 'gallery_walk',
-    naam: 'Gallery Walk',
-    beschrijving: 'Leerlingen lopen langs verschillende posters/werkstukken en geven feedback',
-    icon: '🖼️',
-    categorie: 'Presentatie',
-    tijdsduur: '20-40 minuten',
-    groepsgrootte: 'Individueel of kleine groepjes',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['expressie', 'nederlands', 'wereldoriëntatie'],
-    instructiemodellen: ['coöperatief_leren', 'projectonderwijs'],
-    voorbereiding: 'Gemiddeld',
-    materialen: ['Posters/werkstukken', 'Feedback formulieren', 'Stickers/markers'],
-    stappen: [
-      'Hang werkstukken/posters op',
-      'Leg de opdracht uit',
-      'Leerlingen lopen rond en bekijken werk',
-      'Geven feedback of stemmen',
-      'Bespreking van opvallende zaken'
-    ],
-    tips: [
-      'Geef duidelijke feedback criteria',
-      'Zorg voor rustige sfeer',
-      'Varieer in feedback methoden',
-      'Vier de diversiteit aan werk'
-    ],
-    differentiatie: [
-      'Pas feedback formulieren aan',
-      'Geef verschillende rollen',
-      'Varieer in presentatievormen'
-    ]
-  },
-  {
-    id: 'escape_room',
-    naam: 'Escape Room',
-    beschrijving: 'Gamified leeromgeving waar leerlingen puzzels oplossen om te "ontsnappen"',
-    icon: '🔐',
-    categorie: 'Gamification',
-    tijdsduur: '45-90 minuten',
-    groepsgrootte: '4-6 leerlingen per team',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['rekenen', 'nederlands', 'wereldoriëntatie'],
-    instructiemodellen: ['spelend_leren', 'coöperatief_leren'],
-    voorbereiding: 'Zeer hoog',
-    materialen: ['Puzzels/raadsels', 'Sloten/dozen', 'Hints', 'Timer', 'Decoratie'],
-    stappen: [
-      'Stel de escape room in',
-      'Introduceer het verhaal/thema',
-      'Teams beginnen met puzzels',
-      'Geef hints waar nodig',
-      'Vier het succes',
-      'Reflecteer op het leerproces'
-    ],
-    tips: [
-      'Test de escape room vooraf',
-      'Zorg voor verschillende moeilijkheidsniveaus',
-      'Houd de spanning erin',
-      'Maak het verhaal boeiend'
-    ],
-    differentiatie: [
-      'Geef teams verschillende puzzels',
-      'Varieer in aantal hints',
-      'Pas de tijdslimiet aan'
-    ]
-  }
-]
-
 export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen }: WerkvormenProps) {
   const [geselecteerdeWerkvormen, setGeselecteerdeWerkvormen] = useState<any[]>(selectedWerkvormen)
   const [filterCategorie, setFilterCategorie] = useState<string>('alle')
+  const [filterVoorkeur, setFilterVoorkeur] = useState<boolean>(false)
   const [detailView, setDetailView] = useState<string | null>(null)
 
   const categorieën = [
@@ -282,19 +24,31 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
     'Dramatisering',
     'ICT',
     'Presentatie',
-    'Gamification'
+    'Gamification',
+    'Energizer',
+    'Beweging'
   ]
 
   // Filter werkvormen op basis van profiel en categorie
   const getRelevanteWerkvormen = () => {
     let gefilterd = werkvormenDatabase.filter(werkvorm => {
       const geschiktVoorGroep = werkvorm.geschiktVoor.includes(userProfile.groep)
-      const geschiktVoorVak = werkvorm.vakgebieden.some(vak => userProfile.vakgebied.includes(vak))
+      const geschiktVoorVak = werkvorm.vakgebieden.includes('alle vakken') || 
+                             werkvorm.vakgebieden.some(vak => userProfile.vakgebied.includes(vak))
       return geschiktVoorGroep && geschiktVoorVak
     })
 
     if (filterCategorie !== 'alle') {
       gefilterd = gefilterd.filter(werkvorm => werkvorm.categorie === filterCategorie)
+    }
+
+    // Filter op voorkeuren als gewenst
+    if (filterVoorkeur && userProfile.voorkeuren.werkvormen.length > 0) {
+      gefilterd = gefilterd.filter(werkvorm => 
+        userProfile.voorkeuren.werkvormen.some(voorkeur => 
+          werkvorm.id.includes(voorkeur) || werkvorm.naam.toLowerCase().includes(voorkeur)
+        )
+      )
     }
 
     return gefilterd
@@ -315,17 +69,50 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
     onComplete(geselecteerdeWerkvormen)
   }
 
+  const getEnergiekleur = (niveau: string) => {
+    switch (niveau) {
+      case 'Laag': return 'bg-blue-100 text-blue-800'
+      case 'Gemiddeld': return 'bg-yellow-100 text-yellow-800'
+      case 'Hoog': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
   const relevanteWerkvormen = getRelevanteWerkvormen()
 
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Selecteer werkvormen</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Selecteer werkvormen & energizers</h2>
         <p className="text-gray-600">
           Kies de werkvormen die passen bij je les en instructiemodel. 
-          Je kunt meerdere werkvormen combineren voor een gevarieerde les.
+          Je kunt meerdere werkvormen combineren voor een gevarieerde les. Energizers helpen om de energie en focus te behouden.
         </p>
       </div>
+
+      {/* Voorkeur Filter */}
+      {userProfile.voorkeuren.werkvormen.length > 0 && (
+        <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium text-orange-900">Jouw voorkeuren</h3>
+              <p className="text-orange-700 text-sm">
+                Je hebt {userProfile.voorkeuren.werkvormen.length} werkvormen als voorkeur aangegeven
+              </p>
+            </div>
+            <button
+              onClick={() => setFilterVoorkeur(!filterVoorkeur)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                filterVoorkeur
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-white text-orange-700 border border-orange-300'
+              }`}
+            >
+              {filterVoorkeur ? 'Toon alle werkvormen' : 'Toon alleen voorkeuren'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Categorie Filter */}
       <div className="mb-6">
@@ -341,6 +128,11 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
               }`}
             >
               {categorie === 'alle' ? 'Alle categorieën' : categorie}
+              {categorie !== 'alle' && (
+                <span className="ml-1 text-xs opacity-75">
+                  ({werkvormenDatabase.filter(w => w.categorie === categorie && w.geschiktVoor.includes(userProfile.groep)).length})
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -350,22 +142,41 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {relevanteWerkvormen.map((werkvorm) => {
           const isSelected = geselecteerdeWerkvormen.some(w => w.id === werkvorm.id)
+          const isVoorkeur = userProfile.voorkeuren.werkvormen.some(voorkeur => 
+            werkvorm.id.includes(voorkeur) || werkvorm.naam.toLowerCase().includes(voorkeur)
+          )
           
           return (
             <div
               key={werkvorm.id}
-              className={`p-6 rounded-lg border-2 transition-all duration-200 hover:shadow-lg ${
+              className={`p-6 rounded-lg border-2 transition-all duration-200 hover:shadow-lg relative ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50'
+                  : isVoorkeur
+                  ? 'border-orange-300 bg-orange-50 hover:border-orange-400'
                   : 'border-gray-200 hover:border-blue-300'
               }`}
             >
+              {/* Voorkeur indicator */}
+              {isVoorkeur && (
+                <div className="absolute top-2 right-2">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                    ⭐ Voorkeur
+                  </span>
+                </div>
+              )}
+
               <div className="text-center mb-4">
                 <div className="text-3xl mb-2">{werkvorm.icon}</div>
                 <h3 className="font-bold text-lg text-gray-900">{werkvorm.naam}</h3>
-                <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                  {werkvorm.categorie}
-                </span>
+                <div className="flex justify-center space-x-2 mt-2">
+                  <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                    {werkvorm.categorie}
+                  </span>
+                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${getEnergiekleur(werkvorm.energieniveau)}`}>
+                    {werkvorm.energieniveau}
+                  </span>
+                </div>
               </div>
               
               <p className="text-gray-600 text-sm mb-4 text-center">
@@ -390,6 +201,17 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                   }`}>
                     {werkvorm.voorbereiding}
                   </span>
+                </div>
+              </div>
+
+              {/* Doel tags */}
+              <div className="mb-4">
+                <div className="flex flex-wrap gap-1">
+                  {werkvorm.doel.slice(0, 3).map((doel, index) => (
+                    <span key={index} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+                      {doel}
+                    </span>
+                  ))}
                 </div>
               </div>
               
@@ -433,6 +255,14 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                       <div>
                         <h3 className="text-2xl font-bold text-gray-900">{werkvorm.naam}</h3>
                         <p className="text-gray-600">{werkvorm.beschrijving}</p>
+                        <div className="flex space-x-2 mt-2">
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+                            {werkvorm.categorie}
+                          </span>
+                          <span className={`px-2 py-1 text-sm rounded ${getEnergiekleur(werkvorm.energieniveau)}`}>
+                            Energie: {werkvorm.energieniveau}
+                          </span>
+                        </div>
                       </div>
                     </div>
                     <button
@@ -451,10 +281,6 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                       <h4 className="font-bold text-gray-900 mb-3">Basisinformatie</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Categorie:</span>
-                          <span className="font-medium">{werkvorm.categorie}</span>
-                        </div>
-                        <div className="flex justify-between">
                           <span className="text-gray-600">Tijdsduur:</span>
                           <span className="font-medium">{werkvorm.tijdsduur}</span>
                         </div>
@@ -472,6 +298,10 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                             {werkvorm.voorbereiding}
                           </span>
                         </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Energieniveau:</span>
+                          <span className="font-medium">{werkvorm.energieniveau}</span>
+                        </div>
                       </div>
                     </div>
                     
@@ -486,6 +316,18 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                           </li>
                         ))}
                       </ul>
+                    </div>
+                  </div>
+
+                  {/* Doelen */}
+                  <div className="mb-8">
+                    <h4 className="font-bold text-gray-900 mb-3">Doelen van deze werkvorm</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {werkvorm.doel.map((doel, index) => (
+                        <span key={index} className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                          {doel}
+                        </span>
+                      ))}
                     </div>
                   </div>
                   
@@ -567,7 +409,7 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
                 <span className="text-lg">{werkvorm.icon}</span>
                 <div>
                   <p className="font-medium text-green-900 text-sm">{werkvorm.naam}</p>
-                  <p className="text-green-700 text-xs">{werkvorm.tijdsduur}</p>
+                  <p className="text-green-700 text-xs">{werkvorm.tijdsduur} • {werkvorm.categorie}</p>
                 </div>
               </div>
             ))}
@@ -575,11 +417,25 @@ export default function Werkvormen({ userProfile, onComplete, selectedWerkvormen
         </div>
       )}
 
+      {/* Info over energizers */}
+      <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h4 className="font-medium text-yellow-900 mb-2 flex items-center">
+          <span className="text-lg mr-2">⚡</span>
+          Energizers & Bewegingswerkvormen
+        </h4>
+        <p className="text-yellow-800 text-sm">
+          Energizers zijn korte activiteiten (2-10 minuten) om de energie en focus van leerlingen te verhogen. 
+          Bewegingswerkvormen combineren leren met fysieke activiteit. Beide helpen om de concentratie te behouden en maken lessen dynamischer.
+        </p>
+      </div>
+
       {/* Navigation */}
       <div className="pt-6 border-t border-gray-200">
         <div className="flex justify-between items-center">
           <div className="text-sm text-gray-600">
             {geselecteerdeWerkvormen.length} werkvormen geselecteerd
+            {filterVoorkeur && ` • Gefilterd op voorkeuren`}
+            {filterCategorie !== 'alle' && ` • Categorie: ${filterCategorie}`}
           </div>
           <button
             onClick={handleContinue}

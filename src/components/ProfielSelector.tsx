@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { UserProfile } from './LesWizard'
 import ProfielBeheer from './ProfielBeheer'
 
@@ -10,7 +10,7 @@ interface ProfielSelectorProps {
 }
 
 export default function ProfielSelector({ onComplete, currentProfile }: ProfielSelectorProps) {
-  const [profiel, setProfiel] = useState<UserProfile>(currentProfile || {
+  const [profiel, setProfiel] = useState<UserProfile>({
     groep: '',
     vakgebied: [],
     ervaring: '',
@@ -23,6 +23,13 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
   })
 
   const [showProfielBeheer, setShowProfielBeheer] = useState(false)
+
+  // Initialize profile from currentProfile prop
+  useEffect(() => {
+    if (currentProfile) {
+      setProfiel(currentProfile)
+    }
+  }, [currentProfile])
 
   const groepen = [
     { id: 'groep1-2', label: 'Groep 1-2', description: 'Kleuteronderwijs (4-6 jaar)' },
@@ -58,7 +65,42 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     { id: 'onderzoekend', label: 'Onderzoekend leren', icon: '🔍' },
     { id: 'creatief', label: 'Creatief onderwijs', icon: '🎨' },
     { id: 'taalrijk', label: 'Taalrijk onderwijs', icon: '💬' },
-    { id: 'rekenvaardig', label: 'Rekenvaardigheid', icon: '🧮' }
+    { id: 'rekenvaardig', label: 'Rekenvaardigheid', icon: '🧮' },
+    { id: 'wetenschap', label: 'Wetenschap & Techniek', icon: '🔬' },
+    { id: 'duurzaamheid', label: 'Duurzaam onderwijs', icon: '🌱' }
+  ]
+
+  // Voorkeur instructiemodellen
+  const instructieModelVoorkeuren = [
+    { id: 'directe_instructie', label: 'Directe Instructie', icon: '👨‍🏫' },
+    { id: 'onderzoekend_leren', label: 'Onderzoekend Leren', icon: '🔍' },
+    { id: 'coöperatief_leren', label: 'Coöperatief Leren', icon: '🤝' },
+    { id: 'spelend_leren', label: 'Spelend Leren', icon: '🎮' },
+    { id: 'gepersonaliseerd_leren', label: 'Gepersonaliseerd Leren', icon: '🎯' },
+    { id: 'projectonderwijs', label: 'Projectonderwijs', icon: '📊' },
+    { id: 'flipped_classroom', label: 'Flipped Classroom', icon: '🔄' },
+    { id: 'blended_learning', label: 'Blended Learning', icon: '💻' }
+  ]
+
+  // Voorkeur werkvormen
+  const werkvormVoorkeuren = [
+    { id: 'klassengesprek', label: 'Klassengesprek', icon: '💬' },
+    { id: 'groepswerk', label: 'Groepswerk', icon: '👥' },
+    { id: 'individueel_werk', label: 'Individueel werk', icon: '👤' },
+    { id: 'presentaties', label: 'Presentaties', icon: '🎤' },
+    { id: 'experimenten', label: 'Experimenten', icon: '🧪' },
+    { id: 'rollenspel', label: 'Rollenspel', icon: '🎭' },
+    { id: 'stations_werk', label: 'Stations werk', icon: '🔄' },
+    { id: 'digitale_tools', label: 'Digitale tools', icon: '📱' }
+  ]
+
+  // SEL focus voorkeuren
+  const selFocusVoorkeuren = [
+    { id: 'zelfbewustzijn', label: 'Zelfbewustzijn', icon: '🪞' },
+    { id: 'zelfregulatie', label: 'Zelfregulatie', icon: '🧘' },
+    { id: 'sociale_bewustzijn', label: 'Sociale bewustzijn', icon: '👁️' },
+    { id: 'relatievaardigheden', label: 'Relatievaardigheden', icon: '🤝' },
+    { id: 'verantwoordelijke_besluitvorming', label: 'Verantwoordelijke besluitvorming', icon: '⚖️' }
   ]
 
   const handleProfileLoad = (loadedProfile: UserProfile) => {
@@ -82,6 +124,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Stel je profiel in</h2>
             <p className="text-gray-600">
               Help ons je de meest relevante content te tonen door je profiel in te stellen.
+              Dit profiel wordt opgeslagen voor toekomstig gebruik.
             </p>
           </div>
           
@@ -203,7 +246,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
           <label className="block text-sm font-semibold text-gray-900 mb-4">
             Waar ligt je focus op? (optioneel, meerdere mogelijk)
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {focusgebieden.map((focus) => (
               <button
                 key={focus.id}
@@ -227,6 +270,110 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             ))}
           </div>
         </div>
+
+        {/* Voorkeuren sectie */}
+        <div className="border-t border-gray-200 pt-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6">Jouw voorkeuren (optioneel)</h3>
+          
+          {/* Instructiemodel voorkeuren */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-900 mb-4">
+              Welke instructiemodellen gebruik je graag?
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {instructieModelVoorkeuren.map((model) => (
+                <button
+                  key={model.id}
+                  onClick={() => {
+                    setProfiel(prev => ({
+                      ...prev,
+                      voorkeuren: {
+                        ...prev.voorkeuren,
+                        instructiemodel: prev.voorkeuren.instructiemodel.includes(model.id)
+                          ? prev.voorkeuren.instructiemodel.filter(m => m !== model.id)
+                          : [...prev.voorkeuren.instructiemodel, model.id]
+                      }
+                    }))
+                  }}
+                  className={`p-3 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    profiel.voorkeuren.instructiemodel.includes(model.id)
+                      ? 'border-purple-500 bg-purple-50 text-purple-900'
+                      : 'border-gray-200 hover:border-purple-300'
+                  }`}
+                >
+                  <div className="text-lg mb-1">{model.icon}</div>
+                  <div className="font-medium text-xs">{model.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Werkvorm voorkeuren */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-900 mb-4">
+              Welke werkvormen gebruik je vaak?
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {werkvormVoorkeuren.map((werkvorm) => (
+                <button
+                  key={werkvorm.id}
+                  onClick={() => {
+                    setProfiel(prev => ({
+                      ...prev,
+                      voorkeuren: {
+                        ...prev.voorkeuren,
+                        werkvormen: prev.voorkeuren.werkvormen.includes(werkvorm.id)
+                          ? prev.voorkeuren.werkvormen.filter(w => w !== werkvorm.id)
+                          : [...prev.voorkeuren.werkvormen, werkvorm.id]
+                      }
+                    }))
+                  }}
+                  className={`p-3 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    profiel.voorkeuren.werkvormen.includes(werkvorm.id)
+                      ? 'border-orange-500 bg-orange-50 text-orange-900'
+                      : 'border-gray-200 hover:border-orange-300'
+                  }`}
+                >
+                  <div className="text-lg mb-1">{werkvorm.icon}</div>
+                  <div className="font-medium text-xs">{werkvorm.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SEL focus voorkeuren */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-4">
+              Welke SEL-aspecten vind je belangrijk?
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {selFocusVoorkeuren.map((sel) => (
+                <button
+                  key={sel.id}
+                  onClick={() => {
+                    setProfiel(prev => ({
+                      ...prev,
+                      voorkeuren: {
+                        ...prev.voorkeuren,
+                        selFocus: prev.voorkeuren.selFocus.includes(sel.id)
+                          ? prev.voorkeuren.selFocus.filter(s => s !== sel.id)
+                          : [...prev.voorkeuren.selFocus, sel.id]
+                      }
+                    }))
+                  }}
+                  className={`p-3 rounded-lg border-2 text-left transition-all duration-200 hover:shadow-md ${
+                    profiel.voorkeuren.selFocus.includes(sel.id)
+                      ? 'border-pink-500 bg-pink-50 text-pink-900'
+                      : 'border-gray-200 hover:border-pink-300'
+                  }`}
+                >
+                  <div className="text-lg mb-1">{sel.icon}</div>
+                  <div className="font-medium text-xs">{sel.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Submit Button */}
@@ -244,7 +391,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            Volgende: SLO-doelen selecteren →
+            Volgende: Documenten beheer →
           </button>
         </div>
       </div>
