@@ -6,6 +6,8 @@ import SLODoelen from './SLODoelen'
 import InstructieModellen from './InstructieModellen'
 import Werkvormen from './Werkvormen'
 import SELActiviteiten from './SELActiviteiten'
+import TaxonomieCoach from './TaxonomieCoach'
+import DocumentenBeheer from './DocumentenBeheer'
 import LesplanGenerator from './LesplanGenerator'
 
 export interface UserProfile {
@@ -20,12 +22,25 @@ export interface UserProfile {
   }
 }
 
+export interface SchoolDocument {
+  id: string
+  naam: string
+  type: 'schoolplan' | 'jaarplan' | 'methode' | 'toetsplan' | 'beleid'
+  inhoud: string
+  doelen: any[]
+  uploadDatum: Date
+  actief: boolean
+}
+
 export interface LesplanData {
   profiel: UserProfile | null
   sloDoelen: any[]
+  schoolDoelen: any[]
   instructiemodel: any | null
   werkvormen: any[]
   selActiviteiten: any[]
+  taxonomieNiveau: string
+  toetsvormen: any[]
   lesonderwerp: string
   lesdoelen: string[]
   tijdsduur: number
@@ -34,12 +49,16 @@ export interface LesplanData {
 export default function LesWizard() {
   const [currentStep, setCurrentStep] = useState(1)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [schoolDocumenten, setSchoolDocumenten] = useState<SchoolDocument[]>([])
   const [lesplanData, setLesplanData] = useState<LesplanData>({
     profiel: null,
     sloDoelen: [],
+    schoolDoelen: [],
     instructiemodel: null,
     werkvormen: [],
     selActiviteiten: [],
+    taxonomieNiveau: '',
+    toetsvormen: [],
     lesonderwerp: '',
     lesdoelen: [],
     tijdsduur: 45
@@ -47,11 +66,13 @@ export default function LesWizard() {
 
   const steps = [
     { id: 1, title: 'Profiel', icon: '👤', description: 'Stel je profiel in' },
-    { id: 2, title: 'SLO-doelen', icon: '🎯', description: 'Selecteer leerdoelen' },
-    { id: 3, title: 'Instructiemodel', icon: '📚', description: 'Kies je aanpak' },
-    { id: 4, title: 'Werkvormen', icon: '🎲', description: 'Selecteer activiteiten' },
-    { id: 5, title: 'SEL', icon: '💝', description: 'Sociaal-emotioneel leren' },
-    { id: 6, title: 'Lesplan', icon: '📋', description: 'Genereer je lesplan' }
+    { id: 2, title: 'Documenten', icon: '📚', description: 'School documenten' },
+    { id: 3, title: 'Doelen', icon: '🎯', description: 'SLO & school doelen' },
+    { id: 4, title: 'Instructiemodel', icon: '📖', description: 'Kies je aanpak' },
+    { id: 5, title: 'Werkvormen', icon: '🎲', description: 'Selecteer activiteiten' },
+    { id: 6, title: 'SEL', icon: '💝', description: 'Sociaal-emotioneel leren' },
+    { id: 7, title: 'Taxonomie', icon: '🧠', description: 'Denkniveaus & toetsing' },
+    { id: 8, title: 'Lesplan', icon: '📋', description: 'Genereer je lesplan' }
   ]
 
   const handleProfileComplete = (profile: UserProfile) => {
@@ -60,24 +81,34 @@ export default function LesWizard() {
     setCurrentStep(2)
   }
 
-  const handleSLOComplete = (doelen: any[]) => {
-    setLesplanData(prev => ({ ...prev, sloDoelen: doelen }))
+  const handleDocumentenComplete = (documenten: SchoolDocument[]) => {
+    setSchoolDocumenten(documenten)
     setCurrentStep(3)
+  }
+
+  const handleDoelenComplete = (sloDoelen: any[], schoolDoelen: any[]) => {
+    setLesplanData(prev => ({ ...prev, sloDoelen, schoolDoelen }))
+    setCurrentStep(4)
   }
 
   const handleInstructieComplete = (model: any) => {
     setLesplanData(prev => ({ ...prev, instructiemodel: model }))
-    setCurrentStep(4)
+    setCurrentStep(5)
   }
 
   const handleWerkvormenComplete = (werkvormen: any[]) => {
     setLesplanData(prev => ({ ...prev, werkvormen }))
-    setCurrentStep(5)
+    setCurrentStep(6)
   }
 
   const handleSELComplete = (activiteiten: any[]) => {
     setLesplanData(prev => ({ ...prev, selActiviteiten: activiteiten }))
-    setCurrentStep(6)
+    setCurrentStep(7)
+  }
+
+  const handleTaxonomieComplete = (taxonomieNiveau: string, toetsvormen: any[]) => {
+    setLesplanData(prev => ({ ...prev, taxonomieNiveau, toetsvormen }))
+    setCurrentStep(8)
   }
 
   const goToStep = (step: number) => {
@@ -97,7 +128,7 @@ export default function LesWizard() {
                 <span className="text-white font-bold text-lg">📚</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">PO LesWizard</h1>
+                <h1 className="text-xl font-bold text-gray-900">PO LesWizard Pro</h1>
                 <p className="text-sm text-gray-600">Professionele lesplanning voor het Primair Onderwijs</p>
               </div>
             </div>
@@ -114,9 +145,9 @@ export default function LesWizard() {
       {/* Progress Bar */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-4 overflow-x-auto">
             {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center">
+              <div key={step.id} className="flex items-center flex-shrink-0">
                 <button
                   onClick={() => goToStep(step.id)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 ${
@@ -154,14 +185,23 @@ export default function LesWizard() {
           )}
           
           {currentStep === 2 && userProfile && (
-            <SLODoelen 
-              userProfile={userProfile} 
-              onComplete={handleSLOComplete}
-              selectedDoelen={lesplanData.sloDoelen}
+            <DocumentenBeheer 
+              userProfile={userProfile}
+              onComplete={handleDocumentenComplete}
+              schoolDocumenten={schoolDocumenten}
             />
           )}
           
           {currentStep === 3 && userProfile && (
+            <SLODoelen 
+              userProfile={userProfile} 
+              onComplete={handleDoelenComplete}
+              selectedDoelen={lesplanData.sloDoelen}
+              schoolDocumenten={schoolDocumenten}
+            />
+          )}
+          
+          {currentStep === 4 && userProfile && (
             <InstructieModellen 
               userProfile={userProfile}
               onComplete={handleInstructieComplete}
@@ -169,7 +209,7 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 4 && userProfile && (
+          {currentStep === 5 && userProfile && (
             <Werkvormen 
               userProfile={userProfile}
               onComplete={handleWerkvormenComplete}
@@ -177,7 +217,7 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 5 && userProfile && (
+          {currentStep === 6 && userProfile && (
             <SELActiviteiten 
               userProfile={userProfile}
               onComplete={handleSELComplete}
@@ -185,10 +225,18 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 6 && (
+          {currentStep === 7 && userProfile && (
+            <TaxonomieCoach 
+              userProfile={userProfile}
+              lesplanData={lesplanData}
+              onComplete={handleTaxonomieComplete}
+            />
+          )}
+          
+          {currentStep === 8 && (
             <LesplanGenerator 
               lesplanData={lesplanData}
-              onBack={() => setCurrentStep(5)}
+              onBack={() => setCurrentStep(7)}
             />
           )}
         </div>
