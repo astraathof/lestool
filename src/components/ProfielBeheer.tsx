@@ -140,6 +140,30 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
       'groep1-8': 'Combi 1-8'
     }
 
+    const vakgebiedLabels: Record<string, string> = {
+      'nederlands': 'Nederlands',
+      'rekenen': 'Rekenen',
+      'wereldoriëntatie': 'Wereldoriëntatie',
+      'engels': 'Engels',
+      'bewegingsonderwijs': 'Beweging',
+      'expressie': 'Expressie',
+      'burgerschap': 'Burgerschap',
+      'ict': 'ICT'
+    }
+
+    const focusLabels: Record<string, string> = {
+      'differentiatie': 'Differentiatie',
+      'inclusief': 'Inclusief',
+      'digitaal': 'Digitaal',
+      'sel': 'SEL',
+      'onderzoekend': 'Onderzoekend',
+      'creatief': 'Creatief',
+      'taalrijk': 'Taalrijk',
+      'rekenvaardig': 'Rekenvaardig',
+      'beweging': 'Beweging',
+      'duurzaamheid': 'Duurzaamheid'
+    }
+
     const groepLabel = groepLabels[profile.groep] || profile.groep
 
     const ervaringLabel = {
@@ -149,7 +173,16 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
       'schoolleider': 'Schoolleider'
     }[profile.ervaring] || profile.ervaring
 
-    return `${groepLabel} • ${ervaringLabel} • ${profile.vakgebied.length} vakgebieden`
+    const vakgebiedText = profile.vakgebied.map(id => vakgebiedLabels[id] || id).join(', ')
+    const focusText = profile.focus.map(id => focusLabels[id] || id).join(', ')
+
+    return {
+      groepLabel,
+      ervaringLabel,
+      vakgebiedText,
+      focusText,
+      summary: `${groepLabel} • ${ervaringLabel} • ${profile.vakgebied.length} vakgebieden`
+    }
   }
 
   return (
@@ -186,26 +219,34 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <h4 className="font-medium text-blue-900 mb-3">Recent gebruikte profielen</h4>
           <div className="space-y-2">
-            {savedProfiles.slice(0, 3).map((profile) => (
-              <button
-                key={profile.id}
-                onClick={() => loadProfile(profile)}
-                className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h5 className="font-medium text-blue-900">{profile.naam}</h5>
-                    <p className="text-blue-700 text-sm">{getProfileSummary(profile)}</p>
-                    {profile.beschrijving && (
-                      <p className="text-blue-600 text-xs mt-1">{profile.beschrijving}</p>
-                    )}
+            {savedProfiles.slice(0, 3).map((profile) => {
+              const profileInfo = getProfileSummary(profile)
+              
+              return (
+                <button
+                  key={profile.id}
+                  onClick={() => loadProfile(profile)}
+                  className="w-full text-left p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h5 className="font-medium text-blue-900">{profile.naam}</h5>
+                      <p className="text-blue-700 text-sm">{profileInfo.summary}</p>
+                      <div className="text-blue-600 text-xs mt-1">
+                        <div><strong>Vakken:</strong> {profileInfo.vakgebiedText}</div>
+                        {profileInfo.focusText && <div><strong>Focus:</strong> {profileInfo.focusText}</div>}
+                      </div>
+                      {profile.beschrijving && (
+                        <p className="text-blue-600 text-xs mt-1 italic">{profile.beschrijving}</p>
+                      )}
+                    </div>
+                    <div className="text-blue-600 text-xs ml-4">
+                      {profile.laatstGebruikt.toLocaleDateString('nl-NL')}
+                    </div>
                   </div>
-                  <div className="text-blue-600 text-xs">
-                    {profile.laatstGebruikt.toLocaleDateString('nl-NL')}
-                  </div>
-                </div>
-              </button>
-            ))}
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
@@ -244,15 +285,18 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
               </div>
 
               {/* Preview */}
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Preview:</h4>
-                <p className="text-gray-700 text-sm">{getProfileSummary(currentProfile!)}</p>
-                {currentProfile?.focus.length > 0 && (
-                  <p className="text-gray-600 text-xs mt-1">
-                    Focus: {currentProfile.focus.join(', ')}
-                  </p>
-                )}
-              </div>
+              {currentProfile && (
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-2">Preview:</h4>
+                  <div className="text-sm text-gray-700">
+                    <div>{getProfileSummary(currentProfile).summary}</div>
+                    <div className="mt-1"><strong>Vakken:</strong> {getProfileSummary(currentProfile).vakgebiedText}</div>
+                    {getProfileSummary(currentProfile).focusText && (
+                      <div><strong>Focus:</strong> {getProfileSummary(currentProfile).focusText}</div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between mt-6">
@@ -285,7 +329,7 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
       {/* Load Dialog */}
       {showLoadDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+          <div className="bg-white rounded-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-bold text-gray-900">Profiel laden</h3>
@@ -308,60 +352,52 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {savedProfiles.map((profile) => (
-                    <div
-                      key={profile.id}
-                      className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900">{profile.naam}</h4>
-                          <p className="text-gray-600 text-sm mt-1">{getProfileSummary(profile)}</p>
-                          {profile.beschrijving && (
-                            <p className="text-gray-500 text-sm mt-1">{profile.beschrijving}</p>
-                          )}
-                          <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                            <span>Aangemaakt: {profile.aangemaakt.toLocaleDateString('nl-NL')}</span>
-                            <span>Laatst gebruikt: {profile.laatstGebruikt.toLocaleDateString('nl-NL')}</span>
+                  {savedProfiles.map((profile) => {
+                    const profileInfo = getProfileSummary(profile)
+                    
+                    return (
+                      <div
+                        key={profile.id}
+                        className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-900">{profile.naam}</h4>
+                            <p className="text-gray-600 text-sm mt-1">{profileInfo.summary}</p>
+                            <div className="text-gray-500 text-sm mt-1">
+                              <div><strong>Vakken:</strong> {profileInfo.vakgebiedText}</div>
+                              {profileInfo.focusText && <div><strong>Focus:</strong> {profileInfo.focusText}</div>}
+                            </div>
+                            {profile.beschrijving && (
+                              <p className="text-gray-500 text-sm mt-1 italic">{profile.beschrijving}</p>
+                            )}
+                            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                              <span>Aangemaakt: {profile.aangemaakt.toLocaleDateString('nl-NL')}</span>
+                              <span>Laatst gebruikt: {profile.laatstGebruikt.toLocaleDateString('nl-NL')}</span>
+                            </div>
                           </div>
                           
-                          {/* Focus gebieden */}
-                          {profile.focus.length > 0 && (
-                            <div className="mt-2">
-                              <div className="flex flex-wrap gap-1">
-                                {profile.focus.map((focus) => (
-                                  <span
-                                    key={focus}
-                                    className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded"
-                                  >
-                                    {focus}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        
-                        <div className="flex items-center space-x-2 ml-4">
-                          <button
-                            onClick={() => loadProfile(profile)}
-                            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm"
-                          >
-                            Laden
-                          </button>
-                          <button
-                            onClick={() => deleteProfile(profile.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-                            title="Profiel verwijderen"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          <div className="flex items-center space-x-2 ml-4">
+                            <button
+                              onClick={() => loadProfile(profile)}
+                              className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm"
+                            >
+                              Laden
+                            </button>
+                            <button
+                              onClick={() => deleteProfile(profile.id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                              title="Profiel verwijderen"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
