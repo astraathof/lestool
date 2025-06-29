@@ -235,54 +235,133 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
     }
   }
 
-  const createPrompt = () => {
+  const createEnhancedPrompt = () => {
     const profiel = lesplanData.profiel
     const sloDoelen = lesplanData.sloDoelen
     const instructiemodel = lesplanData.instructiemodel
     const werkvormen = lesplanData.werkvormen
     const selActiviteiten = lesplanData.selActiviteiten
 
-    let prompt = `Maak een gedetailleerd lesplan voor het primair onderwijs met de volgende specificaties:
+    let prompt = `Maak een COMPLEET, PRAKTISCH en DIRECT UITVOERBAAR lesplan voor het primair onderwijs. Dit lesplan moet zo gedetailleerd zijn dat een leerkracht er direct mee aan de slag kan!
 
-**PROFIEL INFORMATIE:**
-- Groep: ${profiel?.groep}
-- Vakgebieden: ${profiel?.vakgebied.join(', ')}
-- Ervaring leraar: ${profiel?.ervaring}
-- Focus gebieden: ${profiel?.focus.join(', ')}
+**📋 LESPLAN SPECIFICATIES:**
+- **Onderwerp:** ${lesonderwerp}
+- **Groep:** ${profiel?.groep}
+- **Vakgebieden:** ${profiel?.vakgebied.join(', ')}
+- **Tijdsduur:** ${formatTime(tijdsduur)}
+- **Ervaring leraar:** ${profiel?.ervaring}
 
-**LES INFORMATIE:**
-- Onderwerp: ${lesonderwerp}
-- Tijdsduur: ${formatTime(tijdsduur)}
-- Lesdoelen: ${lesdoelen.map((doel, i) => `${i + 1}. ${doel}`).join('\n')}
+**🎯 LESDOELEN:**
+${lesdoelen.map((doel, i) => `${i + 1}. ${doel}`).join('\n')}
 
-**SLO-DOELEN:**
-${sloDoelen.map(doel => `- ${doel.code}: ${doel.titel}\n  ${doel.beschrijving}`).join('\n')}
+**📚 SLO-KERNDOELEN:**
+${sloDoelen.map(doel => `• ${doel.code}: ${doel.titel}\n  ${doel.beschrijving}`).join('\n')}
 
-**INSTRUCTIEMODEL:**
+**🏗️ INSTRUCTIEMODEL:**
 ${instructiemodel ? `
-- Model: ${instructiemodel.naam}
-- Beschrijving: ${instructiemodel.beschrijving}
-- Fases: ${instructiemodel.fases.map((fase: any) => `${fase.naam} (${fase.beschrijving})`).join(', ')}
-` : 'Geen specifiek instructiemodel geselecteerd'}
+**${instructiemodel.naam}**
+${instructiemodel.beschrijving}
+Fases: ${instructiemodel.fases.map((fase: any) => fase.naam).join(' → ')}
+` : 'Flexibele instructie aangepast aan de les'}
 
-**WERKVORMEN:**
-${werkvormen.map(werkvorm => `- ${werkvorm.naam} (${werkvorm.tijdsduur}): ${werkvorm.beschrijving}`).join('\n')}
+**🎲 WERKVORMEN:**
+${werkvormen.map(werkvorm => `• **${werkvorm.naam}** (${werkvorm.tijdsduur}): ${werkvorm.beschrijving}`).join('\n')}
 
-**SEL-ACTIVITEITEN:**
-${selActiviteiten.map(activiteit => `- ${activiteit.naam} (${activiteit.categorie}): ${activiteit.beschrijving}`).join('\n')}
+**💝 SEL-ACTIVITEITEN:**
+${selActiviteiten.map(activiteit => `• **${activiteit.naam}** (${activiteit.categorie}): ${activiteit.beschrijving}`).join('\n')}
 
-${aanvullendeWensen ? `**AANVULLENDE WENSEN:**\n${aanvullendeWensen}` : ''}
+${aanvullendeWensen ? `**✨ SPECIALE WENSEN:**\n${aanvullendeWensen}` : ''}
 
-Maak een compleet, praktisch lesplan met:
-1. **Lesopbouw** - Duidelijke tijdsindeling per fase (totaal ${formatTime(tijdsduur)})
-2. **Materialen** - Concrete lijst van benodigdheden  
-3. **Instructies** - Stap-voor-stap uitleg per activiteit
-4. **Differentiatie** - Aanpassingen voor verschillende niveaus
-5. **Evaluatie** - Hoe je checkt of lesdoelen behaald zijn
-6. **SEL-integratie** - Hoe SEL-activiteiten verweven zijn
-7. **Praktische tips** - Concrete handvatten voor uitvoering
+---
 
-Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een PO-professional.`
+**MAAK NU EEN COMPLEET LESPLAN MET:**
+
+## 📅 **LESOPBOUW & TIJDSINDELING** (Totaal: ${formatTime(tijdsduur)})
+Geef een precieze tijdsindeling per fase met concrete activiteiten:
+
+**Fase 1: Lesopening (X minuten)**
+- Concrete activiteit 1
+- Concrete activiteit 2
+- Wat doet de leraar precies?
+- Wat doen de leerlingen?
+
+**Fase 2: [Volgende fase] (X minuten)**
+- [Etc. voor alle fases]
+
+## 🛠️ **MATERIALEN & VOORBEREIDING**
+**Benodigde materialen:**
+- Concrete lijst van alle materialen
+- Waar te vinden/hoe voor te bereiden
+- Digitale tools indien nodig
+
+**Voorbereiding leraar:**
+- Wat moet vooraf geregeld worden?
+- Welke materialen klaarzetten?
+- Ruimte-indeling
+
+## 📖 **STAP-VOOR-STAP INSTRUCTIES**
+Voor elke fase van de les:
+**Wat zegt de leraar letterlijk?**
+**Welke vragen stelt de leraar?**
+**Hoe begeleid je de activiteiten?**
+**Waar let je op tijdens de les?**
+
+## 🎯 **DIFFERENTIATIE & INCLUSIE**
+**Voor zwakkere leerlingen:**
+- Concrete aanpassingen
+- Extra ondersteuning
+- Alternatieve opdrachten
+
+**Voor sterkere leerlingen:**
+- Uitdagende uitbreidingen
+- Extra verantwoordelijkheden
+- Verdiepingsopdrachten
+
+**Voor leerlingen met speciale behoeften:**
+- Praktische aanpassingen
+- Visuele ondersteuning
+- Alternatieve werkvormen
+
+## ✅ **EVALUATIE & TOETSING**
+**Hoe check je of lesdoelen behaald zijn?**
+- Concrete observatiepunten
+- Vragen om begrip te checken
+- Praktische opdrachten
+- Exit ticket voorbeelden
+
+**Formatieve evaluatie tijdens de les:**
+- Wat observeer je?
+- Welke signalen let je op?
+- Hoe stuur je bij?
+
+## 💝 **SEL-INTEGRATIE**
+**Hoe zijn SEL-activiteiten verweven in de les?**
+- Concrete momenten in de les
+- Verbinding met lesstof
+- Reflectiemomenten
+
+## 💡 **PRAKTISCHE TIPS & AANDACHTSPUNTEN**
+- Wat kan er misgaan en hoe voorkom je dit?
+- Tips voor klassenmanagement
+- Hoe houd je alle leerlingen betrokken?
+- Backup-activiteiten als je tijd over hebt
+- Wat doe je als de les te lang/kort duurt?
+
+## 🔄 **AFSLUITING & HUISWERK**
+- Hoe sluit je de les goed af?
+- Reflectievragen voor leerlingen
+- Eventueel huiswerk of voorbereiding volgende les
+- Opruimen en evaluatie
+
+## 📝 **EVALUATIE VOOR LERAAR**
+- Wat ging goed?
+- Wat kan beter?
+- Aanpassingen voor volgende keer
+- Notities over individuele leerlingen
+
+---
+
+**BELANGRIJK:** Maak dit lesplan zo praktisch en gedetailleerd dat een collega-leraar het direct kan overnemen en uitvoeren. Geef concrete voorbeelden, letterlijke teksten, en praktische handvatten. Dit moet een professioneel, uitvoerbaar document worden!`
 
     return prompt
   }
@@ -297,7 +376,7 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
     setIsGenerating(true)
     
     try {
-      const prompt = createPrompt()
+      const prompt = createEnhancedPrompt()
       
       // Stuur de prompt automatisch naar de chat
       if (chatBotRef.current && chatBotRef.current.sendMessage) {
@@ -320,189 +399,135 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
   const canGenerate = lesonderwerp.trim() && lesdoelen.length > 0
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Genereer je lesplan</h2>
+    <div className="p-6 max-w-7xl mx-auto">
+      {/* Compacte header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">🚀 Professionele Lesplan Generator</h2>
         <p className="text-gray-600">
-          Vul de laatste details in en laat AI een compleet, professioneel lesplan voor je maken.
+          Genereer een compleet, uitvoerbaar lesplan in seconden. Direct klaar voor de klas!
         </p>
       </div>
 
-      {/* Opgeslagen lesplannen */}
-      {savedLesplannen.length > 0 && (
-        <div className="mb-8 p-6 bg-purple-50 border border-purple-200 rounded-lg">
-          <h3 className="font-bold text-purple-900 mb-4">Recent gegenereerde lesplannen</h3>
-          <div className="space-y-3">
-            {savedLesplannen.slice(0, 3).map((lesplan) => (
-              <div key={lesplan.id} className="p-4 bg-white border border-purple-200 rounded-lg">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-medium text-purple-900">{lesplan.onderwerp}</h4>
-                    <p className="text-purple-700 text-sm">
-                      {lesplan.profiel?.groep} • {formatTime(lesplan.tijdsduur)} • {lesplan.doelen.length} doelen
-                    </p>
-                    <p className="text-purple-600 text-xs mt-1">
-                      {new Date(lesplan.aangemaakt).toLocaleDateString('nl-NL')} • 
-                      {lesplan.sloDoelen} SLO-doelen • {lesplan.werkvormen} werkvormen
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      // Laad lesplan data
-                      setLesonderwerp(lesplan.onderwerp)
-                      setLesdoelen(lesplan.doelen)
-                      setTijdsduur(lesplan.tijdsduur)
-                    }}
-                    className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-all duration-200"
-                  >
-                    Hergebruiken
-                  </button>
-                </div>
-              </div>
-            ))}
+      {/* Compacte samenvatting */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="text-center">
+            <div className="font-bold text-blue-600">{lesplanData.profiel?.groep}</div>
+            <div className="text-blue-500 text-xs">{lesplanData.profiel?.vakgebied.join(', ')}</div>
           </div>
-        </div>
-      )}
-
-      {/* Samenvatting van selecties */}
-      <div className="mb-8 p-6 bg-gray-50 rounded-lg">
-        <h3 className="font-bold text-gray-900 mb-4">Jouw selecties samengevat</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-          <div>
-            <h4 className="font-medium text-gray-700 mb-2">Profiel</h4>
-            <p className="text-gray-600">{lesplanData.profiel?.groep}</p>
-            <p className="text-gray-600">{lesplanData.profiel?.vakgebied.join(', ')}</p>
+          <div className="text-center">
+            <div className="font-bold text-green-600">{lesplanData.sloDoelen.length} SLO-doelen</div>
+            <div className="text-green-500 text-xs">Kerndoelen geselecteerd</div>
           </div>
-          
-          <div>
-            <h4 className="font-medium text-gray-700 mb-2">SLO-doelen</h4>
-            <p className="text-gray-600">{lesplanData.sloDoelen.length} doelen geselecteerd</p>
+          <div className="text-center">
+            <div className="font-bold text-purple-600">{lesplanData.instructiemodel?.naam || 'Flexibel'}</div>
+            <div className="text-purple-500 text-xs">Instructiemodel</div>
           </div>
-          
-          <div>
-            <h4 className="font-medium text-gray-700 mb-2">Instructiemodel</h4>
-            <p className="text-gray-600">{lesplanData.instructiemodel?.naam || 'Geen geselecteerd'}</p>
-          </div>
-          
-          <div>
-            <h4 className="font-medium text-gray-700 mb-2">Werkvormen & SEL</h4>
-            <p className="text-gray-600">{lesplanData.werkvormen.length} werkvormen</p>
-            <p className="text-gray-600">{lesplanData.selActiviteiten.length} SEL-activiteiten</p>
+          <div className="text-center">
+            <div className="font-bold text-orange-600">{lesplanData.werkvormen.length + lesplanData.selActiviteiten.length}</div>
+            <div className="text-orange-500 text-xs">Werkvormen & SEL</div>
           </div>
         </div>
       </div>
 
-      {/* Les details invoer */}
-      <div className="space-y-6 mb-8">
-        {/* Lesonderwerp */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Lesonderwerp *
-          </label>
-          <input
-            type="text"
-            value={lesonderwerp}
-            onChange={(e) => setLesonderwerp(e.target.value)}
-            placeholder="Bijvoorbeeld: Breuken vergelijken, Verhaal schrijven, De Romeinse tijd..."
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        {/* Lesdoelen met intelligente suggesties */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-semibold text-gray-900">
-              Lesdoelen *
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Linker kolom: Invoer */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Lesonderwerp */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <label className="block text-sm font-bold text-gray-900 mb-2">
+              📚 Lesonderwerp *
             </label>
-            <button
-              onClick={() => setShowDoelenSuggesties(!showDoelenSuggesties)}
-              className="flex items-center space-x-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all duration-200 text-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-              <span>Slimme suggesties ({suggestedDoelen.length})</span>
-            </button>
+            <input
+              type="text"
+              value={lesonderwerp}
+              onChange={(e) => setLesonderwerp(e.target.value)}
+              placeholder="Bijvoorbeeld: Breuken vergelijken, Verhaal schrijven, De Romeinse tijd..."
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
 
-          {/* Slimme suggesties panel */}
-          {showDoelenSuggesties && (
-            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-3">🎯 Intelligente lesdoelen suggesties</h4>
-              <p className="text-blue-700 text-sm mb-3">
-                Gebaseerd op je profiel, SLO-doelen, instructiemodel en werkvormen:
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                {suggestedDoelen.map((suggestion) => (
-                  <div
-                    key={suggestion.id}
-                    onClick={() => addSuggestedDoel(suggestion)}
-                    className="p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer text-left group"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <span className={`px-2 py-1 text-xs rounded-full ${
-                            suggestion.bron === 'SLO' ? 'bg-green-100 text-green-800' :
-                            suggestion.bron === 'Instructiemodel' ? 'bg-purple-100 text-purple-800' :
-                            suggestion.bron === 'Werkvorm' ? 'bg-orange-100 text-orange-800' :
-                            suggestion.bron === 'SEL' ? 'bg-pink-100 text-pink-800' :
-                            'bg-blue-100 text-blue-800'
-                          }`}>
-                            {suggestion.bron}
-                          </span>
-                          <div className="flex">
-                            {[...Array(suggestion.relevantie)].map((_, i) => (
-                              <span key={i} className="text-yellow-400 text-xs">⭐</span>
-                            ))}
+          {/* Lesdoelen met slimme suggesties */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-bold text-gray-900">
+                🎯 Lesdoelen * ({lesdoelen.length})
+              </label>
+              <button
+                onClick={() => setShowDoelenSuggesties(!showDoelenSuggesties)}
+                className="flex items-center space-x-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all duration-200 text-sm"
+              >
+                <span>💡</span>
+                <span>Slimme suggesties</span>
+              </button>
+            </div>
+
+            {/* Slimme suggesties - compacter */}
+            {showDoelenSuggesties && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-3">
+                  {suggestedDoelen.slice(0, 8).map((suggestion) => (
+                    <div
+                      key={suggestion.id}
+                      onClick={() => addSuggestedDoel(suggestion)}
+                      className="p-2 bg-white border border-blue-200 rounded hover:bg-blue-50 transition-all duration-200 cursor-pointer text-left group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-1 mb-1">
+                            <span className={`px-1 py-0.5 text-xs rounded ${
+                              suggestion.bron === 'SLO' ? 'bg-green-100 text-green-700' :
+                              suggestion.bron === 'Instructiemodel' ? 'bg-purple-100 text-purple-700' :
+                              suggestion.bron === 'Werkvorm' ? 'bg-orange-100 text-orange-700' :
+                              suggestion.bron === 'SEL' ? 'bg-pink-100 text-pink-700' :
+                              'bg-blue-100 text-blue-700'
+                            }`}>
+                              {suggestion.bron}
+                            </span>
+                            <div className="flex">
+                              {[...Array(suggestion.relevantie)].map((_, i) => (
+                                <span key={i} className="text-yellow-400 text-xs">⭐</span>
+                              ))}
+                            </div>
                           </div>
+                          <p className="font-medium text-gray-900 text-xs">{suggestion.titel}</p>
                         </div>
-                        <p className="font-medium text-gray-900 text-sm">{suggestion.titel}</p>
-                        <p className="text-gray-600 text-xs mt-1">{suggestion.beschrijving}</p>
-                      </div>
-                      <div className="ml-2 text-blue-600 group-hover:text-blue-800">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
+                        <div className="ml-2 text-blue-600 group-hover:text-blue-800">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* Custom doel toevoegen */}
-              <div className="border-t border-blue-200 pt-3">
-                <h5 className="font-medium text-blue-900 mb-2">➕ Eigen lesdoel toevoegen</h5>
+                {/* Custom doel toevoegen - compacter */}
                 <div className="flex space-x-2">
                   <input
                     type="text"
                     value={customDoelenInput}
                     onChange={(e) => setCustomDoelenInput(e.target.value)}
-                    placeholder="Leerlingen kunnen..."
-                    className="flex-1 p-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Eigen lesdoel toevoegen..."
+                    className="flex-1 p-2 border border-blue-200 rounded text-sm"
                     onKeyPress={(e) => e.key === 'Enter' && addCustomDoel()}
                   />
                   <button
                     onClick={addCustomDoel}
                     disabled={!customDoelenInput.trim()}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+                    className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 text-sm"
                   >
-                    Toevoegen
+                    +
                   </button>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Huidige lesdoelen lijst */}
-          {lesdoelen.length > 0 && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <h4 className="font-medium text-green-900 mb-3">📝 Geselecteerde lesdoelen ({lesdoelen.length})</h4>
+            {/* Huidige lesdoelen - compacter */}
+            {lesdoelen.length > 0 ? (
               <div className="space-y-2">
                 {lesdoelen.map((doel, index) => (
-                  <div key={index} className="flex items-start justify-between p-3 bg-white border border-green-200 rounded-lg">
+                  <div key={index} className="flex items-start justify-between p-2 bg-green-50 border border-green-200 rounded">
                     <div className="flex-1">
                       <span className="text-green-700 font-medium text-sm">{index + 1}. </span>
                       <span className="text-gray-900 text-sm">{doel}</span>
@@ -510,71 +535,58 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
                     <button
                       onClick={() => removeLesdoel(index)}
                       className="ml-2 p-1 text-red-600 hover:bg-red-50 rounded"
-                      title="Verwijder lesdoel"
+                      title="Verwijder"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6m0 0L6 6l12 12" />
                       </svg>
                     </button>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {lesdoelen.length === 0 && (
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 text-sm">
-                ⚠️ Nog geen lesdoelen geselecteerd. Klik op "Slimme suggesties" hierboven of voeg handmatig toe.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Verfijnde tijdsduur */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-semibold text-gray-900">
-              Tijdsduur
-            </label>
-            <button
-              onClick={() => setShowTimePresets(!showTimePresets)}
-              className="flex items-center space-x-2 px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-all duration-200 text-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Snelle keuzes</span>
-            </button>
+            ) : (
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded">
+                <p className="text-yellow-800 text-sm">⚠️ Klik op "Slimme suggesties" om snel lesdoelen toe te voegen</p>
+              </div>
+            )}
           </div>
 
-          {/* Time presets */}
-          {showTimePresets && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <h4 className="font-medium text-green-900 mb-3">⏰ Veelgebruikte tijdsduren</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {/* Tijdsduur - compacter */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-bold text-gray-900">
+                ⏰ Tijdsduur: {formatTime(tijdsduur)}
+              </label>
+              <button
+                onClick={() => setShowTimePresets(!showTimePresets)}
+                className="flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200"
+              >
+                <span>🕐</span>
+                <span>Presets</span>
+              </button>
+            </div>
+
+            {showTimePresets && (
+              <div className="mb-3 grid grid-cols-3 gap-2">
                 {timePresets.map((preset) => (
                   <button
                     key={preset.value}
                     onClick={() => setTimePreset(preset.value)}
-                    className={`p-3 text-left border-2 rounded-lg transition-all duration-200 hover:shadow-md ${
+                    className={`p-2 text-left border rounded text-xs transition-all ${
                       tijdsduur === preset.value
                         ? 'border-green-500 bg-green-100'
                         : 'border-green-200 bg-white hover:border-green-300'
                     }`}
                   >
-                    <div className="font-medium text-green-900">{preset.label}</div>
-                    <div className="text-green-700 text-sm">{formatTime(preset.value)}</div>
-                    <div className="text-green-600 text-xs mt-1">{preset.description}</div>
+                    <div className="font-medium">{preset.label}</div>
+                    <div className="text-green-600">{formatTime(preset.value)}</div>
                   </button>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Custom tijdsduur slider - GEFIXTE VERSIE */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-4">
+            {/* Tijdsbalk */}
+            <div className="space-y-2">
               <input
                 type="range"
                 min="15"
@@ -582,106 +594,141 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
                 step="5"
                 value={tijdsduur}
                 onChange={(e) => setTijdsduur(Number(e.target.value))}
-                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 style={{
                   background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((tijdsduur - 15) / (120 - 15)) * 100}%, #E5E7EB ${((tijdsduur - 15) / (120 - 15)) * 100}%, #E5E7EB 100%)`
                 }}
               />
-              <div className="min-w-[100px] text-right">
-                <span className="font-bold text-xl text-blue-600">{formatTime(tijdsduur)}</span>
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>15 min</span>
+                <span>1u</span>
+                <span>2u</span>
               </div>
             </div>
-            
-            {/* Tijdsindicatoren - GEFIXTE VERSIE */}
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>15 min</span>
-              <span>1 uur</span>
-              <span>2 uur</span>
-            </div>
+          </div>
 
-            {/* Tijdsduur feedback */}
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <span className="text-blue-600">
-                  {tijdsduur <= 30 ? '⚡' : tijdsduur <= 60 ? '📚' : tijdsduur <= 90 ? '🔄' : '🎯'}
-                </span>
-                <span className="text-blue-800 text-sm font-medium">
-                  {tijdsduur <= 30 ? 'Korte, intensieve les' :
-                   tijdsduur <= 60 ? 'Standaard lesstructuur' :
-                   tijdsduur <= 90 ? 'Uitgebreide behandeling' :
-                   'Workshop of projectles'}
-                </span>
-              </div>
-              <p className="text-blue-700 text-xs mt-1">
-                {tijdsduur <= 30 ? 'Perfect voor instructie + korte oefening' :
-                 tijdsduur <= 60 ? 'Ruimte voor alle lesfases en differentiatie' :
-                 tijdsduur <= 90 ? 'Geschikt voor projectwerk en verdieping' :
-                 'Ideaal voor workshops en intensieve training'}
-              </p>
-            </div>
+          {/* Aanvullende wensen - compacter */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <label className="block text-sm font-bold text-gray-900 mb-2">
+              ✨ Aanvullende wensen (optioneel)
+            </label>
+            <textarea
+              value={aanvullendeWensen}
+              onChange={(e) => setAanvullendeWensen(e.target.value)}
+              placeholder="Extra aandacht voor zwakke rekenaars, gebruik van iPads, koppeling met vorige les..."
+              rows={2}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            />
           </div>
         </div>
 
-        {/* Aanvullende wensen */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Aanvullende wensen (optioneel)
-          </label>
-          <textarea
-            value={aanvullendeWensen}
-            onChange={(e) => setAanvullendeWensen(e.target.value)}
-            placeholder="Bijvoorbeeld: Extra aandacht voor zwakke rekenaars, gebruik van iPads, koppeling met vorige les..."
-            rows={3}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
+        {/* Rechter kolom: Acties en status */}
+        <div className="space-y-6">
+          {/* Genereer knop */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <button
+              onClick={generateLesplan}
+              disabled={!canGenerate || isGenerating}
+              className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-200 ${
+                canGenerate && !isGenerating
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {isGenerating ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Genereren...</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center space-x-2">
+                  <span>🚀</span>
+                  <span>Genereer Lesplan</span>
+                  <span className="text-sm opacity-75">({formatTime(tijdsduur)})</span>
+                </div>
+              )}
+            </button>
 
-        {/* Genereer Lesplan Knop */}
-        <div className="flex justify-center">
-          <button
-            onClick={generateLesplan}
-            disabled={!canGenerate || isGenerating}
-            className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 ${
-              canGenerate && !isGenerating
-                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            {isGenerating ? (
-              <div className="flex items-center space-x-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Lesplan wordt gegenereerd...</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>🚀 Genereer Lesplan ({formatTime(tijdsduur)})</span>
-              </div>
+            {!canGenerate && (
+              <p className="text-red-600 text-sm mt-2 text-center">
+                ⚠️ Vul onderwerp en minimaal 1 lesdoel in
+              </p>
             )}
-          </button>
+          </div>
+
+          {/* Status indicator */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+            <h4 className="font-bold text-gray-900 mb-3">📊 Lesplan Status</h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Onderwerp:</span>
+                <span className={lesonderwerp ? 'text-green-600' : 'text-red-600'}>
+                  {lesonderwerp ? '✅' : '❌'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Lesdoelen:</span>
+                <span className={lesdoelen.length > 0 ? 'text-green-600' : 'text-red-600'}>
+                  {lesdoelen.length > 0 ? `✅ ${lesdoelen.length}` : '❌ 0'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tijdsduur:</span>
+                <span className="text-blue-600">⏰ {formatTime(tijdsduur)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>SLO-doelen:</span>
+                <span className="text-purple-600">📚 {lesplanData.sloDoelen.length}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Werkvormen:</span>
+                <span className="text-orange-600">🎲 {lesplanData.werkvormen.length}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent lesplannen - compacter */}
+          {savedLesplannen.length > 0 && (
+            <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+              <h4 className="font-bold text-gray-900 mb-3">📁 Recent ({savedLesplannen.length})</h4>
+              <div className="space-y-2">
+                {savedLesplannen.slice(0, 3).map((lesplan) => (
+                  <div key={lesplan.id} className="p-2 bg-purple-50 border border-purple-200 rounded text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium text-purple-900 truncate">{lesplan.onderwerp}</div>
+                        <div className="text-purple-600">{lesplan.profiel?.groep} • {formatTime(lesplan.tijdsduur)}</div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setLesonderwerp(lesplan.onderwerp)
+                          setLesdoelen(lesplan.doelen)
+                          setTijdsduur(lesplan.tijdsduur)
+                        }}
+                        className="ml-2 px-2 py-1 bg-purple-600 text-white rounded text-xs hover:bg-purple-700"
+                      >
+                        Laden
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* AI Chat Interface */}
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-          <span className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-3">
-            <span className="text-white text-sm">🤖</span>
-          </span>
-          AI Lesplan Assistent
-        </h3>
-        
+      {/* AI Chat Interface - compacter */}
+      <div className="mt-8">
         <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg">
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium text-gray-900">Interactieve Lesplan Generator</h4>
+                <h4 className="font-bold text-gray-900">🤖 AI Lesplan Assistent</h4>
                 <p className="text-gray-600 text-sm">
                   {canGenerate 
-                    ? 'Klik op "Genereer Lesplan" hierboven om automatisch te starten, of stel vragen in de chat'
-                    : 'Vul eerst het lesonderwerp en minimaal één lesdoel in om te kunnen genereren'
+                    ? 'Klik "Genereer Lesplan" voor automatische generatie, of stel vragen in de chat'
+                    : 'Vul eerst de basisgegevens in om te kunnen genereren'
                   }
                 </p>
               </div>
@@ -691,7 +738,7 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-sm font-medium">Klaar voor generatie</span>
+                  <span className="text-sm font-medium">Klaar!</span>
                 </div>
               )}
             </div>
@@ -699,33 +746,22 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
           
           <TestChatBot ref={chatBotRef} />
         </div>
-        
-        {/* Instructies */}
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h4 className="font-medium text-blue-900 mb-2">💡 Hoe werkt het?</h4>
-          <div className="text-blue-800 text-sm space-y-1">
-            <p><strong>1. Automatisch:</strong> Klik op "Genereer Lesplan" voor een compleet lesplan op basis van al je selecties</p>
-            <p><strong>2. Interactief:</strong> Stel vragen in de chat zoals "Maak het lesplan meer interactief" of "Voeg meer differentiatie toe"</p>
-            <p><strong>3. Verfijnen:</strong> Vraag om aanpassingen: "Maak de introductie korter" of "Voeg een extra activiteit toe"</p>
-            <p><strong>4. Exporteren:</strong> Gebruik de export functies om je lesplan op te slaan als Word document</p>
-          </div>
-        </div>
       </div>
 
       {/* Navigation */}
-      <div className="pt-6 border-t border-gray-200">
+      <div className="mt-6 pt-4 border-t border-gray-200">
         <div className="flex justify-between items-center">
           <button
             onClick={onBack}
-            className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-all duration-200"
+            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-medium transition-all duration-200"
           >
-            ← Terug naar SEL-activiteiten
+            ← Terug
           </button>
           
           <div className="text-sm text-gray-600">
             {canGenerate 
-              ? `Alles ingevuld! Lesplan van ${formatTime(tijdsduur)} klaar om te genereren.`
-              : 'Vul de vereiste velden in om het lesplan te kunnen genereren.'
+              ? `✅ Klaar om ${formatTime(tijdsduur)} lesplan te genereren`
+              : '⚠️ Vul de vereiste velden in'
             }
           </div>
         </div>
