@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import MarkdownRenderer from './MarkdownRenderer'
 import CameraCapture from './CameraCapture'
 import ResponseActions from './ResponseActions'
@@ -16,23 +16,20 @@ interface UploadedFile {
   selected: boolean
 }
 
-export default function TestChatBot() {
+interface TestChatBotProps {
+  autoFocus?: boolean
+}
+
+const TestChatBot = forwardRef<any, TestChatBotProps>(({ autoFocus = false }, ref) => {
   const [message, setMessage] = useState('')
   const [response, setResponse] = useState('')
   const [streamingResponse, setStreamingResponse] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [isWaitingForStream, setIsWaitingForStream] = useState(false)
-  const [aiModel, setAiModel] = useState<'pro' | 'smart' | 'internet'>('smart') // 'pro' = 2.5 Pro, 'smart' = 2.5 Flash, 'internet' = 2.0
+  const [aiModel, setAiModel] = useState<'pro' | 'smart' | 'internet'>('smart')
   const [useGrounding, setUseGrounding] = useState(true)
   const [groundingData, setGroundingData] = useState<any>(null)
-
-  // Automatically enable grounding when Internet model is selected
-  useEffect(() => {
-    if (aiModel === 'internet') {
-      setUseGrounding(true)
-    }
-  }, [aiModel])
 
   const [isListening, setIsListening] = useState(false)
   const [uploadedContent, setUploadedContent] = useState('')
@@ -44,6 +41,37 @@ export default function TestChatBot() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const recognitionRef = useRef<any>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    sendMessage: async (messageText: string) => {
+      setMessage(messageText)
+      // Trigger the send after state update
+      setTimeout(() => {
+        sendMessageStreaming(messageText)
+      }, 100)
+    },
+    clearChat: () => {
+      setMessage('')
+      setResponse('')
+      setStreamingResponse('')
+      setUploadedFiles([])
+    }
+  }))
+
+  // Auto focus on textarea if requested
+  useEffect(() => {
+    if (autoFocus && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [autoFocus])
+
+  // Automatically enable grounding when Internet model is selected
+  useEffect(() => {
+    if (aiModel === 'internet') {
+      setUseGrounding(true)
+    }
+  }, [aiModel])
 
   // Setup paste event listeners
   useEffect(() => {
@@ -102,7 +130,6 @@ export default function TestChatBot() {
   }
 
   const handleCameraCapture = (imageData: string, blob: Blob) => {
-    // Add to file manager instead of single image
     const uploadedFile: UploadedFile = {
       id: generateFileId(),
       name: `Camera_${new Date().toLocaleTimeString()}.jpg`,
@@ -115,11 +142,6 @@ export default function TestChatBot() {
     }
     
     addUploadedFile(uploadedFile)
-  }
-
-  const removeCapturedImage = () => {
-    setCapturedImage('')
-    setImagePreview('')
   }
 
   const generateFileId = () => `file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
@@ -166,7 +188,6 @@ export default function TestChatBot() {
           reader.onload = (event) => {
             const result = event.target?.result as string
             
-            // Add to file manager instead of single image
             const uploadedFile: UploadedFile = {
               id: generateFileId(),
               name: file.name || 'Pasted Image',
@@ -194,21 +215,17 @@ export default function TestChatBot() {
       
       if (item.type === 'text/plain') {
         item.getAsString(async (pastedText) => {
-          // Check if it's a URL
           const urlRegex = /(https?:\/\/[^\s]+)/g
           const urls = pastedText.match(urlRegex)
           
           if (urls && urls.length === 1 && pastedText.trim() === urls[0]) {
-            // It's just a URL, try to fetch content
             e.preventDefault()
             try {
               await handleUrlPaste(urls[0])
             } catch (error) {
-              // If URL fetch fails, just paste as normal text
               setMessage(prev => prev + pastedText)
             }
           } else {
-            // Regular text paste - let it happen normally
             setPasteHint('📝 Tekst geplakt!')
             setTimeout(() => setPasteHint(''), 2000)
           }
@@ -222,18 +239,15 @@ export default function TestChatBot() {
     setPasteHint('🔗 URL wordt geladen...')
     
     try {
-      // Check if it's an image URL
       const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp']
       const isImageUrl = imageExtensions.some(ext => url.toLowerCase().includes(ext))
       
       if (isImageUrl) {
-        // Load image directly
         setCapturedImage(url)
         setImagePreview(url)
         setPasteHint('🖼️ Afbeelding URL geladen!')
         setTimeout(() => setPasteHint(''), 3000)
       } else {
-        // For other URLs, just add to message with instruction
         setMessage(prev => prev + (prev ? '\n\n' : '') + `🔗 URL: ${url}\n\nKun je deze link analyseren of de inhoud samenvatten?`)
         setPasteHint('🔗 URL toegevoegd!')
         setTimeout(() => setPasteHint(''), 3000)
@@ -269,7 +283,6 @@ export default function TestChatBot() {
       }
     }
 
-    // Also check for dropped text/URLs
     const text = e.dataTransfer.getData('text/plain')
     if (text && !files.length) {
       const urlRegex = /(https?:\/\/[^\s]+)/g
@@ -299,13 +312,11 @@ export default function TestChatBot() {
     const fileName = file.name.toLowerCase()
     const fileType = file.type.toLowerCase()
     
-    // Definieer ondersteunde formaten
     const imageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp']
     const documentFormats = ['docx', 'pdf', 'txt', 'md']
     const dataFormats = ['csv', 'json']
     const audioFormats = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'mp4', 'mpeg', 'mpga', 'webm']
     
-    // Check file extension
     const extension = fileName.split('.').pop() || ''
     const isImage = imageFormats.some(format => fileName.endsWith(`.${format}`)) || fileType.startsWith('image/')
     const isDocument = documentFormats.some(format => fileName.endsWith(`.${format}`))
@@ -319,7 +330,6 @@ export default function TestChatBot() {
 
     try {
       if (isImage) {
-        // Handle images - add to file manager
         const reader = new FileReader()
         reader.onload = (e) => {
           const result = e.target?.result as string
@@ -345,7 +355,6 @@ export default function TestChatBot() {
       }
       
       if (fileName.endsWith('.txt') || fileName.endsWith('.md')) {
-        // Handle text files - add to file manager
         const reader = new FileReader()
         reader.onload = (e) => {
           const content = e.target?.result as string
@@ -371,7 +380,6 @@ export default function TestChatBot() {
       }
       
       if (fileName.endsWith('.json')) {
-        // Handle JSON files - add to file manager
         const reader = new FileReader()
         reader.onload = (e) => {
           try {
@@ -400,7 +408,6 @@ export default function TestChatBot() {
       }
       
       if (isAudio) {
-        // Handle audio files - transcription via server
         setIsLoading(true)
         const formData = new FormData()
         formData.append('file', file)
@@ -418,7 +425,6 @@ export default function TestChatBot() {
 
           const data = await response.json()
           
-          // Add to file manager
           const uploadedFile: UploadedFile = {
             id: generateFileId(),
             name: file.name,
@@ -440,7 +446,6 @@ export default function TestChatBot() {
         return
       }
       
-      // Handle other documents (PDF, DOCX, CSV) via server upload
       const formData = new FormData()
       formData.append('file', file)
 
@@ -456,7 +461,6 @@ export default function TestChatBot() {
 
       const data = await response.json()
       
-      // Add to file manager
       const uploadedFile: UploadedFile = {
         id: generateFileId(),
         name: file.name,
@@ -480,10 +484,11 @@ export default function TestChatBot() {
   const currentStreamingResponseRef = useRef<string>('')
   const hasReceivedFirstTokenRef = useRef<boolean>(false)
 
-  const sendMessageStreaming = async () => {
+  const sendMessageStreaming = async (messageOverride?: string) => {
     const selectedFiles = getSelectedFiles()
+    const messageToSend = messageOverride || message
     
-    if (!message.trim() && selectedFiles.length === 0) return
+    if (!messageToSend.trim() && selectedFiles.length === 0) return
 
     // Reset states
     setIsWaitingForStream(true)
@@ -499,20 +504,18 @@ export default function TestChatBot() {
 
     try {
       const payload: any = { 
-        message, 
+        message: messageToSend, 
         useGrounding: aiModel === 'internet' ? useGrounding : false,
         aiModel 
       }
       
       // Add selected files to payload
       if (selectedFiles.length > 0) {
-        // Send ALL selected images for Gemini Vision
         const selectedImages = selectedFiles.filter(file => file.type === 'image')
         if (selectedImages.length > 0) {
           payload.images = selectedImages.map(img => img.content)
         }
         
-        // Add context from all selected files
         const fileContexts = selectedFiles.map((file, index) => {
           const fileType = file.type === 'image' ? 'Afbeelding' : 
                           file.type === 'document' ? 'Document' : 
@@ -524,8 +527,8 @@ export default function TestChatBot() {
           }
         }).join('\n\n---\n\n')
         
-        if (message.trim()) {
-          payload.message = `${message}\n\n=== BIJGEVOEGDE BESTANDEN ===\n${fileContexts}`
+        if (messageToSend.trim()) {
+          payload.message = `${messageToSend}\n\n=== BIJGEVOEGDE BESTANDEN ===\n${fileContexts}`
         } else {
           payload.message = `Analyseer de volgende bestanden:\n\n${fileContexts}`
         }
@@ -559,12 +562,10 @@ export default function TestChatBot() {
         
         if (done) break
 
-        // Decode chunk and add to buffer
         buffer += decoder.decode(value, { stream: true })
         
-        // Process complete lines
         const lines = buffer.split('\n')
-        buffer = lines.pop() || '' // Keep incomplete line in buffer
+        buffer = lines.pop() || ''
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -576,7 +577,6 @@ export default function TestChatBot() {
               }
               
               if (data.done) {
-                // Stream completed - save current streaming response as final response
                 setIsStreaming(false)
                 setIsWaitingForStream(false)
                 setResponse(currentStreamingResponseRef.current)
@@ -584,19 +584,15 @@ export default function TestChatBot() {
               }
               
               if (data.token) {
-                // First token - switch from waiting to streaming
                 if (!hasReceivedFirstTokenRef.current) {
                   hasReceivedFirstTokenRef.current = true
                   setIsWaitingForStream(false)
                   setIsStreaming(true)
-                  console.log('First token received, switching to streaming mode')
                 }
                 
-                // Add token to streaming response
                 const newResponse = currentStreamingResponseRef.current + data.token
                 currentStreamingResponseRef.current = newResponse
                 setStreamingResponse(newResponse)
-                console.log('Streaming token:', data.token, 'Total length:', newResponse.length)
               }
             } catch (parseError) {
               console.error('Error parsing streaming data:', parseError)
@@ -609,7 +605,6 @@ export default function TestChatBot() {
       console.error('Streaming error:', error)
       
       if (error.name === 'AbortError') {
-        // Request was aborted - keep current streaming response if available
         if (!currentStreamingResponseRef.current) {
           setResponse('Generatie gestopt door gebruiker.')
         } else {
@@ -623,77 +618,17 @@ export default function TestChatBot() {
       setIsWaitingForStream(false)
       setIsLoading(false)
       abortControllerRef.current = null
+      
+      // Clear message if not using override
+      if (!messageOverride) {
+        setMessage('')
+      }
     }
   }
 
   const stopGeneration = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
-    }
-  }
-
-  // Legacy non-streaming function (fallback)
-  const sendMessage = async () => {
-    const selectedFiles = getSelectedFiles()
-    
-    if (!message.trim() && selectedFiles.length === 0) return
-
-    setIsLoading(true)
-    try {
-      const payload: any = { 
-        message, 
-        useGrounding: aiModel === 'internet' ? useGrounding : false,
-        aiModel 
-      }
-      
-      // Add selected files to payload
-      if (selectedFiles.length > 0) {
-        // Send ALL selected images for Gemini Vision
-        const selectedImages = selectedFiles.filter(file => file.type === 'image')
-        if (selectedImages.length > 0) {
-          payload.images = selectedImages.map(img => img.content)
-        }
-        
-        // Add context from all selected files
-        const fileContexts = selectedFiles.map((file, index) => {
-          const fileType = file.type === 'image' ? 'Afbeelding' : 
-                          file.type === 'document' ? 'Document' : 
-                          file.type === 'audio' ? 'Audio Transcriptie' : 'Data'
-          if (file.type === 'image') {
-            return `[${fileType} ${index + 1}: ${file.name}]\n[Afbeelding bijgevoegd voor analyse]`
-          } else {
-            return `[${fileType}: ${file.name}]\n${file.content}`
-          }
-        }).join('\n\n---\n\n')
-        
-        if (message.trim()) {
-          payload.message = `${message}\n\n=== BIJGEVOEGDE BESTANDEN ===\n${fileContexts}`
-        } else {
-          payload.message = `Analyseer de volgende bestanden:\n\n${fileContexts}`
-        }
-      }
-
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.error || 'Er is een fout opgetreden')
-      }
-
-      const data = await res.json()
-      setResponse(data.response)
-      setGroundingData(data.grounding || null)
-    } catch (error) {
-      console.error('Error:', error)
-      setResponse('Error: ' + (error instanceof Error ? error.message : 'Onbekende fout'))
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -706,13 +641,6 @@ export default function TestChatBot() {
 
   return (
     <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
-      <h3 className="text-lg font-semibold text-purple-800 mb-4 flex items-center">
-        <span className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center mr-2">
-          <span className="text-white text-sm">💬</span>
-        </span>
-        Test je API Key
-      </h3>
-      
       <div className="space-y-4">
         {/* File Manager */}
         {uploadedFiles.length > 0 && (
@@ -830,20 +758,6 @@ export default function TestChatBot() {
                 </div>
                 <span className="text-xs text-purple-600 font-medium">PRO</span>
               </div>
-              
-              {/* Enhanced Tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 bg-gray-900 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 shadow-xl min-w-max">
-                <div className="text-center">
-                  <div className="font-semibold text-purple-300 mb-1">Gemini 2.5 Pro</div>
-                  <div className="text-xs text-gray-300 mb-2">Beste redeneren en complexe taken</div>
-                  <div className="text-xs border-t border-gray-700 pt-2">
-                    <span className="text-green-400">✓ Hoogste kwaliteit</span><br/>
-                    <span className="text-yellow-400">⚠ Langzaamste responses</span><br/>
-                    <span className="text-blue-400">🎯 Beste voor analyses</span>
-                  </div>
-                </div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-              </div>
             </div>
 
             {/* Smart Model */}
@@ -863,20 +777,6 @@ export default function TestChatBot() {
                   <span className="font-medium text-green-700">⚡ Slim</span>
                 </div>
                 <span className="text-xs text-green-600 font-medium">FLASH</span>
-              </div>
-              
-              {/* Enhanced Tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 bg-gray-900 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 shadow-xl min-w-max">
-                <div className="text-center">
-                  <div className="font-semibold text-green-300 mb-1">Gemini 2.5 Flash</div>
-                  <div className="text-xs text-gray-300 mb-2">Goede balans snelheid & kwaliteit</div>
-                  <div className="text-xs border-t border-gray-700 pt-2">
-                    <span className="text-green-400">✓ Snelle responses</span><br/>
-                    <span className="text-green-400">✓ Goede kwaliteit</span><br/>
-                    <span className="text-blue-400">🎯 Beste voor dagelijks gebruik</span>
-                  </div>
-                </div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
               </div>
             </div>
 
@@ -898,25 +798,8 @@ export default function TestChatBot() {
                 </div>
                 <span className="text-xs text-blue-600 font-medium">2.0</span>
               </div>
-              
-              {/* Enhanced Tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 px-4 py-3 bg-gray-900 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 shadow-xl min-w-max">
-                <div className="text-center">
-                  <div className="font-semibold text-blue-300 mb-1">Gemini 2.0 Flash</div>
-                  <div className="text-xs text-gray-300 mb-2">Toegang tot actuele informatie</div>
-                  <div className="text-xs border-t border-gray-700 pt-2">
-                    <span className="text-green-400">✓ Actuele info via Google</span><br/>
-                    <span className="text-green-400">✓ Bronvermelding</span><br/>
-                    <span className="text-yellow-400">⚠ Minder slim model</span><br/>
-                    <span className="text-blue-400">🎯 Automatisch Google Search</span>
-                  </div>
-                </div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
-              </div>
             </div>
           </div>
-
-
         </div>
 
         {/* Input Area */}
@@ -928,7 +811,6 @@ export default function TestChatBot() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}>
-
 
           {/* Drag & Drop Overlay */}
           {isDragOver && (
@@ -999,7 +881,7 @@ export default function TestChatBot() {
               
               {/* Send Button */}
               <button
-                onClick={sendMessageStreaming}
+                onClick={() => sendMessageStreaming()}
                 disabled={(isLoading || isStreaming || isWaitingForStream) || (!message.trim() && getSelectedFiles().length === 0)}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -1023,8 +905,6 @@ export default function TestChatBot() {
             </div>
           )}
         </div>
-
-
 
         {/* Response Area */}
         {isWaitingForStream && (
@@ -1161,7 +1041,6 @@ export default function TestChatBot() {
                 )}
               </div>
             )}
-
           </div>
         )}
 
@@ -1170,7 +1049,7 @@ export default function TestChatBot() {
           ref={fileInputRef}
           type="file"
           multiple
-                      accept=".docx,.pdf,.txt,.md,.csv,.json,.jpg,.jpeg,.png,.gif,.webp,.bmp,image/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.mp4,.mpeg,.mpga,.webm,audio/*"
+          accept=".docx,.pdf,.txt,.md,.csv,.json,.jpg,.jpeg,.png,.gif,.webp,.bmp,image/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.mp4,.mpeg,.mpga,.webm,audio/*"
           onChange={(e) => {
             const files = e.target.files
             if (files && files.length > 0) {
@@ -1180,7 +1059,6 @@ export default function TestChatBot() {
                 handleMultipleFileUpload(files)
               }
             }
-            // Reset input value to allow selecting the same files again
             e.target.value = ''
           }}
           className="hidden"
@@ -1188,4 +1066,8 @@ export default function TestChatBot() {
       </div>
     </div>
   )
-}
+})
+
+TestChatBot.displayName = 'TestChatBot'
+
+export default TestChatBot

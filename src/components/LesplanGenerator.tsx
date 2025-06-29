@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { LesplanData } from './LesWizard'
 import TestChatBot from './TestChatBot'
 
@@ -14,8 +14,11 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
   const [lesdoelen, setLesdoelen] = useState<string[]>([''])
   const [tijdsduur, setTijdsduur] = useState(45)
   const [aanvullendeWensen, setAanvullendeWensen] = useState('')
-  const [isGenerating, setIsGenerating] = useState(false)
   const [savedLesplannen, setSavedLesplannen] = useState<any[]>([])
+  const [isGenerating, setIsGenerating] = useState(false)
+  
+  // Ref voor de chat component
+  const chatBotRef = useRef<any>(null)
 
   // Laad opgeslagen lesplannen
   const loadSavedLesplannen = () => {
@@ -74,21 +77,6 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
     }
   }
 
-  const generateLesplan = () => {
-    if (!lesonderwerp.trim() || !lesdoelen.some(doel => doel.trim())) {
-      alert('Vul minimaal een lesonderwerp en één lesdoel in.')
-      return
-    }
-
-    setIsGenerating(true)
-    
-    // Hier zou de AI-generatie plaatsvinden
-    // Voor nu simuleren we dit
-    setTimeout(() => {
-      setIsGenerating(false)
-    }, 3000)
-  }
-
   const createPrompt = () => {
     const profiel = lesplanData.profiel
     const sloDoelen = lesplanData.sloDoelen
@@ -141,10 +129,37 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
     return prompt
   }
 
+  // Automatisch lesplan genereren
+  const generateLesplan = async () => {
+    if (!lesonderwerp.trim() || !lesdoelen.some(doel => doel.trim())) {
+      alert('Vul minimaal een lesonderwerp en één lesdoel in.')
+      return
+    }
+
+    setIsGenerating(true)
+    
+    try {
+      const prompt = createPrompt()
+      
+      // Stuur de prompt automatisch naar de chat
+      if (chatBotRef.current && chatBotRef.current.sendMessage) {
+        await chatBotRef.current.sendMessage(prompt)
+      }
+      
+    } catch (error) {
+      console.error('Fout bij genereren lesplan:', error)
+      alert('Er is een fout opgetreden bij het genereren van het lesplan.')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
   // Laad opgeslagen lesplannen bij component mount
   useState(() => {
     setSavedLesplannen(loadSavedLesplannen())
   })
+
+  const canGenerate = lesonderwerp.trim() && lesdoelen.some(doel => doel.trim())
 
   return (
     <div className="p-8">
@@ -312,51 +327,81 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
+
+        {/* Genereer Lesplan Knop */}
+        <div className="flex justify-center">
+          <button
+            onClick={generateLesplan}
+            disabled={!canGenerate || isGenerating}
+            className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 ${
+              canGenerate && !isGenerating
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:scale-105'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {isGenerating ? (
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span>Lesplan wordt gegenereerd...</span>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>🚀 Genereer Lesplan</span>
+              </div>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* AI Chat Interface */}
       <div className="mb-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Lesplan genereren met AI</h3>
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <TestChatBot />
-        </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          <span className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-sm">🤖</span>
+          </span>
+          AI Lesplan Assistent
+        </h3>
         
-        {/* Pre-filled prompt button */}
-        {lesonderwerp && lesdoelen.some(doel => doel.trim()) && (
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h4 className="font-medium text-blue-900 mb-2">Klaar om te genereren?</h4>
-            <p className="text-blue-800 text-sm mb-3">
-              Klik op de knop hieronder om automatisch een gedetailleerde prompt in te vullen gebaseerd op al je selecties.
-            </p>
-            <div className="flex space-x-3">
-              <button
-                onClick={() => {
-                  const prompt = createPrompt()
-                  // Hier zou je de prompt naar de chat component kunnen sturen
-                  // Voor nu kopiëren we het naar het klembord
-                  navigator.clipboard.writeText(prompt)
-                  alert('Prompt gekopieerd naar klembord! Plak deze in de chat hierboven.')
-                }}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-all duration-200"
-              >
-                📋 Genereer lesplan prompt
-              </button>
-              
-              <button
-                onClick={() => {
-                  // Simuleer het opslaan van een lesplan
-                  const mockContent = `# Lesplan: ${lesonderwerp}\n\nDit is een voorbeeld lesplan gegenereerd op ${new Date().toLocaleString('nl-NL')}`
-                  if (saveLesplan(mockContent)) {
-                    alert('Lesplan opgeslagen!')
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-medium text-gray-900">Interactieve Lesplan Generator</h4>
+                <p className="text-gray-600 text-sm">
+                  {canGenerate 
+                    ? 'Klik op "Genereer Lesplan" hierboven om automatisch te starten, of stel vragen in de chat'
+                    : 'Vul eerst het lesonderwerp en minimaal één lesdoel in om te kunnen genereren'
                   }
-                }}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-all duration-200"
-              >
-                💾 Lesplan opslaan
-              </button>
+                </p>
+              </div>
+              
+              {canGenerate && (
+                <div className="flex items-center space-x-2 text-green-600">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-sm font-medium">Klaar voor generatie</span>
+                </div>
+              )}
             </div>
           </div>
-        )}
+          
+          <TestChatBot ref={chatBotRef} />
+        </div>
+        
+        {/* Instructies */}
+        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h4 className="font-medium text-blue-900 mb-2">💡 Hoe werkt het?</h4>
+          <div className="text-blue-800 text-sm space-y-1">
+            <p><strong>1. Automatisch:</strong> Klik op "Genereer Lesplan" voor een compleet lesplan op basis van al je selecties</p>
+            <p><strong>2. Interactief:</strong> Stel vragen in de chat zoals "Maak het lesplan meer interactief" of "Voeg meer differentiatie toe"</p>
+            <p><strong>3. Verfijnen:</strong> Vraag om aanpassingen: "Maak de introductie korter" of "Voeg een extra activiteit toe"</p>
+            <p><strong>4. Exporteren:</strong> Gebruik de export functies om je lesplan op te slaan als Word document</p>
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -370,7 +415,10 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
           </button>
           
           <div className="text-sm text-gray-600">
-            Gebruik de AI-chat hierboven om je lesplan te genereren
+            {canGenerate 
+              ? 'Alles ingevuld! Klik op "Genereer Lesplan" om te beginnen.'
+              : 'Vul de vereiste velden in om het lesplan te kunnen genereren.'
+            }
           </div>
         </div>
       </div>
