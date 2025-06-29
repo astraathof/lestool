@@ -16,6 +16,45 @@ export interface SLODoel {
 
 export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
   nederlands: {
+    'groep1': [
+      {
+        id: 'nl_1_1',
+        code: 'NL.1.1',
+        titel: 'Mondeling taalgebruik basis',
+        beschrijving: 'De leerling kan zich mondeling uiten en begrijpt eenvoudige instructies',
+        subdoelen: [
+          'Luisteren naar korte verhalen',
+          'Eenvoudige vragen beantwoorden',
+          'Gevoelens uiten',
+          'Basiswoordenschat gebruiken',
+          'Klanken herkennen'
+        ],
+        groep: 'groep1',
+        vakgebied: 'nederlands',
+        vervolgend: ['nl_2_1'],
+        kernwoorden: ['luisteren', 'spreken', 'woordenschat', 'klanken']
+      }
+    ],
+    'groep2': [
+      {
+        id: 'nl_2_1',
+        code: 'NL.2.1',
+        titel: 'Mondeling taalgebruik uitgebreid',
+        beschrijving: 'De leerling kan zich duidelijker mondeling uiten en begrijpt complexere instructies',
+        subdoelen: [
+          'Luisteren naar langere verhalen',
+          'Uitgebreide vragen stellen en beantwoorden',
+          'Gevoelens en behoeften duidelijk uiten',
+          'Woordenschat uitbreiden',
+          'Lettergrepen herkennen'
+        ],
+        groep: 'groep2',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_1_1'],
+        vervolgend: ['nl_3_1'],
+        kernwoorden: ['luisteren', 'spreken', 'woordenschat', 'lettergrepen']
+      }
+    ],
     'groep1-2': [
       {
         id: 'nl_12_1',
@@ -67,6 +106,46 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         vakgebied: 'nederlands',
         vervolgend: ['nl_34_3'],
         kernwoorden: ['schrijven', 'letters', 'motoriek', 'naam']
+      }
+    ],
+    'groep3': [
+      {
+        id: 'nl_3_1',
+        code: 'NL.3.1',
+        titel: 'Technisch lezen begin',
+        beschrijving: 'De leerling leert letters en klanken koppelen en eerste woorden lezen',
+        subdoelen: [
+          'Letters en klanken koppelen',
+          'Eenvoudige woorden lezen',
+          'Korte zinnen lezen',
+          'Leesrichting volgen',
+          'Leestekens herkennen'
+        ],
+        groep: 'groep3',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_2_1'],
+        vervolgend: ['nl_4_1'],
+        kernwoorden: ['lezen', 'letters', 'klanken', 'woorden']
+      }
+    ],
+    'groep4': [
+      {
+        id: 'nl_4_1',
+        code: 'NL.4.1',
+        titel: 'Technisch lezen vloeiend',
+        beschrijving: 'De leerling kan woorden en zinnen vlot en accuraat lezen',
+        subdoelen: [
+          'Woorden vlot herkennen',
+          'Zinnen vloeiend lezen',
+          'Leestempo ontwikkelen',
+          'Expressief lezen',
+          'Verschillende tekstsoorten herkennen'
+        ],
+        groep: 'groep4',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_3_1'],
+        vervolgend: ['nl_5_1'],
+        kernwoorden: ['lezen', 'woorden', 'zinnen', 'vlot', 'tempo']
       }
     ],
     'groep3-4': [
@@ -143,6 +222,46 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         kernwoorden: ['spreken', 'luisteren', 'communiceren', 'gesprek']
       }
     ],
+    'groep5': [
+      {
+        id: 'nl_5_1',
+        code: 'NL.5.1',
+        titel: 'Voortgezet lezen',
+        beschrijving: 'De leerling leest verschillende tekstsoorten met begrip',
+        subdoelen: [
+          'Complexere woorden lezen',
+          'Verschillende tekstsoorten herkennen',
+          'Leessnelheid verhogen',
+          'Informatie zoeken',
+          'Leesstrategieën toepassen'
+        ],
+        groep: 'groep5',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_4_1'],
+        vervolgend: ['nl_6_1'],
+        kernwoorden: ['lezen', 'tekstsoorten', 'snelheid', 'informatie']
+      }
+    ],
+    'groep6': [
+      {
+        id: 'nl_6_1',
+        code: 'NL.6.1',
+        titel: 'Gevorderd lezen',
+        beschrijving: 'De leerling leest verschillende tekstsoorten vlot en met begrip',
+        subdoelen: [
+          'Tekststructuur herkennen',
+          'Kritisch lezen',
+          'Samenvatten',
+          'Verschillende leesdoelen hanteren',
+          'Expressief voorlezen'
+        ],
+        groep: 'groep6',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_5_1'],
+        vervolgend: ['nl_7_1'],
+        kernwoorden: ['tekststructuur', 'kritisch', 'samenvatten', 'leesdoelen']
+      }
+    ],
     'groep5-6': [
       {
         id: 'nl_56_1',
@@ -217,6 +336,45 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         kernwoorden: ['presenteren', 'argumenteren', 'discussie', 'feedback']
       }
     ],
+    'groep7': [
+      {
+        id: 'nl_7_1',
+        code: 'NL.7.1',
+        titel: 'Complex lezen',
+        beschrijving: 'De leerling leest complexe teksten met begrip en kan deze analyseren',
+        subdoelen: [
+          'Complexe teksten begrijpen',
+          'Kritisch lezen en beoordelen',
+          'Verschillende leesdoelen hanteren',
+          'Literatuur waarderen',
+          'Leesstrategieën bewust inzetten'
+        ],
+        groep: 'groep7',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_6_1'],
+        vervolgend: ['nl_8_1'],
+        kernwoorden: ['complex', 'kritisch', 'literatuur', 'analyse']
+      }
+    ],
+    'groep8': [
+      {
+        id: 'nl_8_1',
+        code: 'NL.8.1',
+        titel: 'Gevorderd lezen en schrijven',
+        beschrijving: 'De leerling beheerst alle aspecten van lezen en schrijven op basisniveau',
+        subdoelen: [
+          'Alle tekstsoorten beheersen',
+          'Argumentatieve teksten schrijven',
+          'Creatief schrijven',
+          'Formele communicatie',
+          'Onderzoeksvaardigheden'
+        ],
+        groep: 'groep8',
+        vakgebied: 'nederlands',
+        voorafgaand: ['nl_7_1'],
+        kernwoorden: ['tekstsoorten', 'argumentatief', 'creatief', 'onderzoek']
+      }
+    ],
     'groep7-8': [
       {
         id: 'nl_78_1',
@@ -272,6 +430,45 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
     ]
   },
   rekenen: {
+    'groep1': [
+      {
+        id: 'rek_1_1',
+        code: 'RE.1.1',
+        titel: 'Getalbegrip tot 10',
+        beschrijving: 'De leerling ontwikkelt getalbegrip en kan tellen tot 10',
+        subdoelen: [
+          'Tellen tot 10',
+          'Hoeveelheden tot 5 vergelijken',
+          'Getalsymbolen 1-5 herkennen',
+          'Ordenen en rangschikken',
+          'Meer, minder begrip'
+        ],
+        groep: 'groep1',
+        vakgebied: 'rekenen',
+        vervolgend: ['rek_2_1'],
+        kernwoorden: ['tellen', 'getallen', 'vergelijken', 'hoeveelheid']
+      }
+    ],
+    'groep2': [
+      {
+        id: 'rek_2_1',
+        code: 'RE.2.1',
+        titel: 'Getalbegrip tot 20',
+        beschrijving: 'De leerling ontwikkelt getalbegrip en kan tellen tot 20',
+        subdoelen: [
+          'Tellen tot 20',
+          'Hoeveelheden tot 10 vergelijken',
+          'Getalsymbolen tot 10 herkennen',
+          'Ordenen en rangschikken',
+          'Eerste rekenbewerkingen'
+        ],
+        groep: 'groep2',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_1_1'],
+        vervolgend: ['rek_3_1'],
+        kernwoorden: ['tellen', 'getallen', 'vergelijken', 'rekenen']
+      }
+    ],
     'groep1-2': [
       {
         id: 'rek_12_1',
@@ -323,6 +520,46 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         vakgebied: 'rekenen',
         vervolgend: ['rek_34_1'],
         kernwoorden: ['optellen', 'aftrekken', 'splitsen', 'hoofdrekenen']
+      }
+    ],
+    'groep3': [
+      {
+        id: 'rek_3_1',
+        code: 'RE.3.1',
+        titel: 'Getallen tot 50',
+        beschrijving: 'De leerling beheerst getallen tot 50 en kan ermee rekenen',
+        subdoelen: [
+          'Getalbegrip tot 50',
+          'Optellen en aftrekken tot 20',
+          'Tafels van 1, 2, 5 beginnen',
+          'Hoofdrekenen uitbreiden',
+          'Rekenstrategieën toepassen'
+        ],
+        groep: 'groep3',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_2_1'],
+        vervolgend: ['rek_4_1'],
+        kernwoorden: ['50', 'tafels', 'strategieën', 'bewerkingen']
+      }
+    ],
+    'groep4': [
+      {
+        id: 'rek_4_1',
+        code: 'RE.4.1',
+        titel: 'Getallen tot 100',
+        beschrijving: 'De leerling beheerst getallen tot 100 en alle basisbewerkingen',
+        subdoelen: [
+          'Getalbegrip tot 100',
+          'Optellen en aftrekken tot 100',
+          'Tafels van 1, 2, 5, 10',
+          'Vermenigvuldigen en delen',
+          'Woordsommen maken'
+        ],
+        groep: 'groep4',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_3_1'],
+        vervolgend: ['rek_5_1'],
+        kernwoorden: ['100', 'tafels', 'vermenigvuldigen', 'delen']
       }
     ],
     'groep3-4': [
@@ -378,6 +615,46 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         vakgebied: 'rekenen',
         vervolgend: ['rek_56_1'],
         kernwoorden: ['tafels', 'vermenigvuldigen', 'delen', 'woordsommen']
+      }
+    ],
+    'groep5': [
+      {
+        id: 'rek_5_1',
+        code: 'RE.5.1',
+        titel: 'Getallen tot 1000',
+        beschrijving: 'De leerling beheerst getallen tot 1000 en uitgebreide bewerkingen',
+        subdoelen: [
+          'Getalbegrip tot 1000',
+          'Alle tafels tot 10',
+          'Schriftelijk rekenen beginnen',
+          'Breuken introductie',
+          'Kommagetallen kennismaken'
+        ],
+        groep: 'groep5',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_4_1'],
+        vervolgend: ['rek_6_1'],
+        kernwoorden: ['1000', 'schriftelijk', 'breuken', 'komma']
+      }
+    ],
+    'groep6': [
+      {
+        id: 'rek_6_1',
+        code: 'RE.6.1',
+        titel: 'Getallen tot 10.000',
+        beschrijving: 'De leerling beheerst getallen tot 10.000 en complexere bewerkingen',
+        subdoelen: [
+          'Getalbegrip tot 10.000',
+          'Schriftelijk rekenen uitbreiden',
+          'Breuken vergelijken',
+          'Kommagetallen rekenen',
+          'Verhoudingen begrijpen'
+        ],
+        groep: 'groep6',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_5_1'],
+        vervolgend: ['rek_7_1'],
+        kernwoorden: ['10000', 'schriftelijk', 'breuken', 'verhoudingen']
       }
     ],
     'groep5-6': [
@@ -436,6 +713,45 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         kernwoorden: ['oppervlakte', 'omtrek', 'ruimtelijk', 'coördinaten']
       }
     ],
+    'groep7': [
+      {
+        id: 'rek_7_1',
+        code: 'RE.7.1',
+        titel: 'Complexe bewerkingen',
+        beschrijving: 'De leerling beheerst complexe rekenbewerkingen en probleemoplossing',
+        subdoelen: [
+          'Kommagetallen beheersen',
+          'Complexe breuken',
+          'Oppervlakte en inhoud',
+          'Probleemoplossend rekenen',
+          'Rekenregels toepassen'
+        ],
+        groep: 'groep7',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_6_1'],
+        vervolgend: ['rek_8_1'],
+        kernwoorden: ['kommagetallen', 'breuken', 'inhoud', 'problemen']
+      }
+    ],
+    'groep8': [
+      {
+        id: 'rek_8_1',
+        code: 'RE.8.1',
+        titel: 'Gevorderde wiskunde',
+        beschrijving: 'De leerling beheerst alle rekenvaardigheden op basisniveau',
+        subdoelen: [
+          'Alle bewerkingen automatiseren',
+          'Statistiek en kansrekening',
+          'Algebra introductie',
+          'Meetkunde uitbreiden',
+          'Wiskundig redeneren'
+        ],
+        groep: 'groep8',
+        vakgebied: 'rekenen',
+        voorafgaand: ['rek_7_1'],
+        kernwoorden: ['automatiseren', 'statistiek', 'algebra', 'redeneren']
+      }
+    ],
     'groep7-8': [
       {
         id: 'rek_78_1',
@@ -470,410 +786,6 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         vakgebied: 'rekenen',
         voorafgaand: ['rek_56_2', 'rek_56_3'],
         kernwoorden: ['statistiek', 'kans', 'onderzoek', 'conclusies']
-      }
-    ]
-  },
-  burgerschap: {
-    'groep1-2': [
-      {
-        id: 'burg_12_1',
-        code: 'BU.1.1',
-        titel: 'Zelfbeeld en identiteit',
-        beschrijving: 'De leerling ontwikkelt een positief zelfbeeld en kent eigen kenmerken',
-        subdoelen: [
-          'Eigen naam en leeftijd kennen',
-          'Familieleden benoemen',
-          'Gevoelens herkennen',
-          'Eigen voorkeuren uiten',
-          'Verschillen en overeenkomsten zien'
-        ],
-        groep: 'groep1-2',
-        vakgebied: 'burgerschap',
-        vervolgend: ['burg_34_1'],
-        kernwoorden: ['identiteit', 'zelfbeeld', 'familie', 'gevoelens']
-      },
-      {
-        id: 'burg_12_2',
-        code: 'BU.1.2',
-        titel: 'Samenleven in de groep',
-        beschrijving: 'De leerling leert samen te leven en te spelen met anderen',
-        subdoelen: [
-          'Afspraken maken en nakomen',
-          'Samen spelen',
-          'Conflicten oplossen',
-          'Hulp vragen en aanbieden',
-          'Respect tonen voor anderen'
-        ],
-        groep: 'groep1-2',
-        vakgebied: 'burgerschap',
-        vervolgend: ['burg_34_2'],
-        kernwoorden: ['samenleven', 'afspraken', 'spelen', 'respect']
-      }
-    ],
-    'groep3-4': [
-      {
-        id: 'burg_34_1',
-        code: 'BU.2.1',
-        titel: 'Identiteit en diversiteit',
-        beschrijving: 'De leerling begrijpt diversiteit en ontwikkelt respect voor verschillen',
-        subdoelen: [
-          'Eigen achtergrond beschrijven',
-          'Verschillende culturen kennen',
-          'Vooroordelen herkennen',
-          'Gelijkwaardigheid begrijpen',
-          'Discriminatie herkennen'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_12_1'],
-        vervolgend: ['burg_56_1'],
-        kernwoorden: ['diversiteit', 'culturen', 'gelijkwaardigheid', 'discriminatie']
-      },
-      {
-        id: 'burg_34_2',
-        code: 'BU.2.2',
-        titel: 'Democratie en participatie',
-        beschrijving: 'De leerling leert democratische principes en participeert in de klas',
-        subdoelen: [
-          'Klassenregels opstellen',
-          'Stemmen en verkiezingen',
-          'Meningen uiten',
-          'Compromissen sluiten',
-          'Verantwoordelijkheid nemen'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_12_2'],
-        vervolgend: ['burg_56_2'],
-        kernwoorden: ['democratie', 'stemmen', 'meningen', 'verantwoordelijkheid']
-      },
-      {
-        id: 'burg_34_3',
-        code: 'BU.2.3',
-        titel: 'Rechten en plichten',
-        beschrijving: 'De leerling leert over kinderrechten en eigen plichten',
-        subdoelen: [
-          'Kinderrechten kennen',
-          'Eigen plichten begrijpen',
-          'Regels en wetten',
-          'Eerlijkheid en rechtvaardigheid',
-          'Hulp zoeken bij problemen'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'burgerschap',
-        vervolgend: ['burg_56_3'],
-        kernwoorden: ['rechten', 'plichten', 'regels', 'rechtvaardigheid']
-      }
-    ],
-    'groep5-6': [
-      {
-        id: 'burg_56_1',
-        code: 'BU.3.1',
-        titel: 'Pluriforme samenleving',
-        beschrijving: 'De leerling begrijpt de pluriforme Nederlandse samenleving',
-        subdoelen: [
-          'Verschillende levensbeschouwingen',
-          'Culturele diversiteit waarderen',
-          'Integratie en inburgering',
-          'Sociale cohesie',
-          'Interculturele communicatie'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_34_1'],
-        vervolgend: ['burg_78_1'],
-        kernwoorden: ['pluriform', 'levensbeschouwing', 'integratie', 'cohesie']
-      },
-      {
-        id: 'burg_56_2',
-        code: 'BU.3.2',
-        titel: 'Rechtsstaat en democratie',
-        beschrijving: 'De leerling begrijpt de werking van democratie en rechtsstaat',
-        subdoelen: [
-          'Verkiezingen en regering',
-          'Wetten en handhaving',
-          'Rechterlijke macht',
-          'Grondwet en grondrechten',
-          'Lokale democratie'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_34_2'],
-        vervolgend: ['burg_78_2'],
-        kernwoorden: ['rechtsstaat', 'verkiezingen', 'grondwet', 'democratie']
-      },
-      {
-        id: 'burg_56_3',
-        code: 'BU.3.3',
-        titel: 'Sociale vaardigheden',
-        beschrijving: 'De leerling ontwikkelt sociale vaardigheden voor het samenleven',
-        subdoelen: [
-          'Empathie en perspectief nemen',
-          'Conflicthantering',
-          'Samenwerken in groepen',
-          'Leiderschap en volgerschap',
-          'Sociale media en digitaal gedrag'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_34_3'],
-        vervolgend: ['burg_78_3'],
-        kernwoorden: ['empathie', 'conflict', 'samenwerken', 'digitaal']
-      }
-    ],
-    'groep7-8': [
-      {
-        id: 'burg_78_1',
-        code: 'BU.4.1',
-        titel: 'Nationale identiteit',
-        beschrijving: 'De leerling begrijpt Nederlandse identiteit en Europese context',
-        subdoelen: [
-          'Nederlandse geschiedenis en cultuur',
-          'Nationale symbolen en tradities',
-          'Europese Unie',
-          'Internationale samenwerking',
-          'Globalisering'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_56_1'],
-        kernwoorden: ['nationale identiteit', 'geschiedenis', 'Europa', 'globalisering']
-      },
-      {
-        id: 'burg_78_2',
-        code: 'BU.4.2',
-        titel: 'Politieke participatie',
-        beschrijving: 'De leerling begrijpt politieke processen en kan participeren',
-        subdoelen: [
-          'Politieke partijen en standpunten',
-          'Belangenbehartiging',
-          'Maatschappelijke organisaties',
-          'Actief burgerschap',
-          'Kritisch mediagebruik'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_56_2'],
-        kernwoorden: ['politiek', 'participatie', 'belangenbehartiging', 'media']
-      },
-      {
-        id: 'burg_78_3',
-        code: 'BU.4.3',
-        titel: 'Maatschappelijke vraagstukken',
-        beschrijving: 'De leerling kan nadenken over complexe maatschappelijke vraagstukken',
-        subdoelen: [
-          'Duurzaamheid en milieu',
-          'Sociale ongelijkheid',
-          'Technologie en privacy',
-          'Ethische dilemma\'s',
-          'Toekomstperspectief'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'burgerschap',
-        voorafgaand: ['burg_56_3'],
-        kernwoorden: ['duurzaamheid', 'ongelijkheid', 'technologie', 'ethiek']
-      }
-    ]
-  },
-  wereldoriëntatie: {
-    'groep1-2': [
-      {
-        id: 'wo_12_1',
-        code: 'WO.1.1',
-        titel: 'Jezelf en je omgeving',
-        beschrijving: 'De leerling verkent de directe leefomgeving',
-        subdoelen: [
-          'Eigen lichaam kennen',
-          'Familie en thuis',
-          'School en klas',
-          'Buurt verkennen',
-          'Seizoenen herkennen'
-        ],
-        groep: 'groep1-2',
-        vakgebied: 'wereldoriëntatie',
-        vervolgend: ['wo_34_1'],
-        kernwoorden: ['lichaam', 'familie', 'school', 'buurt', 'seizoenen']
-      },
-      {
-        id: 'wo_12_2',
-        code: 'WO.1.2',
-        titel: 'Natuur en techniek',
-        beschrijving: 'De leerling ontdekt de natuur en eenvoudige techniek',
-        subdoelen: [
-          'Dieren en planten herkennen',
-          'Water, lucht, vuur',
-          'Eenvoudige werktuigen',
-          'Materialen onderzoeken',
-          'Zintuigen gebruiken'
-        ],
-        groep: 'groep1-2',
-        vakgebied: 'wereldoriëntatie',
-        vervolgend: ['wo_34_2'],
-        kernwoorden: ['natuur', 'dieren', 'planten', 'werktuigen', 'zintuigen']
-      }
-    ],
-    'groep3-4': [
-      {
-        id: 'wo_34_1',
-        code: 'WO.2.1',
-        titel: 'Mens en samenleving',
-        beschrijving: 'De leerling leert over verschillende samenlevingsvormen',
-        subdoelen: [
-          'Verschillende gezinnen',
-          'Beroepen en werk',
-          'Winkels en geld',
-          'Vervoer en verkeer',
-          'Feesten en tradities'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_12_1'],
-        vervolgend: ['wo_56_1'],
-        kernwoorden: ['gezin', 'beroepen', 'geld', 'vervoer', 'tradities']
-      },
-      {
-        id: 'wo_34_2',
-        code: 'WO.2.2',
-        titel: 'Natuur en milieu',
-        beschrijving: 'De leerling onderzoekt de natuur en leert over milieu',
-        subdoelen: [
-          'Levenscyclus van dieren',
-          'Planten verzorgen',
-          'Weer en klimaat',
-          'Milieuvriendelijk gedrag',
-          'Recycling en afval'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_12_2'],
-        vervolgend: ['wo_56_2'],
-        kernwoorden: ['levenscyclus', 'planten', 'weer', 'milieu', 'recycling']
-      },
-      {
-        id: 'wo_34_3',
-        code: 'WO.2.3',
-        titel: 'Tijd en geschiedenis',
-        beschrijving: 'De leerling ontwikkelt tijdsbesef en leert over het verleden',
-        subdoelen: [
-          'Dag, week, maand, jaar',
-          'Eigen geschiedenis',
-          'Vroeger en nu vergelijken',
-          'Oude voorwerpen',
-          'Verhalen uit het verleden'
-        ],
-        groep: 'groep3-4',
-        vakgebied: 'wereldoriëntatie',
-        vervolgend: ['wo_56_3'],
-        kernwoorden: ['tijd', 'geschiedenis', 'vroeger', 'voorwerpen', 'verleden']
-      }
-    ],
-    'groep5-6': [
-      {
-        id: 'wo_56_1',
-        code: 'WO.3.1',
-        titel: 'Nederland en Europa',
-        beschrijving: 'De leerling leert over Nederland en de Europese context',
-        subdoelen: [
-          'Nederlandse provincies',
-          'Hoofdsteden en rivieren',
-          'Nederlandse geschiedenis',
-          'Europese landen',
-          'EU en samenwerking'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_34_1'],
-        vervolgend: ['wo_78_1'],
-        kernwoorden: ['Nederland', 'provincies', 'geschiedenis', 'Europa', 'EU']
-      },
-      {
-        id: 'wo_56_2',
-        code: 'WO.3.2',
-        titel: 'Natuur en technologie',
-        beschrijving: 'De leerling onderzoekt natuurverschijnselen en technologie',
-        subdoelen: [
-          'Ecosystemen begrijpen',
-          'Energie en kracht',
-          'Technische uitvindingen',
-          'Digitale technologie',
-          'Duurzame ontwikkeling'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_34_2'],
-        vervolgend: ['wo_78_2'],
-        kernwoorden: ['ecosystemen', 'energie', 'uitvindingen', 'digitaal', 'duurzaam']
-      },
-      {
-        id: 'wo_56_3',
-        code: 'WO.3.3',
-        titel: 'Geschiedenis van Nederland',
-        beschrijving: 'De leerling leert over belangrijke perioden in de Nederlandse geschiedenis',
-        subdoelen: [
-          'Prehistorie en Romeinen',
-          'Middeleeuwen',
-          'Gouden Eeuw',
-          'Industriële revolutie',
-          'Twintigste eeuw'
-        ],
-        groep: 'groep5-6',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_34_3'],
-        vervolgend: ['wo_78_3'],
-        kernwoorden: ['prehistorie', 'middeleeuwen', 'gouden eeuw', 'industrieel', 'twintigste eeuw']
-      }
-    ],
-    'groep7-8': [
-      {
-        id: 'wo_78_1',
-        code: 'WO.4.1',
-        titel: 'Wereld en globalisering',
-        beschrijving: 'De leerling begrijpt de wereld en globale verbindingen',
-        subdoelen: [
-          'Continenten en landen',
-          'Wereldreligies en culturen',
-          'Internationale handel',
-          'Migratie en vluchtelingen',
-          'Mondiale problemen'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_56_1'],
-        kernwoorden: ['wereld', 'globalisering', 'culturen', 'handel', 'migratie']
-      },
-      {
-        id: 'wo_78_2',
-        code: 'WO.4.2',
-        titel: 'Wetenschap en onderzoek',
-        beschrijving: 'De leerling leert wetenschappelijk denken en onderzoeken',
-        subdoelen: [
-          'Hypotheses opstellen',
-          'Experimenten uitvoeren',
-          'Gegevens verzamelen',
-          'Conclusies trekken',
-          'Wetenschappelijke methode'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_56_2'],
-        kernwoorden: ['wetenschap', 'hypothese', 'experimenten', 'onderzoek', 'methode']
-      },
-      {
-        id: 'wo_78_3',
-        code: 'WO.4.3',
-        titel: 'Geschiedenis en erfgoed',
-        beschrijving: 'De leerling begrijpt historische ontwikkelingen en erfgoed',
-        subdoelen: [
-          'Wereldoorlogen',
-          'Dekolonisatie',
-          'Koude Oorlog',
-          'Cultureel erfgoed',
-          'Geschiedenis en heden'
-        ],
-        groep: 'groep7-8',
-        vakgebied: 'wereldoriëntatie',
-        voorafgaand: ['wo_56_3'],
-        kernwoorden: ['wereldoorlogen', 'dekolonisatie', 'koude oorlog', 'erfgoed', 'heden']
       }
     ]
   }
