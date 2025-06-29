@@ -15,6 +15,7 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
   const [selectedType, setSelectedType] = useState<string>('schoolplan')
   const [documentNaam, setDocumentNaam] = useState('')
   const [showUploadForm, setShowUploadForm] = useState(false)
+  const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const documentTypes = [
@@ -22,37 +23,182 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
     { id: 'jaarplan', label: 'Jaarplan', icon: '📅', description: 'Jaarlijkse planning en doelstellingen' },
     { id: 'methode', label: 'Methode Handleiding', icon: '📖', description: 'Lesmethodes en didactische materialen' },
     { id: 'toetsplan', label: 'Toetsplan', icon: '📊', description: 'Planning van toetsen en evaluaties' },
-    { id: 'beleid', label: 'Beleidsdocument', icon: '📋', description: 'Specifiek beleid (veiligheid, zorg, etc.)' }
+    { id: 'beleid', label: 'Beleidsdocument', icon: '📋', description: 'Specifiek beleid (veiligheid, zorg, etc.)' },
+    { id: 'curriculum', label: 'Curriculum', icon: '🎓', description: 'Leerplan en vakinhoudelijke doelen' },
+    { id: 'evaluatie', label: 'Evaluatierapport', icon: '📈', description: 'Evaluaties en onderzoeksrapporten' },
+    { id: 'protocol', label: 'Protocol', icon: '📝', description: 'Procedures en werkwijzen' }
   ]
+
+  // Uitgebreide lijst van ondersteunde bestandstypen
+  const supportedFileTypes = {
+    // Documenten
+    'application/pdf': '.pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
+    'application/msword': '.doc',
+    'application/vnd.oasis.opendocument.text': '.odt',
+    'application/rtf': '.rtf',
+    
+    // Tekst bestanden
+    'text/plain': '.txt',
+    'text/markdown': '.md',
+    'text/html': '.html',
+    'text/csv': '.csv',
+    'application/json': '.json',
+    'text/xml': '.xml',
+    
+    // Spreadsheets
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+    'application/vnd.ms-excel': '.xls',
+    'application/vnd.oasis.opendocument.spreadsheet': '.ods',
+    
+    // Presentaties
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': '.pptx',
+    'application/vnd.ms-powerpoint': '.ppt',
+    'application/vnd.oasis.opendocument.presentation': '.odp',
+    
+    // Afbeeldingen (voor documenten met afbeeldingen)
+    'image/jpeg': '.jpg,.jpeg',
+    'image/png': '.png',
+    'image/gif': '.gif',
+    'image/webp': '.webp',
+    'image/svg+xml': '.svg',
+    
+    // Andere formaten
+    'application/epub+zip': '.epub',
+    'application/x-yaml': '.yaml,.yml'
+  }
+
+  const acceptedExtensions = Object.values(supportedFileTypes).join(',')
+
+  const handleFileSelect = () => {
+    if (!documentNaam.trim()) {
+      alert('Vul eerst een document naam in')
+      return
+    }
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      handleFileUpload(file)
+    }
+    // Reset input value zodat hetzelfde bestand opnieuw gekozen kan worden
+    event.target.value = ''
+  }
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    setDragOver(false)
+    
+    const files = event.dataTransfer.files
+    if (files.length > 0) {
+      if (!documentNaam.trim()) {
+        alert('Vul eerst een document naam in')
+        return
+      }
+      handleFileUpload(files[0])
+    }
+  }
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    setDragOver(true)
+  }
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    setDragOver(false)
+  }
+
+  const isFileTypeSupported = (file: File): boolean => {
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
+    const mimeType = file.type.toLowerCase()
+    
+    // Check by MIME type
+    if (supportedFileTypes[mimeType as keyof typeof supportedFileTypes]) {
+      return true
+    }
+    
+    // Check by extension
+    return Object.values(supportedFileTypes).some(extensions => 
+      extensions.split(',').some(ext => ext.trim() === fileExtension)
+    )
+  }
 
   const handleFileUpload = async (file: File) => {
     if (!file || !documentNaam.trim()) return
 
+    // Check file type
+    if (!isFileTypeSupported(file)) {
+      alert(`Bestandstype niet ondersteund!\n\nOndersteunde formaten:\n${Object.values(supportedFileTypes).join(', ')}`)
+      return
+    }
+
+    // Check file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (file.size > maxSize) {
+      alert(`Bestand is te groot (max 50MB). Huidig bestand: ${(file.size / 1024 / 1024).toFixed(1)}MB`)
+      return
+    }
+
     setIsUploading(true)
     
     try {
-      const formData = new FormData()
-      formData.append('file', file)
+      let content = ''
+      
+      // Handle different file types
+      if (file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+        // Text files
+        content = await file.text()
+      } else if (file.type === 'application/json' || file.name.endsWith('.json')) {
+        // JSON files
+        const jsonText = await file.text()
+        try {
+          const jsonData = JSON.parse(jsonText)
+          content = JSON.stringify(jsonData, null, 2)
+        } catch {
+          content = jsonText
+        }
+      } else if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+        // CSV files
+        content = await file.text()
+      } else if (file.type === 'text/html' || file.name.endsWith('.html')) {
+        // HTML files
+        content = await file.text()
+      } else if (file.type === 'text/xml' || file.name.endsWith('.xml')) {
+        // XML files
+        content = await file.text()
+      } else if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
+        // YAML files
+        content = await file.text()
+      } else {
+        // For other file types (PDF, DOCX, etc.), use the upload API
+        const formData = new FormData()
+        formData.append('file', file)
 
-      const response = await fetch('/api/upload-docx', {
-        method: 'POST',
-        body: formData,
-      })
+        const response = await fetch('/api/upload-docx', {
+          method: 'POST',
+          body: formData,
+        })
 
-      if (!response.ok) {
-        throw new Error('Upload failed')
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Upload failed')
+        }
+
+        const data = await response.json()
+        content = data.content
       }
-
-      const data = await response.json()
       
       // Extract doelen from document content
-      const extractedDoelen = extractDoelenFromContent(data.content, selectedType)
+      const extractedDoelen = extractDoelenFromContent(content, selectedType, file.name)
       
       const newDocument: SchoolDocument = {
         id: Date.now().toString(),
         naam: documentNaam.trim(),
         type: selectedType as any,
-        inhoud: data.content,
+        inhoud: content,
         doelen: extractedDoelen,
         uploadDatum: new Date(),
         actief: true
@@ -64,38 +210,78 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
       
     } catch (error) {
       console.error('Upload error:', error)
-      alert('Fout bij uploaden van document')
+      alert(`Fout bij uploaden van document: ${error instanceof Error ? error.message : 'Onbekende fout'}`)
     } finally {
       setIsUploading(false)
     }
   }
 
-  const extractDoelenFromContent = (content: string, type: string): any[] => {
+  const extractDoelenFromContent = (content: string, type: string, fileName: string): any[] => {
     const doelen: any[] = []
     
-    // Simple extraction based on common patterns
+    // Enhanced extraction patterns
     const lines = content.split('\n')
+    let doelCounter = 1
     
     lines.forEach((line, index) => {
-      // Look for goal-like patterns
-      if (line.match(/^[\d\w\.-]+\s+.*leerling.*kan/i) || 
-          line.match(/^doel\s*\d+/i) ||
-          line.match(/^leerdoel/i) ||
-          line.match(/^.*\s+beheerst/i)) {
-        
-        doelen.push({
-          id: `school_${type}_${index}`,
-          code: `SCH.${doelen.length + 1}`,
-          titel: line.substring(0, 100),
-          beschrijving: line,
-          bron: type,
-          groep: userProfile.groep,
-          vakgebied: userProfile.vakgebied[0] || 'algemeen'
-        })
+      const trimmedLine = line.trim()
+      
+      // Skip empty lines
+      if (!trimmedLine) return
+      
+      // Pattern 1: Lines starting with numbers or bullets that mention learning goals
+      if (trimmedLine.match(/^[\d\w\.-]+\s+.*(?:leerling|student|kind).*(?:kan|moet|weet|begrijpt|beheerst)/i)) {
+        doelen.push(createDoel(trimmedLine, type, doelCounter++, fileName))
+      }
+      
+      // Pattern 2: Lines with "doel" or "leerdoel"
+      else if (trimmedLine.match(/^.*(?:doel|leerdoel|doelstelling).*:/i)) {
+        doelen.push(createDoel(trimmedLine, type, doelCounter++, fileName))
+      }
+      
+      // Pattern 3: Lines with learning verbs
+      else if (trimmedLine.match(/.*(?:leren|ontwikkelen|beheersen|kunnen|begrijpen|toepassen|analyseren|evalueren|creëren)/i) && 
+               trimmedLine.length > 20 && trimmedLine.length < 200) {
+        doelen.push(createDoel(trimmedLine, type, doelCounter++, fileName))
+      }
+      
+      // Pattern 4: Competency statements
+      else if (trimmedLine.match(/^.*(?:competentie|vaardigheid|kennis).*:/i)) {
+        doelen.push(createDoel(trimmedLine, type, doelCounter++, fileName))
+      }
+      
+      // Pattern 5: Curriculum codes (like "NL.3.1" or "RE.2.4")
+      else if (trimmedLine.match(/^[A-Z]{2,3}\.\d+\.\d+/)) {
+        doelen.push(createDoel(trimmedLine, type, doelCounter++, fileName))
       }
     })
     
-    return doelen
+    // If no specific goals found, create some general ones based on content
+    if (doelen.length === 0) {
+      const contentSample = content.substring(0, 500)
+      if (contentSample.length > 50) {
+        doelen.push(createDoel(`Algemeen doel uit ${fileName}`, type, 1, fileName))
+      }
+    }
+    
+    return doelen.slice(0, 20) // Limit to 20 goals per document
+  }
+
+  const createDoel = (text: string, type: string, counter: number, fileName: string) => {
+    // Clean up the text
+    const cleanText = text.replace(/^[\d\w\.-]+\s*/, '').trim()
+    const titel = cleanText.length > 100 ? cleanText.substring(0, 100) + '...' : cleanText
+    
+    return {
+      id: `school_${type}_${Date.now()}_${counter}`,
+      code: `SCH.${counter.toString().padStart(2, '0')}`,
+      titel: titel || `Doel ${counter} uit ${fileName}`,
+      beschrijving: text,
+      bron: type,
+      groep: userProfile.groep,
+      vakgebied: userProfile.vakgebied[0] || 'algemeen',
+      bestand: fileName
+    }
   }
 
   const removeDocument = (id: string) => {
@@ -114,6 +300,23 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
 
   const handleContinue = () => {
     onComplete(documenten)
+  }
+
+  const getFileTypeIcon = (fileName: string) => {
+    const extension = fileName.split('.').pop()?.toLowerCase()
+    
+    const iconMap: Record<string, string> = {
+      'pdf': '📄',
+      'docx': '📝', 'doc': '📝', 'odt': '📝', 'rtf': '📝',
+      'xlsx': '📊', 'xls': '📊', 'ods': '📊', 'csv': '📊',
+      'pptx': '📽️', 'ppt': '📽️', 'odp': '📽️',
+      'txt': '📄', 'md': '📄', 'html': '🌐',
+      'json': '🔧', 'xml': '🔧', 'yaml': '🔧', 'yml': '🔧',
+      'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️', 'webp': '🖼️', 'svg': '🖼️',
+      'epub': '📚'
+    }
+    
+    return iconMap[extension || ''] || '📄'
   }
 
   return (
@@ -172,36 +375,77 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
               </div>
             </div>
 
+            {/* Drag & Drop Upload Area */}
             <div>
               <label className="block text-sm font-medium text-blue-900 mb-2">
                 Bestand Selecteren *
               </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".pdf,.docx,.txt,.md"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file && documentNaam.trim()) {
-                      handleFileUpload(file)
-                    } else if (!documentNaam.trim()) {
-                      alert('Vul eerst een document naam in')
-                    }
-                  }}
-                  className="hidden"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={!documentNaam.trim() || isUploading}
-                  className="px-4 py-2 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isUploading ? 'Uploaden...' : 'Bestand Kiezen'}
-                </button>
-                <span className="text-sm text-blue-600">
-                  Ondersteunde formaten: PDF, DOCX, TXT, MD
-                </span>
+              
+              <div
+                className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
+                  dragOver 
+                    ? 'border-blue-500 bg-blue-100' 
+                    : 'border-blue-300 hover:border-blue-400 hover:bg-blue-50'
+                }`}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+              >
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  
+                  <div>
+                    <p className="text-lg font-medium text-blue-900">
+                      Sleep je document hier naartoe
+                    </p>
+                    <p className="text-blue-700 text-sm mt-1">
+                      of klik om een bestand te selecteren
+                    </p>
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={handleFileSelect}
+                    disabled={!documentNaam.trim() || isUploading}
+                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  >
+                    {isUploading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Uploaden...</span>
+                      </div>
+                    ) : (
+                      'Bestand Kiezen'
+                    )}
+                  </button>
+                  
+                  <div className="text-xs text-blue-600 max-w-2xl">
+                    <p className="font-medium mb-1">Ondersteunde formaten:</p>
+                    <p>
+                      📄 Documenten: PDF, DOCX, DOC, ODT, RTF, TXT, MD, HTML<br/>
+                      📊 Spreadsheets: XLSX, XLS, ODS, CSV<br/>
+                      📽️ Presentaties: PPTX, PPT, ODP<br/>
+                      🔧 Data: JSON, XML, YAML<br/>
+                      🖼️ Afbeeldingen: JPG, PNG, GIF, WebP, SVG<br/>
+                      📚 Andere: EPUB
+                    </p>
+                    <p className="mt-1 text-blue-500">Maximum bestandsgrootte: 50MB</p>
+                  </div>
+                </div>
               </div>
+              
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={acceptedExtensions}
+                onChange={handleFileChange}
+                className="hidden"
+              />
             </div>
           </div>
         )}
@@ -210,7 +454,7 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
       {/* Document Types Info */}
       <div className="mb-8">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Ondersteunde Document Types</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {documentTypes.map(type => (
             <div key={type.id} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-all duration-200">
               <div className="flex items-center space-x-3 mb-2">
@@ -320,10 +564,11 @@ export default function DocumentenBeheer({ userProfile, onComplete, schoolDocume
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Automatische Doelen Extractie
+          Automatische Doelen Extractie & Uitgebreide Bestandsondersteuning
         </h4>
         <p className="text-yellow-800 text-sm">
           Het systeem analyseert geüploade documenten en extraheert automatisch leerdoelen. 
+          Ondersteunt nu 20+ bestandsformaten inclusief Office documenten, PDF's, tekst bestanden, spreadsheets en meer.
           Deze worden in de volgende stap naast de SLO-kerndoelen getoond. 
           Je kunt documenten activeren/deactiveren om te bepalen welke doelen beschikbaar zijn.
         </p>
