@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { UserProfile } from './LesWizard'
+import ProfielBeheer from './ProfielBeheer'
 
 interface ProfielSelectorProps {
   onComplete: (profile: UserProfile) => void
@@ -20,6 +21,8 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
       selFocus: []
     }
   })
+
+  const [showProfielBeheer, setShowProfielBeheer] = useState(false)
 
   const groepen = [
     { id: 'groep1-2', label: 'Groep 1-2', description: 'Kleuteronderwijs (4-6 jaar)' },
@@ -58,6 +61,11 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     { id: 'rekenvaardig', label: 'Rekenvaardigheid', icon: '🧮' }
   ]
 
+  const handleProfileLoad = (loadedProfile: UserProfile) => {
+    setProfiel(loadedProfile)
+    setShowProfielBeheer(false)
+  }
+
   const handleSubmit = () => {
     if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
       onComplete(profiel)
@@ -69,10 +77,48 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Stel je profiel in</h2>
-        <p className="text-gray-600">
-          Help ons je de meest relevante content te tonen door je profiel in te stellen.
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Stel je profiel in</h2>
+            <p className="text-gray-600">
+              Help ons je de meest relevante content te tonen door je profiel in te stellen.
+            </p>
+          </div>
+          
+          <button
+            onClick={() => setShowProfielBeheer(!showProfielBeheer)}
+            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all duration-200"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>Profiel beheer</span>
+          </button>
+        </div>
+
+        {/* Profiel Beheer Component */}
+        {showProfielBeheer && (
+          <div className="mb-6">
+            <ProfielBeheer 
+              onProfileSelect={handleProfileLoad}
+              currentProfile={profiel.groep ? profiel : null}
+            />
+          </div>
+        )}
+
+        {/* Current Profile Indicator */}
+        {profiel.groep && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="font-medium text-green-900">
+                Huidig profiel: {profiel.groep} • {profiel.vakgebied.length} vakgebieden • {profiel.ervaring}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="space-y-8">

@@ -15,6 +15,48 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
   const [tijdsduur, setTijdsduur] = useState(45)
   const [aanvullendeWensen, setAanvullendeWensen] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
+  const [savedLesplannen, setSavedLesplannen] = useState<any[]>([])
+
+  // Laad opgeslagen lesplannen
+  const loadSavedLesplannen = () => {
+    try {
+      const saved = localStorage.getItem('leswizard_lesplannen')
+      if (saved) {
+        return JSON.parse(saved)
+      }
+    } catch (error) {
+      console.error('Fout bij laden lesplannen:', error)
+    }
+    return []
+  }
+
+  // Sla lesplan op
+  const saveLesplan = (lesplanContent: string) => {
+    const newLesplan = {
+      id: Date.now().toString(),
+      onderwerp: lesonderwerp,
+      doelen: lesdoelen.filter(d => d.trim()),
+      tijdsduur,
+      content: lesplanContent,
+      profiel: lesplanData.profiel,
+      aangemaakt: new Date().toISOString(),
+      sloDoelen: lesplanData.sloDoelen.length,
+      instructiemodel: lesplanData.instructiemodel?.naam || 'Geen',
+      werkvormen: lesplanData.werkvormen.length,
+      selActiviteiten: lesplanData.selActiviteiten.length
+    }
+
+    try {
+      const existing = loadSavedLesplannen()
+      const updated = [newLesplan, ...existing].slice(0, 20) // Max 20 lesplannen
+      localStorage.setItem('leswizard_lesplannen', JSON.stringify(updated))
+      setSavedLesplannen(updated)
+      return true
+    } catch (error) {
+      console.error('Fout bij opslaan lesplan:', error)
+      return false
+    }
+  }
 
   const addLesdoel = () => {
     setLesdoelen([...lesdoelen, ''])
@@ -99,6 +141,11 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
     return prompt
   }
 
+  // Laad opgeslagen lesplannen bij component mount
+  useState(() => {
+    setSavedLesplannen(loadSavedLesplannen())
+  })
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -107,6 +154,42 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
           Vul de laatste details in en laat AI een compleet, professioneel lesplan voor je maken.
         </p>
       </div>
+
+      {/* Opgeslagen lesplannen */}
+      {savedLesplannen.length > 0 && (
+        <div className="mb-8 p-6 bg-purple-50 border border-purple-200 rounded-lg">
+          <h3 className="font-bold text-purple-900 mb-4">Recent gegenereerde lesplannen</h3>
+          <div className="space-y-3">
+            {savedLesplannen.slice(0, 3).map((lesplan) => (
+              <div key={lesplan.id} className="p-4 bg-white border border-purple-200 rounded-lg">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h4 className="font-medium text-purple-900">{lesplan.onderwerp}</h4>
+                    <p className="text-purple-700 text-sm">
+                      {lesplan.profiel?.groep} • {lesplan.tijdsduur} min • {lesplan.doelen.length} doelen
+                    </p>
+                    <p className="text-purple-600 text-xs mt-1">
+                      {new Date(lesplan.aangemaakt).toLocaleDateString('nl-NL')} • 
+                      {lesplan.sloDoelen} SLO-doelen • {lesplan.werkvormen} werkvormen
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      // Laad lesplan data
+                      setLesonderwerp(lesplan.onderwerp)
+                      setLesdoelen(lesplan.doelen)
+                      setTijdsduur(lesplan.tijdsduur)
+                    }}
+                    className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-all duration-200"
+                  >
+                    Hergebruiken
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Samenvatting van selecties */}
       <div className="mb-8 p-6 bg-gray-50 rounded-lg">
@@ -245,18 +328,33 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
             <p className="text-blue-800 text-sm mb-3">
               Klik op de knop hieronder om automatisch een gedetailleerde prompt in te vullen gebaseerd op al je selecties.
             </p>
-            <button
-              onClick={() => {
-                const prompt = createPrompt()
-                // Hier zou je de prompt naar de chat component kunnen sturen
-                // Voor nu kopiëren we het naar het klembord
-                navigator.clipboard.writeText(prompt)
-                alert('Prompt gekopieerd naar klembord! Plak deze in de chat hierboven.')
-              }}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-all duration-200"
-            >
-              📋 Genereer lesplan prompt
-            </button>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => {
+                  const prompt = createPrompt()
+                  // Hier zou je de prompt naar de chat component kunnen sturen
+                  // Voor nu kopiëren we het naar het klembord
+                  navigator.clipboard.writeText(prompt)
+                  alert('Prompt gekopieerd naar klembord! Plak deze in de chat hierboven.')
+                }}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-all duration-200"
+              >
+                📋 Genereer lesplan prompt
+              </button>
+              
+              <button
+                onClick={() => {
+                  // Simuleer het opslaan van een lesplan
+                  const mockContent = `# Lesplan: ${lesonderwerp}\n\nDit is een voorbeeld lesplan gegenereerd op ${new Date().toLocaleString('nl-NL')}`
+                  if (saveLesplan(mockContent)) {
+                    alert('Lesplan opgeslagen!')
+                  }
+                }}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-all duration-200"
+              >
+                💾 Lesplan opslaan
+              </button>
+            </div>
           </div>
         )}
       </div>
