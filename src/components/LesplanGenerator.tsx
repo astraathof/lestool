@@ -156,15 +156,28 @@ export default function LesplanGenerator({ lesplanData, onBack }: LesplanGenerat
   }
 
   const addSuggestedDoel = (suggestion: ProfielBasedDoel) => {
-    if (!lesdoelen.includes(suggestion.titel)) {
-      setLesdoelen(prev => [...prev.filter(d => d.trim()), suggestion.titel])
+    console.log('Adding suggested doel:', suggestion.titel)
+    
+    // Check if this goal already exists
+    const existingGoals = lesdoelen.filter(d => d.trim())
+    if (!existingGoals.includes(suggestion.titel)) {
+      // Remove empty goals and add the new one
+      const newGoals = [...existingGoals, suggestion.titel]
+      setLesdoelen(newGoals)
+      console.log('Updated goals:', newGoals)
+    } else {
+      console.log('Goal already exists')
     }
   }
 
   const addCustomDoel = () => {
-    if (customDoelenInput.trim() && !lesdoelen.includes(customDoelenInput.trim())) {
-      setLesdoelen(prev => [...prev.filter(d => d.trim()), customDoelenInput.trim()])
-      setCustomDoelenInput('')
+    if (customDoelenInput.trim()) {
+      const existingGoals = lesdoelen.filter(d => d.trim())
+      if (!existingGoals.includes(customDoelenInput.trim())) {
+        const newGoals = [...existingGoals, customDoelenInput.trim()]
+        setLesdoelen(newGoals)
+        setCustomDoelenInput('')
+      }
     }
   }
 
@@ -438,10 +451,14 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                 {suggestedDoelen.map((suggestion) => (
-                  <div
+                  <button
                     key={suggestion.id}
-                    className="p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer"
-                    onClick={() => addSuggestedDoel(suggestion)}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      addSuggestedDoel(suggestion)
+                    }}
+                    className="p-3 bg-white border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200 cursor-pointer text-left"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -464,13 +481,13 @@ Zorg dat het lesplan professioneel, praktisch en direct uitvoerbaar is voor een 
                         <p className="font-medium text-gray-900 text-sm">{suggestion.titel}</p>
                         <p className="text-gray-600 text-xs mt-1">{suggestion.beschrijving}</p>
                       </div>
-                      <button className="ml-2 text-blue-600 hover:text-blue-800">
+                      <div className="ml-2 text-blue-600 hover:text-blue-800">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                      </button>
+                      </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
 
