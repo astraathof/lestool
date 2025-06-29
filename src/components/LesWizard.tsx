@@ -66,19 +66,23 @@ export default function LesWizard() {
 
   // Load saved data on component mount
   useEffect(() => {
+    console.log('🔄 LesWizard: Loading saved data...')
     try {
       const savedProfile = localStorage.getItem('leswizard_current_profile')
       const savedLesplanData = localStorage.getItem('leswizard_current_lesplan')
       const savedDocumenten = localStorage.getItem('leswizard_current_documenten')
+      const savedStep = localStorage.getItem('leswizard_current_step')
       
       if (savedProfile) {
         const profile = JSON.parse(savedProfile)
+        console.log('✅ LesWizard: Loaded profile:', profile)
         setUserProfile(profile)
         setLesplanData(prev => ({ ...prev, profiel: profile }))
       }
       
       if (savedLesplanData) {
         const data = JSON.parse(savedLesplanData)
+        console.log('✅ LesWizard: Loaded lesplan data:', data)
         setLesplanData(prev => ({ ...prev, ...data }))
       }
       
@@ -87,27 +91,42 @@ export default function LesWizard() {
           ...doc,
           uploadDatum: new Date(doc.uploadDatum)
         }))
+        console.log('✅ LesWizard: Loaded documents:', docs.length)
         setSchoolDocumenten(docs)
       }
+
+      if (savedStep) {
+        const step = parseInt(savedStep)
+        console.log('✅ LesWizard: Loaded step:', step)
+        setCurrentStep(step)
+      }
     } catch (error) {
-      console.error('Error loading saved data:', error)
+      console.error('❌ LesWizard: Error loading saved data:', error)
     }
   }, [])
 
   // Save data whenever it changes
   useEffect(() => {
     if (userProfile) {
+      console.log('💾 LesWizard: Saving profile:', userProfile)
       localStorage.setItem('leswizard_current_profile', JSON.stringify(userProfile))
     }
   }, [userProfile])
 
   useEffect(() => {
+    console.log('💾 LesWizard: Saving lesplan data')
     localStorage.setItem('leswizard_current_lesplan', JSON.stringify(lesplanData))
   }, [lesplanData])
 
   useEffect(() => {
+    console.log('💾 LesWizard: Saving documents')
     localStorage.setItem('leswizard_current_documenten', JSON.stringify(schoolDocumenten))
   }, [schoolDocumenten])
+
+  useEffect(() => {
+    console.log('💾 LesWizard: Saving current step:', currentStep)
+    localStorage.setItem('leswizard_current_step', currentStep.toString())
+  }, [currentStep])
 
   const steps = [
     { id: 1, title: 'Profiel', icon: '👤', description: 'Stel je profiel in', color: 'from-blue-500 to-blue-600' },
@@ -121,38 +140,44 @@ export default function LesWizard() {
   ]
 
   const handleProfileComplete = (profile: UserProfile) => {
-    console.log('Profile completed:', profile)
+    console.log('🎯 LesWizard: Profile completed:', profile)
     setUserProfile(profile)
     setLesplanData(prev => ({ ...prev, profiel: profile }))
     setCurrentStep(2)
   }
 
   const handleDocumentenComplete = (documenten: SchoolDocument[]) => {
+    console.log('📚 LesWizard: Documents completed:', documenten.length)
     setSchoolDocumenten(documenten)
     setCurrentStep(3)
   }
 
   const handleDoelenComplete = (sloDoelen: any[], schoolDoelen: any[]) => {
+    console.log('🎯 LesWizard: Goals completed:', { sloDoelen: sloDoelen.length, schoolDoelen: schoolDoelen.length })
     setLesplanData(prev => ({ ...prev, sloDoelen, schoolDoelen }))
     setCurrentStep(4)
   }
 
   const handleInstructieComplete = (model: any) => {
+    console.log('📖 LesWizard: Instruction model completed:', model?.naam)
     setLesplanData(prev => ({ ...prev, instructiemodel: model }))
     setCurrentStep(5)
   }
 
   const handleWerkvormenComplete = (werkvormen: any[]) => {
+    console.log('🎲 LesWizard: Work forms completed:', werkvormen.length)
     setLesplanData(prev => ({ ...prev, werkvormen }))
     setCurrentStep(6)
   }
 
   const handleSELComplete = (activiteiten: any[]) => {
+    console.log('💝 LesWizard: SEL activities completed:', activiteiten.length)
     setLesplanData(prev => ({ ...prev, selActiviteiten: activiteiten }))
     setCurrentStep(7)
   }
 
   const handleTaxonomieComplete = (taxonomieNiveau: string, toetsvormen: any[]) => {
+    console.log('🧠 LesWizard: Taxonomy completed:', { taxonomieNiveau, toetsvormen: toetsvormen.length })
     setLesplanData(prev => ({ ...prev, taxonomieNiveau, toetsvormen }))
     setCurrentStep(8)
   }
@@ -160,6 +185,7 @@ export default function LesWizard() {
   const goToStep = (step: number) => {
     // Allow going back to any completed step, or step 1
     if (step <= currentStep || step === 1) {
+      console.log('🔄 LesWizard: Going to step:', step)
       setCurrentStep(step)
     }
   }
@@ -173,6 +199,14 @@ export default function LesWizard() {
   const getCompletionPercentage = () => {
     return Math.round((currentStep / steps.length) * 100)
   }
+
+  // Debug info
+  console.log('🔍 LesWizard render:', {
+    currentStep,
+    hasProfile: !!userProfile,
+    profileGroep: userProfile?.groep,
+    profileVakgebied: userProfile?.vakgebied
+  })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -404,6 +438,23 @@ export default function LesWizard() {
                   lesplanData={lesplanData}
                   onBack={() => setCurrentStep(7)}
                 />
+              )}
+
+              {/* Fallback for missing profile */}
+              {currentStep > 1 && !userProfile && (
+                <div className="p-8 text-center">
+                  <div className="text-6xl mb-4">⚠️</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Profiel ontbreekt</h3>
+                  <p className="text-gray-600 mb-4">
+                    Er is geen profiel gevonden. Ga terug naar stap 1 om je profiel in te stellen.
+                  </p>
+                  <button
+                    onClick={() => setCurrentStep(1)}
+                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+                  >
+                    Terug naar Profiel
+                  </button>
+                </div>
               )}
             </div>
           </div>

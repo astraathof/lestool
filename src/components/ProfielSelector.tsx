@@ -10,6 +10,7 @@ interface ProfielSelectorProps {
 }
 
 export default function ProfielSelector({ onComplete, currentProfile }: ProfielSelectorProps) {
+  // Initialize with empty profile structure
   const [profiel, setProfiel] = useState<UserProfile>({
     groep: '',
     vakgebied: [],
@@ -27,11 +28,24 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
 
   // CRITICAL: Initialize profile from currentProfile prop
   useEffect(() => {
-    console.log('ProfielSelector: currentProfile changed:', currentProfile)
+    console.log('🔄 ProfielSelector: currentProfile prop changed:', currentProfile)
     if (currentProfile) {
+      console.log('✅ ProfielSelector: Setting profile from prop')
       setProfiel(currentProfile)
+    } else {
+      console.log('⚠️ ProfielSelector: No currentProfile, keeping empty state')
     }
   }, [currentProfile])
+
+  // Debug logging for profiel state changes
+  useEffect(() => {
+    console.log('🔍 ProfielSelector: profiel state changed:', {
+      groep: profiel.groep,
+      vakgebied: profiel.vakgebied,
+      ervaring: profiel.ervaring,
+      focus: profiel.focus.length
+    })
+  }, [profiel])
 
   const groepen = [
     { id: 'groep1-2', label: 'Groep 1-2', description: 'Kleuteronderwijs (4-6 jaar)', icon: '🧸', color: 'from-pink-500 to-rose-500' },
@@ -106,20 +120,69 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
   ]
 
   const handleProfileLoad = (loadedProfile: UserProfile) => {
-    console.log('Loading profile:', loadedProfile)
+    console.log('📥 ProfielSelector: Loading profile from beheer:', loadedProfile)
     setProfiel(loadedProfile)
     setShowProfielBeheer(false)
+  }
+
+  const handleGroepSelect = (groepId: string) => {
+    console.log('🎯 ProfielSelector: Groep selected:', groepId)
+    setProfiel(prev => ({ ...prev, groep: groepId }))
+  }
+
+  const handleVakgebiedToggle = (vakId: string) => {
+    console.log('📚 ProfielSelector: Vakgebied toggled:', vakId)
+    setProfiel(prev => ({
+      ...prev,
+      vakgebied: prev.vakgebied.includes(vakId)
+        ? prev.vakgebied.filter(v => v !== vakId)
+        : [...prev.vakgebied, vakId]
+    }))
+  }
+
+  const handleErvaringSelect = (ervaringId: string) => {
+    console.log('⭐ ProfielSelector: Ervaring selected:', ervaringId)
+    setProfiel(prev => ({ ...prev, ervaring: ervaringId }))
+  }
+
+  const handleFocusToggle = (focusId: string) => {
+    console.log('🎯 ProfielSelector: Focus toggled:', focusId)
+    setProfiel(prev => ({
+      ...prev,
+      focus: prev.focus.includes(focusId)
+        ? prev.focus.filter(f => f !== focusId)
+        : [...prev.focus, focusId]
+    }))
+  }
+
+  const handleVoorkeurToggle = (type: 'instructiemodel' | 'werkvormen' | 'selFocus', id: string) => {
+    console.log('💡 ProfielSelector: Voorkeur toggled:', type, id)
+    setProfiel(prev => ({
+      ...prev,
+      voorkeuren: {
+        ...prev.voorkeuren,
+        [type]: prev.voorkeuren[type].includes(id)
+          ? prev.voorkeuren[type].filter(item => item !== id)
+          : [...prev.voorkeuren[type], id]
+      }
+    }))
   }
 
   const handleSubmit = () => {
     if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
       setIsAnimating(true)
-      console.log('Submitting profile:', profiel)
+      console.log('✅ ProfielSelector: Submitting profile:', profiel)
       
       // Add a small delay for animation
       setTimeout(() => {
         onComplete(profiel)
       }, 300)
+    } else {
+      console.log('❌ ProfielSelector: Profile incomplete:', {
+        groep: profiel.groep,
+        vakgebied: profiel.vakgebied.length,
+        ervaring: profiel.ervaring
+      })
     }
   }
 
@@ -195,7 +258,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             {groepen.map((groep) => (
               <button
                 key={groep.id}
-                onClick={() => setProfiel(prev => ({ ...prev, groep: groep.id }))}
+                onClick={() => handleGroepSelect(groep.id)}
                 className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${
                   profiel.groep === groep.id
                     ? `bg-gradient-to-br ${groep.color} text-white border-transparent shadow-lg`
@@ -241,15 +304,8 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             {vakgebieden.map((vak) => (
               <button
                 key={vak.id}
-                onClick={() => {
-                  setProfiel(prev => ({
-                    ...prev,
-                    vakgebied: prev.vakgebied.includes(vak.id)
-                      ? prev.vakgebied.filter(v => v !== vak.id)
-                      : [...prev.vakgebied, vak.id]
-                  }))
-                }}
-                className={`group p-4 rounded-xl border-2 text-left transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
+                onClick={() => handleVakgebiedToggle(vak.id)}
+                className={`group relative p-4 rounded-xl border-2 text-left transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                   profiel.vakgebied.includes(vak.id)
                     ? `${vak.color} border-current shadow-md`
                     : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
@@ -283,7 +339,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             {ervaringsniveaus.map((niveau) => (
               <button
                 key={niveau.id}
-                onClick={() => setProfiel(prev => ({ ...prev, ervaring: niveau.id }))}
+                onClick={() => handleErvaringSelect(niveau.id)}
                 className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${
                   profiel.ervaring === niveau.id
                     ? `bg-gradient-to-br ${niveau.color} text-white border-transparent shadow-lg`
@@ -325,14 +381,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             {focusgebieden.map((focus) => (
               <button
                 key={focus.id}
-                onClick={() => {
-                  setProfiel(prev => ({
-                    ...prev,
-                    focus: prev.focus.includes(focus.id)
-                      ? prev.focus.filter(f => f !== focus.id)
-                      : [...prev.focus, focus.id]
-                  }))
-                }}
+                onClick={() => handleFocusToggle(focus.id)}
                 className={`group p-4 rounded-xl border-2 text-center transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${
                   profiel.focus.includes(focus.id)
                     ? 'border-green-500 bg-green-50 text-green-900 shadow-md'
@@ -361,17 +410,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 {instructieModelVoorkeuren.map((model) => (
                   <button
                     key={model.id}
-                    onClick={() => {
-                      setProfiel(prev => ({
-                        ...prev,
-                        voorkeuren: {
-                          ...prev.voorkeuren,
-                          instructiemodel: prev.voorkeuren.instructiemodel.includes(model.id)
-                            ? prev.voorkeuren.instructiemodel.filter(m => m !== model.id)
-                            : [...prev.voorkeuren.instructiemodel, model.id]
-                        }
-                      }))
-                    }}
+                    onClick={() => handleVoorkeurToggle('instructiemodel', model.id)}
                     className={`p-3 rounded-xl border-2 text-center transition-all duration-300 hover:shadow-md transform hover:scale-105 ${
                       profiel.voorkeuren.instructiemodel.includes(model.id)
                         ? 'border-purple-500 bg-purple-50 text-purple-900'
@@ -392,17 +431,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 {werkvormVoorkeuren.map((werkvorm) => (
                   <button
                     key={werkvorm.id}
-                    onClick={() => {
-                      setProfiel(prev => ({
-                        ...prev,
-                        voorkeuren: {
-                          ...prev.voorkeuren,
-                          werkvormen: prev.voorkeuren.werkvormen.includes(werkvorm.id)
-                            ? prev.voorkeuren.werkvormen.filter(w => w !== werkvorm.id)
-                            : [...prev.voorkeuren.werkvormen, werkvorm.id]
-                        }
-                      }))
-                    }}
+                    onClick={() => handleVoorkeurToggle('werkvormen', werkvorm.id)}
                     className={`p-3 rounded-xl border-2 text-center transition-all duration-300 hover:shadow-md transform hover:scale-105 ${
                       profiel.voorkeuren.werkvormen.includes(werkvorm.id)
                         ? 'border-orange-500 bg-orange-50 text-orange-900'
@@ -423,17 +452,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
                 {selFocusVoorkeuren.map((sel) => (
                   <button
                     key={sel.id}
-                    onClick={() => {
-                      setProfiel(prev => ({
-                        ...prev,
-                        voorkeuren: {
-                          ...prev.voorkeuren,
-                          selFocus: prev.voorkeuren.selFocus.includes(sel.id)
-                            ? prev.voorkeuren.selFocus.filter(s => s !== sel.id)
-                            : [...prev.voorkeuren.selFocus, sel.id]
-                        }
-                      }))
-                    }}
+                    onClick={() => handleVoorkeurToggle('selFocus', sel.id)}
                     className={`p-4 rounded-xl border-2 text-left transition-all duration-300 hover:shadow-md transform hover:scale-105 ${
                       profiel.voorkeuren.selFocus.includes(sel.id)
                         ? 'border-pink-500 bg-pink-50 text-pink-900'
