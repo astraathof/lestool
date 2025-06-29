@@ -55,7 +55,7 @@ export default function LesWizard() {
   ]
 
   const handleProfileComplete = (profile: UserProfile) => {
-    console.log('Profile completed:', profile) // Debug log
+    console.log('✅ Profile completed in LesWizard:', profile)
     setUserProfile(profile)
     setLesplanData(prev => ({ ...prev, profiel: profile }))
     setCurrentStep(2)
