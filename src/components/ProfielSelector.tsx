@@ -10,7 +10,7 @@ interface ProfielSelectorProps {
 }
 
 export default function ProfielSelector({ onComplete, currentProfile }: ProfielSelectorProps) {
-  // Initialize with empty profile structure
+  // CRITICAL: Initialize with proper empty state
   const [profiel, setProfiel] = useState<UserProfile>({
     groep: '',
     vakgebied: [],
@@ -25,48 +25,89 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
 
   const [showProfielBeheer, setShowProfielBeheer] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [debugInfo, setDebugInfo] = useState<string>('')
 
-  // CRITICAL: Load profile from currentProfile prop AND localStorage
+  // CRITICAL: Load profile with multiple fallbacks and extensive logging
   useEffect(() => {
-    console.log('🔄 ProfielSelector: Initializing with currentProfile:', currentProfile)
+    console.log('🔄 ProfielSelector: Starting profile load process...')
+    console.log('🔄 ProfielSelector: currentProfile prop:', currentProfile)
     
-    // First try currentProfile prop
+    let loadedProfile: UserProfile | null = null
+    
+    // Priority 1: currentProfile prop
     if (currentProfile && currentProfile.groep) {
       console.log('✅ ProfielSelector: Using currentProfile prop')
-      setProfiel(currentProfile)
-      return
-    }
-    
-    // Fallback to localStorage
-    try {
-      const savedProfile = localStorage.getItem('leswizard_current_profile')
-      if (savedProfile) {
-        const parsed = JSON.parse(savedProfile)
-        console.log('✅ ProfielSelector: Loaded from localStorage:', parsed)
-        setProfiel(parsed)
-        return
+      loadedProfile = currentProfile
+      setDebugInfo('Loaded from prop')
+    } 
+    // Priority 2: localStorage
+    else {
+      try {
+        const savedProfile = localStorage.getItem('leswizard_current_profile')
+        console.log('🔄 ProfielSelector: localStorage content:', savedProfile)
+        
+        if (savedProfile) {
+          const parsed = JSON.parse(savedProfile)
+          console.log('✅ ProfielSelector: Parsed from localStorage:', parsed)
+          
+          if (parsed && parsed.groep) {
+            loadedProfile = parsed
+            setDebugInfo('Loaded from localStorage')
+          }
+        }
+      } catch (error) {
+        console.error('❌ ProfielSelector: Error loading from localStorage:', error)
+        setDebugInfo('Error loading from storage')
       }
-    } catch (error) {
-      console.error('❌ ProfielSelector: Error loading from localStorage:', error)
     }
     
-    console.log('⚠️ ProfielSelector: No profile found, using empty state')
+    // Apply loaded profile or keep empty state
+    if (loadedProfile) {
+      console.log('✅ ProfielSelector: Setting loaded profile:', loadedProfile)
+      setProfiel(loadedProfile)
+    } else {
+      console.log('⚠️ ProfielSelector: No profile found, keeping empty state')
+      setDebugInfo('No profile found')
+    }
   }, [currentProfile])
 
-  // Save to localStorage whenever profiel changes
+  // CRITICAL: Save to localStorage whenever profiel changes (with validation)
   useEffect(() => {
     if (profiel.groep) {
-      console.log('💾 ProfielSelector: Saving to localStorage:', profiel)
-      localStorage.setItem('leswizard_current_profile', JSON.stringify(profiel))
+      console.log('💾 ProfielSelector: Saving profile to localStorage:', profiel)
+      try {
+        localStorage.setItem('leswizard_current_profile', JSON.stringify(profiel))
+        console.log('✅ ProfielSelector: Successfully saved to localStorage')
+      } catch (error) {
+        console.error('❌ ProfielSelector: Error saving to localStorage:', error)
+      }
     }
   }, [profiel])
 
+  // UITGEBREIDE GROEPEN - Los groep 1-8 en combigroepen
   const groepen = [
-    { id: 'groep1-2', label: 'Groep 1-2', description: 'Kleuteronderwijs (4-6 jaar)', icon: '🧸', color: 'from-pink-500 to-rose-500' },
-    { id: 'groep3-4', label: 'Groep 3-4', description: 'Onderbouw (6-8 jaar)', icon: '📚', color: 'from-blue-500 to-cyan-500' },
-    { id: 'groep5-6', label: 'Groep 5-6', description: 'Middenbouw (8-10 jaar)', icon: '🎓', color: 'from-green-500 to-emerald-500' },
-    { id: 'groep7-8', label: 'Groep 7-8', description: 'Bovenbouw (10-12 jaar)', icon: '🏆', color: 'from-purple-500 to-violet-500' },
-    { id: 'combinatie', label: 'Combinatiegroep', description: 'Meerdere groepen', icon: '🌈', color: 'from-orange-500 to-amber-500' }
+    { id: 'groep1', label: 'Groep 1', description: 'Kleuters (4-5 jaar)', icon: '🧸', color: 'from-pink-400 to-rose-500' },
+    { id: 'groep2', label: 'Groep 2', description: 'Kleuters (5-6 jaar)', icon: '🎈', color: 'from-pink-500 to-rose-600' },
+    { id: 'groep3', label: 'Groep 3', description: 'Onderbouw (6-7 jaar)', icon: '📚', color: 'from-blue-400 to-cyan-500' },
+    { id: 'groep4', label: 'Groep 4', description: 'Onderbouw (7-8 jaar)', icon: '📖', color: 'from-blue-500 to-cyan-600' },
+    { id: 'groep5', label: 'Groep 5', description: 'Middenbouw (8-9 jaar)', icon: '🎓', color: 'from-green-400 to-emerald-500' },
+    { id: 'groep6', label: 'Groep 6', description: 'Middenbouw (9-10 jaar)', icon: '📝', color: 'from-green-500 to-emerald-600' },
+    { id: 'groep7', label: 'Groep 7', description: 'Bovenbouw (10-11 jaar)', icon: '🏆', color: 'from-purple-400 to-violet-500' },
+    { id: 'groep8', label: 'Groep 8', description: 'Bovenbouw (11-12 jaar)', icon: '🎯', color: 'from-purple-500 to-violet-600' },
+    
+    // Combigroepen
+    { id: 'groep1-2', label: 'Combi 1-2', description: 'Kleutercombi (4-6 jaar)', icon: '🌈', color: 'from-pink-500 to-orange-500' },
+    { id: 'groep2-3', label: 'Combi 2-3', description: 'Overgangscombi (5-7 jaar)', icon: '🌟', color: 'from-orange-500 to-blue-500' },
+    { id: 'groep3-4', label: 'Combi 3-4', description: 'Onderbouwcombi (6-8 jaar)', icon: '📘', color: 'from-blue-500 to-cyan-500' },
+    { id: 'groep4-5', label: 'Combi 4-5', description: 'Overgangscombi (7-9 jaar)', icon: '🔄', color: 'from-cyan-500 to-green-500' },
+    { id: 'groep5-6', label: 'Combi 5-6', description: 'Middenbouwcombi (8-10 jaar)', icon: '📗', color: 'from-green-500 to-emerald-500' },
+    { id: 'groep6-7', label: 'Combi 6-7', description: 'Overgangscombi (9-11 jaar)', icon: '⚡', color: 'from-emerald-500 to-purple-500' },
+    { id: 'groep7-8', label: 'Combi 7-8', description: 'Bovenbouwcombi (10-12 jaar)', icon: '🚀', color: 'from-purple-500 to-violet-500' },
+    
+    // Speciale combigroepen
+    { id: 'groep1-3', label: 'Combi 1-3', description: 'Brede kleutercombi (4-7 jaar)', icon: '🎪', color: 'from-pink-400 to-blue-400' },
+    { id: 'groep4-8', label: 'Combi 4-8', description: 'Basisschoolcombi (7-12 jaar)', icon: '🏫', color: 'from-blue-400 to-purple-600' },
+    { id: 'groep1-8', label: 'Combi 1-8', description: 'Volledige basisschool (4-12 jaar)', icon: '🌍', color: 'from-pink-400 to-purple-600' }
   ]
 
   const vakgebieden = [
@@ -137,80 +178,81 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     console.log('📥 ProfielSelector: Loading profile from beheer:', loadedProfile)
     setProfiel(loadedProfile)
     setShowProfielBeheer(false)
+    setDebugInfo('Loaded from profile manager')
   }
 
-  // FIXED: Proper event handlers that prevent state loss
+  // CRITICAL: Improved event handlers with immediate state updates and logging
   const handleGroepSelect = (groepId: string) => {
     console.log('🎯 ProfielSelector: Groep selected:', groepId)
-    setProfiel(prev => {
-      const newProfile = { ...prev, groep: groepId }
-      console.log('🎯 ProfielSelector: New profile after groep select:', newProfile)
-      return newProfile
-    })
+    const newProfile = { ...profiel, groep: groepId }
+    console.log('🎯 ProfielSelector: New profile after groep select:', newProfile)
+    setProfiel(newProfile)
+    setDebugInfo(`Groep set to: ${groepId}`)
   }
 
   const handleVakgebiedToggle = (vakId: string) => {
     console.log('📚 ProfielSelector: Vakgebied toggled:', vakId)
-    setProfiel(prev => {
-      const newVakgebied = prev.vakgebied.includes(vakId)
-        ? prev.vakgebied.filter(v => v !== vakId)
-        : [...prev.vakgebied, vakId]
-      
-      const newProfile = { ...prev, vakgebied: newVakgebied }
-      console.log('📚 ProfielSelector: New profile after vakgebied toggle:', newProfile)
-      return newProfile
-    })
+    const newVakgebied = profiel.vakgebied.includes(vakId)
+      ? profiel.vakgebied.filter(v => v !== vakId)
+      : [...profiel.vakgebied, vakId]
+    
+    const newProfile = { ...profiel, vakgebied: newVakgebied }
+    console.log('📚 ProfielSelector: New profile after vakgebied toggle:', newProfile)
+    setProfiel(newProfile)
+    setDebugInfo(`Vakgebied: ${newVakgebied.join(', ')}`)
   }
 
   const handleErvaringSelect = (ervaringId: string) => {
     console.log('⭐ ProfielSelector: Ervaring selected:', ervaringId)
-    setProfiel(prev => {
-      const newProfile = { ...prev, ervaring: ervaringId }
-      console.log('⭐ ProfielSelector: New profile after ervaring select:', newProfile)
-      return newProfile
-    })
+    const newProfile = { ...profiel, ervaring: ervaringId }
+    console.log('⭐ ProfielSelector: New profile after ervaring select:', newProfile)
+    setProfiel(newProfile)
+    setDebugInfo(`Ervaring set to: ${ervaringId}`)
   }
 
   const handleFocusToggle = (focusId: string) => {
     console.log('🎯 ProfielSelector: Focus toggled:', focusId)
-    setProfiel(prev => {
-      const newFocus = prev.focus.includes(focusId)
-        ? prev.focus.filter(f => f !== focusId)
-        : [...prev.focus, focusId]
-      
-      const newProfile = { ...prev, focus: newFocus }
-      console.log('🎯 ProfielSelector: New profile after focus toggle:', newProfile)
-      return newProfile
-    })
+    const newFocus = profiel.focus.includes(focusId)
+      ? profiel.focus.filter(f => f !== focusId)
+      : [...profiel.focus, focusId]
+    
+    const newProfile = { ...profiel, focus: newFocus }
+    console.log('🎯 ProfielSelector: New profile after focus toggle:', newProfile)
+    setProfiel(newProfile)
+    setDebugInfo(`Focus: ${newFocus.join(', ')}`)
   }
 
   const handleVoorkeurToggle = (type: 'instructiemodel' | 'werkvormen' | 'selFocus', id: string) => {
     console.log('💡 ProfielSelector: Voorkeur toggled:', type, id)
-    setProfiel(prev => {
-      const currentVoorkeuren = prev.voorkeuren[type]
-      const newVoorkeuren = currentVoorkeuren.includes(id)
-        ? currentVoorkeuren.filter(item => item !== id)
-        : [...currentVoorkeuren, id]
-      
-      const newProfile = {
-        ...prev,
-        voorkeuren: {
-          ...prev.voorkeuren,
-          [type]: newVoorkeuren
-        }
+    const currentVoorkeuren = profiel.voorkeuren[type]
+    const newVoorkeuren = currentVoorkeuren.includes(id)
+      ? currentVoorkeuren.filter(item => item !== id)
+      : [...currentVoorkeuren, id]
+    
+    const newProfile = {
+      ...profiel,
+      voorkeuren: {
+        ...profiel.voorkeuren,
+        [type]: newVoorkeuren
       }
-      console.log('💡 ProfielSelector: New profile after voorkeur toggle:', newProfile)
-      return newProfile
-    })
+    }
+    console.log('💡 ProfielSelector: New profile after voorkeur toggle:', newProfile)
+    setProfiel(newProfile)
+    setDebugInfo(`${type}: ${newVoorkeuren.join(', ')}`)
   }
 
   const handleSubmit = () => {
     if (profiel.groep && profiel.vakgebied.length > 0 && profiel.ervaring) {
       setIsAnimating(true)
-      console.log('✅ ProfielSelector: Submitting profile:', profiel)
+      console.log('✅ ProfielSelector: Submitting complete profile:', profiel)
       
       // Save to localStorage before submitting
-      localStorage.setItem('leswizard_current_profile', JSON.stringify(profiel))
+      try {
+        localStorage.setItem('leswizard_current_profile', JSON.stringify(profiel))
+        console.log('✅ ProfielSelector: Profile saved to localStorage before submit')
+      } catch (error) {
+        console.error('❌ ProfielSelector: Error saving before submit:', error)
+      }
       
       // Add a small delay for animation
       setTimeout(() => {
@@ -222,6 +264,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
         vakgebied: profiel.vakgebied.length,
         ervaring: profiel.ervaring
       })
+      setDebugInfo('Profile incomplete - missing required fields')
     }
   }
 
@@ -232,7 +275,8 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
     groep: profiel.groep,
     vakgebied: profiel.vakgebied,
     ervaring: profiel.ervaring,
-    isValid
+    isValid,
+    debugInfo
   })
 
   return (
@@ -264,6 +308,13 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
         </div>
       </div>
 
+      {/* Debug Info (only in development) */}
+      {process.env.NODE_ENV === 'development' && debugInfo && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-yellow-800 text-sm">Debug: {debugInfo}</p>
+        </div>
+      )}
+
       {/* Profiel Beheer Component */}
       {showProfielBeheer && (
         <div className="mb-8 card glass">
@@ -286,7 +337,7 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
             <div>
               <h3 className="font-semibold text-green-900">Huidig profiel actief</h3>
               <p className="text-green-700">
-                {profiel.groep} • {profiel.vakgebied.length} vakgebieden • {profiel.ervaring}
+                {groepen.find(g => g.id === profiel.groep)?.label} • {profiel.vakgebied.length} vakgebieden • {profiel.ervaring}
               </p>
             </div>
           </div>
@@ -294,49 +345,91 @@ export default function ProfielSelector({ onComplete, currentProfile }: ProfielS
       )}
 
       <div className="space-y-12">
-        {/* Groep Selectie */}
+        {/* Groep Selectie - UITGEBREID */}
         <div className="space-y-6">
           <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Voor welke groep(en) maak je lessen?</h3>
-            <p className="text-gray-600">Selecteer de groep waar je het meest voor lesgeeft</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Voor welke groep(en) geef je les?</h3>
+            <p className="text-gray-600">Selecteer je groep - nu met alle individuele groepen en combigroepen</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {groepen.map((groep) => (
-              <button
-                key={groep.id}
-                onClick={() => handleGroepSelect(groep.id)}
-                className={`card-interactive group relative p-6 text-left transition-all duration-300 ${
-                  profiel.groep === groep.id
-                    ? `bg-gradient-to-br ${groep.color} text-white border-transparent shadow-xl animate-pulse-glow`
-                    : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center space-x-4 mb-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all duration-300 ${
+          {/* Individuele groepen */}
+          <div>
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">Individuele groepen</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+              {groepen.slice(0, 8).map((groep) => (
+                <button
+                  key={groep.id}
+                  onClick={() => handleGroepSelect(groep.id)}
+                  className={`card-interactive group relative p-4 text-center transition-all duration-300 ${
+                    profiel.groep === groep.id
+                      ? `bg-gradient-to-br ${groep.color} text-white border-transparent shadow-xl animate-pulse-glow`
+                      : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-2 mx-auto transition-all duration-300 ${
                     profiel.groep === groep.id ? 'bg-white/20 shadow-lg' : 'bg-gray-100 group-hover:bg-gray-200'
                   }`}>
                     {groep.icon}
                   </div>
-                  <div>
-                    <div className="font-bold text-lg">{groep.label}</div>
-                    <div className={`text-sm ${profiel.groep === groep.id ? 'text-white/80' : 'text-gray-600'}`}>
-                      {groep.description}
+                  <div className="font-bold text-sm">{groep.label}</div>
+                  <div className={`text-xs mt-1 ${profiel.groep === groep.id ? 'text-white/80' : 'text-gray-600'}`}>
+                    {groep.description.split(' ')[0]}
+                  </div>
+                  
+                  {profiel.groep === groep.id && (
+                    <div className="absolute top-2 right-2">
+                      <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Combigroepen */}
+          <div>
+            <h4 className="text-lg font-semibold text-gray-800 mb-4">Combigroepen</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {groepen.slice(8).map((groep) => (
+                <button
+                  key={groep.id}
+                  onClick={() => handleGroepSelect(groep.id)}
+                  className={`card-interactive group relative p-4 text-left transition-all duration-300 ${
+                    profiel.groep === groep.id
+                      ? `bg-gradient-to-br ${groep.color} text-white border-transparent shadow-xl animate-pulse-glow`
+                      : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all duration-300 ${
+                      profiel.groep === groep.id ? 'bg-white/20 shadow-lg' : 'bg-gray-100 group-hover:bg-gray-200'
+                    }`}>
+                      {groep.icon}
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm">{groep.label}</div>
+                      <div className={`text-xs ${profiel.groep === groep.id ? 'text-white/80' : 'text-gray-600'}`}>
+                        {groep.description}
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                {profiel.groep === groep.id && (
-                  <div className="absolute top-3 right-3">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg">
-                      <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                  
+                  {profiel.groep === groep.id && (
+                    <div className="absolute top-3 right-3">
+                      <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </button>
-            ))}
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

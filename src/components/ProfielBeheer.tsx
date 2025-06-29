@@ -86,8 +86,19 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
       localStorage.setItem('leswizard_profiles', JSON.stringify(updatedProfiles))
       setSavedProfiles(updatedProfiles)
       
+      // CRITICAL: Create clean profile object without extra properties
+      const cleanProfile: UserProfile = {
+        groep: profile.groep,
+        vakgebied: profile.vakgebied,
+        ervaring: profile.ervaring,
+        focus: profile.focus,
+        voorkeuren: profile.voorkeuren
+      }
+      
+      console.log('📥 ProfielBeheer: Loading clean profile:', cleanProfile)
+      
       // Stuur profiel naar parent component
-      onProfileSelect(updatedProfile)
+      onProfileSelect(cleanProfile)
       setShowLoadDialog(false)
     } catch (error) {
       console.error('Fout bij laden profiel:', error)
@@ -107,13 +118,29 @@ export default function ProfielBeheer({ onProfileSelect, currentProfile }: Profi
   }
 
   const getProfileSummary = (profile: UserProfile) => {
-    const groepLabel = {
-      'groep1-2': 'Groep 1-2',
-      'groep3-4': 'Groep 3-4', 
-      'groep5-6': 'Groep 5-6',
-      'groep7-8': 'Groep 7-8',
-      'combinatie': 'Combinatiegroep'
-    }[profile.groep] || profile.groep
+    // Updated groep labels to match new structure
+    const groepLabels: Record<string, string> = {
+      'groep1': 'Groep 1',
+      'groep2': 'Groep 2',
+      'groep3': 'Groep 3',
+      'groep4': 'Groep 4',
+      'groep5': 'Groep 5',
+      'groep6': 'Groep 6',
+      'groep7': 'Groep 7',
+      'groep8': 'Groep 8',
+      'groep1-2': 'Combi 1-2',
+      'groep2-3': 'Combi 2-3',
+      'groep3-4': 'Combi 3-4',
+      'groep4-5': 'Combi 4-5',
+      'groep5-6': 'Combi 5-6',
+      'groep6-7': 'Combi 6-7',
+      'groep7-8': 'Combi 7-8',
+      'groep1-3': 'Combi 1-3',
+      'groep4-8': 'Combi 4-8',
+      'groep1-8': 'Combi 1-8'
+    }
+
+    const groepLabel = groepLabels[profile.groep] || profile.groep
 
     const ervaringLabel = {
       'starter': 'Starter (0-2 jaar)',
