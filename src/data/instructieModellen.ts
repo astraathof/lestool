@@ -29,7 +29,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Directe Instructie',
     beschrijving: 'Gestructureerde, leraargestuurde aanpak met duidelijke stappen en veel oefening',
     icon: '👨‍🏫',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'rekenen', 'engels'],
     kenmerken: [
       'Duidelijke uitleg door de leraar',
@@ -110,7 +110,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Onderzoekend Leren',
     beschrijving: 'Leerlingen ontdekken kennis door eigen onderzoek, experimenten en vragen stellen',
     icon: '🔍',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['wereldoriëntatie', 'ict', 'nederlands', 'rekenen'],
     kenmerken: [
       'Leerlingen stellen vragen',
@@ -192,7 +192,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Coöperatief Leren',
     beschrijving: 'Leerlingen werken samen in kleine groepen aan gemeenschappelijke doelen',
     icon: '🤝',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'wereldoriëntatie', 'burgerschap', 'rekenen'],
     kenmerken: [
       'Samenwerken in groepen',
@@ -274,7 +274,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Spelend Leren',
     beschrijving: 'Leren door middel van spel, ontdekking en plezier in een speelse omgeving',
     icon: '🎮',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep1-2', 'groep3-4', 'groep5-6'],
     vakgebieden: ['rekenen', 'nederlands', 'bewegingsonderwijs', 'expressie'],
     kenmerken: [
       'Speelse activiteiten',
@@ -356,7 +356,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Gepersonaliseerd Leren',
     beschrijving: 'Onderwijs aangepast aan individuele behoeften, leerstijlen en tempo',
     icon: '🎯',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'rekenen', 'ict'],
     kenmerken: [
       'Individuele leerpaden',
@@ -438,7 +438,7 @@ export const instructieModellen: InstructieModel[] = [
     naam: 'Projectonderwijs',
     beschrijving: 'Langdurige, thematische projecten die verschillende vakken integreren',
     icon: '📊',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep5', 'groep6', 'groep7', 'groep8', 'groep5-6', 'groep7-8'],
     vakgebieden: ['wereldoriëntatie', 'nederlands', 'ict', 'expressie'],
     kenmerken: [
       'Thematische aanpak',
@@ -513,170 +513,6 @@ export const instructieModellen: InstructieModel[] = [
       'Zorg voor duidelijke structuur',
       'Betrek de omgeving',
       'Documenteer het proces'
-    ]
-  },
-  {
-    id: 'flipped_classroom',
-    naam: 'Flipped Classroom',
-    beschrijving: 'Leerlingen bereiden thuis voor, in de klas wordt geoefend en toegepast',
-    icon: '🔄',
-    geschiktVoor: ['groep7-8'],
-    vakgebieden: ['nederlands', 'rekenen', 'wereldoriëntatie', 'engels'],
-    kenmerken: [
-      'Voorbereiding thuis',
-      'Actieve lestijd',
-      'Meer individuele aandacht',
-      'Flexibel tempo',
-      'Technologie-ondersteund',
-      'Zelfstandig leren'
-    ],
-    fases: [
-      { 
-        naam: 'Voorbereiding thuis', 
-        beschrijving: 'Leerlingen bestuderen nieuwe stof thuis',
-        tijdsduur: '15-30 minuten',
-        activiteiten: ['Video bekijken', 'Tekst lezen', 'Aantekeningen maken']
-      },
-      { 
-        naam: 'Check-in', 
-        beschrijving: 'Vragen en begrip checken',
-        tijdsduur: '5-10 minuten',
-        activiteiten: ['Vragen beantwoorden', 'Begrip checken', 'Samenvatten']
-      },
-      { 
-        naam: 'Toepassing', 
-        beschrijving: 'Actief werken met de nieuwe stof',
-        tijdsduur: '25-35 minuten',
-        activiteiten: ['Oefenen', 'Toepassen', 'Samenwerken']
-      },
-      { 
-        naam: 'Verdieping', 
-        beschrijving: 'Uitdagende opdrachten en projecten',
-        tijdsduur: '10-15 minuten',
-        activiteiten: ['Uitdaging', 'Creativiteit', 'Transfer']
-      },
-      { 
-        naam: 'Reflectie', 
-        beschrijving: 'Leerproces evalueren',
-        tijdsduur: '5 minuten',
-        activiteiten: ['Reflecteren', 'Feedback geven', 'Plannen']
-      }
-    ],
-    voordelen: [
-      'Meer actieve lestijd',
-      'Individuele aandacht',
-      'Flexibel tempo',
-      'Zelfstandigheid',
-      'Efficiënt gebruik van lestijd',
-      'Moderne vaardigheden'
-    ],
-    tips: [
-      'Start geleidelijk',
-      'Zorg voor goede voorbereiding',
-      'Train leerlingen',
-      'Monitor thuiswerk',
-      'Gebruik technologie slim'
-    ],
-    differentiatie: [
-      'Verschillende voorbereidingsmaterialen',
-      'Flexibel tempo',
-      'Keuze in toepassingen',
-      'Variërende ondersteuning'
-    ],
-    materialen: ['Video\'s', 'Online materialen', 'Tablets/computers', 'Oefenmateriaal'],
-    voorbeelden: [
-      'Rekenvideo\'s thuis, oefenen in klas',
-      'Geschiedenisles voorbereiden',
-      'Taalregels thuis leren'
-    ],
-    wetenschappelijkeBasis: 'Gebaseerd op blended learning onderzoek en actief leren',
-    implementatieTips: [
-      'Zorg voor goede thuisomgeving',
-      'Train ouders mee',
-      'Gebruik korte video\'s',
-      'Evalueer regelmatig'
-    ]
-  },
-  {
-    id: 'blended_learning',
-    naam: 'Blended Learning',
-    beschrijving: 'Combinatie van traditioneel onderwijs en digitale leermiddelen',
-    icon: '💻',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'rekenen', 'ict', 'engels'],
-    kenmerken: [
-      'Mix van online en offline',
-      'Flexibele leeromgeving',
-      'Gepersonaliseerde paden',
-      'Data-gedreven',
-      'Zelfgestuurd leren',
-      'Technologie-integratie'
-    ],
-    fases: [
-      { 
-        naam: 'Introductie', 
-        beschrijving: 'Lesdoel en aanpak uitleggen',
-        tijdsduur: '5 minuten',
-        activiteiten: ['Doel uitleggen', 'Aanpak bespreken', 'Materialen introduceren']
-      },
-      { 
-        naam: 'Online component', 
-        beschrijving: 'Digitaal leren en oefenen',
-        tijdsduur: '15-20 minuten',
-        activiteiten: ['Online oefenen', 'Video\'s bekijken', 'Digitale opdrachten']
-      },
-      { 
-        naam: 'Offline component', 
-        beschrijving: 'Traditionele leeractiviteiten',
-        tijdsduur: '15-20 minuten',
-        activiteiten: ['Klassikaal werken', 'Groepsopdrachten', 'Handmatig oefenen']
-      },
-      { 
-        naam: 'Integratie', 
-        beschrijving: 'Online en offline verbinden',
-        tijdsduur: '5-10 minuten',
-        activiteiten: ['Verbanden leggen', 'Ervaringen delen', 'Samenvatten']
-      },
-      { 
-        naam: 'Evaluatie', 
-        beschrijving: 'Voortgang en begrip checken',
-        tijdsduur: '5 minuten',
-        activiteiten: ['Voortgang bekijken', 'Feedback geven', 'Plannen']
-      }
-    ],
-    voordelen: [
-      'Flexibiliteit',
-      'Gepersonaliseerd',
-      'Efficiënt',
-      'Motiverend',
-      'Data-inzicht',
-      'Moderne vaardigheden'
-    ],
-    tips: [
-      'Balanceer online en offline',
-      'Kies goede tools',
-      'Train leerlingen',
-      'Monitor voortgang',
-      'Zorg voor technische ondersteuning'
-    ],
-    differentiatie: [
-      'Verschillende online paden',
-      'Flexibel tempo',
-      'Keuze in tools',
-      'Variërende ondersteuning'
-    ],
-    materialen: ['Computers/tablets', 'Educatieve software', 'Online platforms', 'Traditionele materialen'],
-    voorbeelden: [
-      'Rekenen met adaptieve software',
-      'Online spelling + handschrift',
-      'Digitaal lezen + boeken'
-    ],
-    wetenschappelijkeBasis: 'Gebaseerd op blended learning onderzoek en technologie-enhanced learning',
-    implementatieTips: [
-      'Start met één vak',
-      'Zorg voor goede infrastructuur',
-      'Train jezelf eerst',
-      'Evalueer effectiviteit'
     ]
   }
 ]

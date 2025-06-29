@@ -21,7 +21,6 @@ export interface Werkvorm {
 }
 
 export const werkvormenDatabase: Werkvorm[] = [
-  // Bestaande werkvormen...
   {
     id: 'klassengesprek',
     naam: 'Klassengesprek',
@@ -30,7 +29,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Discussie',
     tijdsduur: '10-20 minuten',
     groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'wereldoriëntatie', 'burgerschap'],
     instructiemodellen: ['directe_instructie', 'onderzoekend_leren'],
     voorbereiding: 'Laag',
@@ -63,7 +62,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Coöperatief',
     tijdsduur: '15-25 minuten',
     groepsgrootte: 'Individueel → Tweetallen → Klas',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'rekenen', 'wereldoriëntatie'],
     instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
     voorbereiding: 'Laag',
@@ -96,7 +95,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Coöperatief',
     tijdsduur: '45-90 minuten',
     groepsgrootte: '4-6 leerlingen per groep',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep5', 'groep6', 'groep7', 'groep8', 'groep5-6', 'groep7-8'],
     vakgebieden: ['wereldoriëntatie', 'nederlands', 'burgerschap'],
     instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
     voorbereiding: 'Hoog',
@@ -131,7 +130,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Zelfstandig',
     tijdsduur: '30-60 minuten',
     groepsgrootte: '3-5 leerlingen per station',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['rekenen', 'nederlands', 'expressie', 'bewegingsonderwijs'],
     instructiemodellen: ['gepersonaliseerd_leren', 'spelend_leren'],
     voorbereiding: 'Hoog',
@@ -165,7 +164,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Dramatisering',
     tijdsduur: '20-45 minuten',
     groepsgrootte: 'Variabel',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['nederlands', 'burgerschap', 'wereldoriëntatie', 'engels'],
     instructiemodellen: ['spelend_leren', 'coöperatief_leren'],
     voorbereiding: 'Gemiddeld',
@@ -199,7 +198,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'ICT',
     tijdsduur: '60-120 minuten',
     groepsgrootte: '2-4 leerlingen',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep5', 'groep6', 'groep7', 'groep8', 'groep5-6', 'groep7-8'],
     vakgebieden: ['wereldoriëntatie', 'ict', 'nederlands'],
     instructiemodellen: ['onderzoekend_leren', 'projectonderwijs'],
     voorbereiding: 'Hoog',
@@ -234,7 +233,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Presentatie',
     tijdsduur: '20-40 minuten',
     groepsgrootte: 'Individueel of kleine groepjes',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['expressie', 'nederlands', 'wereldoriëntatie'],
     instructiemodellen: ['coöperatief_leren', 'projectonderwijs'],
     voorbereiding: 'Gemiddeld',
@@ -268,7 +267,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Gamification',
     tijdsduur: '45-90 minuten',
     groepsgrootte: '4-6 leerlingen per team',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep5', 'groep6', 'groep7', 'groep8', 'groep5-6', 'groep7-8'],
     vakgebieden: ['rekenen', 'nederlands', 'wereldoriëntatie'],
     instructiemodellen: ['spelend_leren', 'coöperatief_leren'],
     voorbereiding: 'Hoog',
@@ -295,148 +294,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     energieniveau: 'Hoog',
     doel: ['Probleemoplossing', 'Samenwerking', 'Motivatie']
   },
-
-  // NIEUWE WERKVORMEN
-  {
-    id: 'fishbowl',
-    naam: 'Fishbowl Discussie',
-    beschrijving: 'Kleine groep discussieert in het midden, anderen observeren en kunnen deelnemen',
-    icon: '🐠',
-    categorie: 'Discussie',
-    tijdsduur: '20-30 minuten',
-    groepsgrootte: '4-6 in centrum, rest observeert',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['burgerschap', 'nederlands', 'wereldoriëntatie'],
-    instructiemodellen: ['onderzoekend_leren', 'coöperatief_leren'],
-    voorbereiding: 'Gemiddeld',
-    materialen: ['Stoelen in cirkel', 'Discussieonderwerp', 'Regels poster'],
-    stappen: [
-      'Zet stoelen in fishbowl opstelling',
-      'Leg de regels uit',
-      'Start discussie met kerngroep',
-      'Anderen kunnen plaatsnemen',
-      'Sluit af met reflectie'
-    ],
-    tips: [
-      'Houd discussie gefocust',
-      'Moedig wisselingen aan',
-      'Zorg voor veilige sfeer',
-      'Evalueer de kwaliteit van argumenten'
-    ],
-    differentiatie: [
-      'Geef verschillende rollen',
-      'Pas onderwerp aan op niveau',
-      'Bied steekwoorden'
-    ],
-    energieniveau: 'Gemiddeld',
-    doel: ['Discussievaardigheden', 'Luisteren', 'Argumenteren']
-  },
-  {
-    id: 'world_cafe',
-    naam: 'World Café',
-    beschrijving: 'Leerlingen rouleren tussen tafels met verschillende gespreksonderwerpen',
-    icon: '☕',
-    categorie: 'Discussie',
-    tijdsduur: '30-45 minuten',
-    groepsgrootte: '4-6 per tafel',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['burgerschap', 'wereldoriëntatie', 'nederlands'],
-    instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
-    voorbereiding: 'Gemiddeld',
-    materialen: ['Tafels', 'Grote vellen papier', 'Stiften', 'Vragen per tafel'],
-    stappen: [
-      'Stel tafels in met verschillende vragen',
-      'Verdeel leerlingen over tafels',
-      'Eerste ronde discussie (10 min)',
-      'Rouleer naar volgende tafel',
-      'Herhaal 2-3 rondes',
-      'Deel inzichten klassikaal'
-    ],
-    tips: [
-      'Kies gerelateerde onderwerpen',
-      'Zorg voor goede tafelgasteer',
-      'Stimuleer voortbouwen op ideeën',
-      'Maak visuele samenvattingen'
-    ],
-    differentiatie: [
-      'Verschillende complexiteit per tafel',
-      'Visuele ondersteuning',
-      'Keuze in onderwerpen'
-    ],
-    energieniveau: 'Hoog',
-    doel: ['Meerdere perspectieven', 'Netwerken', 'Ideeën genereren']
-  },
-  {
-    id: 'speed_dating',
-    naam: 'Speed Dating',
-    beschrijving: 'Leerlingen wisselen snel van partner en bespreken verschillende onderwerpen',
-    icon: '💨',
-    categorie: 'Coöperatief',
-    tijdsduur: '15-25 minuten',
-    groepsgrootte: 'Tweetallen',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'engels', 'burgerschap'],
-    instructiemodellen: ['coöperatief_leren', 'spelend_leren'],
-    voorbereiding: 'Laag',
-    materialen: ['Timer', 'Vragenlijst', 'Stoelen in twee rijen'],
-    stappen: [
-      'Zet stoelen tegenover elkaar',
-      'Geef elke ronde een vraag',
-      'Start timer (2-3 minuten)',
-      'Laat één rij doorschuiven',
-      'Herhaal met nieuwe vraag',
-      'Sluit af met reflectie'
-    ],
-    tips: [
-      'Houd rondes kort',
-      'Varieer in vraagtypen',
-      'Zorg voor duidelijk signaal',
-      'Maak het speels'
-    ],
-    differentiatie: [
-      'Verschillende vragen per niveau',
-      'Visuele ondersteuning',
-      'Flexibele tijd per ronde'
-    ],
-    energieniveau: 'Hoog',
-    doel: ['Kennismaking', 'Spreken', 'Sociale vaardigheden']
-  },
-  {
-    id: 'silent_discussion',
-    naam: 'Silent Discussion',
-    beschrijving: 'Schriftelijke discussie zonder praten, leerlingen reageren op papier',
-    icon: '🤫',
-    categorie: 'Discussie',
-    tijdsduur: '20-30 minuten',
-    groepsgrootte: '4-6 per groep',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'burgerschap', 'wereldoriëntatie'],
-    instructiemodellen: ['onderzoekend_leren', 'coöperatief_leren'],
-    voorbereiding: 'Laag',
-    materialen: ['Grote vellen papier', 'Verschillende kleuren stiften', 'Stellingen'],
-    stappen: [
-      'Hang stellingen op verschillende plekken',
-      'Leerlingen schrijven reacties',
-      'Reageren op elkaars reacties',
-      'Rouleren naar volgende stelling',
-      'Bespreken van opvallende reacties'
-    ],
-    tips: [
-      'Kies prikkelende stellingen',
-      'Moedig verschillende meningen aan',
-      'Zorg voor respectvolle reacties',
-      'Gebruik verschillende kleuren'
-    ],
-    differentiatie: [
-      'Verschillende complexiteit stellingen',
-      'Visuele ondersteuning',
-      'Keuze in reactievorm'
-    ],
-    energieniveau: 'Laag',
-    doel: ['Reflectie', 'Schriftelijke communicatie', 'Verschillende meningen']
-  },
-
-  // ENERGIZERS
+  // Energizers
   {
     id: 'energizer_brain_gym',
     naam: 'Brain Gym Oefeningen',
@@ -445,7 +303,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Energizer',
     tijdsduur: '3-5 minuten',
     groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['alle vakken'],
     instructiemodellen: ['alle modellen'],
     voorbereiding: 'Laag',
@@ -471,39 +329,6 @@ export const werkvormenDatabase: Werkvorm[] = [
     doel: ['Concentratie verhogen', 'Energie opwekken', 'Ontspanning']
   },
   {
-    id: 'energizer_human_knot',
-    naam: 'Menselijke Knoop',
-    beschrijving: 'Leerlingen vormen een knoop met hun handen en proberen deze op te lossen',
-    icon: '🪢',
-    categorie: 'Energizer',
-    tijdsduur: '5-10 minuten',
-    groepsgrootte: '6-12 leerlingen',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['alle vakken'],
-    instructiemodellen: ['alle modellen'],
-    voorbereiding: 'Laag',
-    materialen: ['Ruimte om te bewegen'],
-    stappen: [
-      'Leerlingen staan in cirkel',
-      'Iedereen pakt twee verschillende handen',
-      'Probeer de knoop op te lossen zonder los te laten',
-      'Werk samen om oplossing te vinden'
-    ],
-    tips: [
-      'Zorg voor veilige omgeving',
-      'Moedig samenwerking aan',
-      'Help waar nodig',
-      'Vier het succes'
-    ],
-    differentiatie: [
-      'Kleinere groepen voor makkelijker',
-      'Extra begeleiding',
-      'Alternatieve vormen'
-    ],
-    energieniveau: 'Hoog',
-    doel: ['Samenwerking', 'Probleemoplossing', 'Beweging']
-  },
-  {
     id: 'energizer_rhythm_clap',
     naam: 'Ritme Klappen',
     beschrijving: 'Gezamenlijk ritme klappen om energie en focus te verhogen',
@@ -511,7 +336,7 @@ export const werkvormenDatabase: Werkvorm[] = [
     categorie: 'Energizer',
     tijdsduur: '2-5 minuten',
     groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
+    geschiktVoor: ['groep1', 'groep2', 'groep3', 'groep4', 'groep5', 'groep6', 'groep7', 'groep8', 'groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
     vakgebieden: ['alle vakken'],
     instructiemodellen: ['alle modellen'],
     voorbereiding: 'Laag',
@@ -535,212 +360,6 @@ export const werkvormenDatabase: Werkvorm[] = [
     ],
     energieniveau: 'Gemiddeld',
     doel: ['Concentratie', 'Groepsgevoel', 'Ritme']
-  },
-  {
-    id: 'energizer_statue_dance',
-    naam: 'Standbeeld Dans',
-    beschrijving: 'Dansen op muziek, bij stop muziek bevriezen als standbeeld',
-    icon: '🕺',
-    categorie: 'Energizer',
-    tijdsduur: '5-8 minuten',
-    groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6'],
-    vakgebieden: ['alle vakken'],
-    instructiemodellen: ['alle modellen'],
-    voorbereiding: 'Laag',
-    materialen: ['Muziek', 'Speaker'],
-    stappen: [
-      'Zet vrolijke muziek aan',
-      'Leerlingen dansen vrij',
-      'Stop muziek onverwacht',
-      'Iedereen bevriest als standbeeld',
-      'Herhaal meerdere keren'
-    ],
-    tips: [
-      'Kies vrolijke muziek',
-      'Varieer in stopmoment',
-      'Complimenteer mooie standbeelden',
-      'Houd het speels'
-    ],
-    differentiatie: [
-      'Verschillende muziekstijlen',
-      'Thematische standbeelden',
-      'Laat leerlingen muziek kiezen'
-    ],
-    energieniveau: 'Hoog',
-    doel: ['Beweging', 'Plezier', 'Luistervaardigheden']
-  },
-  {
-    id: 'energizer_word_association',
-    naam: 'Woordassociatie Cirkel',
-    beschrijving: 'Snel woordassociaties maken in een cirkel',
-    icon: '💭',
-    categorie: 'Energizer',
-    tijdsduur: '3-7 minuten',
-    groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['nederlands', 'alle vakken'],
-    instructiemodellen: ['alle modellen'],
-    voorbereiding: 'Laag',
-    materialen: ['Geen'],
-    stappen: [
-      'Leerlingen staan in cirkel',
-      'Begin met een woord',
-      'Volgende leerling zegt associatie',
-      'Ga snel rond de cirkel',
-      'Varieer in thema\'s'
-    ],
-    tips: [
-      'Houd het tempo hoog',
-      'Accepteer alle associaties',
-      'Varieer in startwoorden',
-      'Maak het thematisch'
-    ],
-    differentiatie: [
-      'Verschillende thema\'s',
-      'Visuele ondersteuning',
-      'Langzamer tempo'
-    ],
-    energieniveau: 'Gemiddeld',
-    doel: ['Creativiteit', 'Snelheid', 'Woordenschat']
-  },
-  {
-    id: 'energizer_mirror_exercise',
-    naam: 'Spiegeloefening',
-    beschrijving: 'Leerlingen spiegelen elkaars bewegingen',
-    icon: '🪞',
-    categorie: 'Energizer',
-    tijdsduur: '3-6 minuten',
-    groepsgrootte: 'Tweetallen',
-    geschiktVoor: ['groep1-2', 'groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['alle vakken'],
-    instructiemodellen: ['alle modellen'],
-    voorbereiding: 'Laag',
-    materialen: ['Ruimte om te bewegen'],
-    stappen: [
-      'Verdeel in tweetallen',
-      'Één persoon is de spiegel',
-      'Ander maakt langzame bewegingen',
-      'Spiegel volgt exact na',
-      'Wissel van rol'
-    ],
-    tips: [
-      'Begin langzaam',
-      'Moedig oogcontact aan',
-      'Varieer in bewegingen',
-      'Maak het speels'
-    ],
-    differentiatie: [
-      'Verschillende bewegingstypen',
-      'Zittende variant',
-      'Groepsvariant'
-    ],
-    energieniveau: 'Gemiddeld',
-    doel: ['Concentratie', 'Samenwerking', 'Lichaamsbewustzijn']
-  },
-
-  // BEWEGINGSWERKVORMEN
-  {
-    id: 'beweging_corners',
-    naam: 'Vier Hoeken',
-    beschrijving: 'Leerlingen kiezen een hoek op basis van hun mening of antwoord',
-    icon: '📐',
-    categorie: 'Beweging',
-    tijdsduur: '10-15 minuten',
-    groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['burgerschap', 'nederlands', 'wereldoriëntatie'],
-    instructiemodellen: ['onderzoekend_leren', 'coöperatief_leren'],
-    voorbereiding: 'Laag',
-    materialen: ['Hoekborden', 'Vragen/stellingen'],
-    stappen: [
-      'Label vier hoeken van het lokaal',
-      'Stel een vraag met vier antwoordmogelijkheden',
-      'Leerlingen lopen naar hun keuze',
-      'Bespreek in hoekgroepen',
-      'Deel argumenten klassikaal'
-    ],
-    tips: [
-      'Kies duidelijke labels',
-      'Zorg voor gelijkwaardige opties',
-      'Moedig discussie aan',
-      'Respecteer alle meningen'
-    ],
-    differentiatie: [
-      'Verschillende complexiteit vragen',
-      'Visuele ondersteuning',
-      'Extra uitleg per hoek'
-    ],
-    energieniveau: 'Gemiddeld',
-    doel: ['Mening uiten', 'Beweging', 'Discussie']
-  },
-  {
-    id: 'beweging_human_timeline',
-    naam: 'Menselijke Tijdlijn',
-    beschrijving: 'Leerlingen vormen een tijdlijn met hun lichaam',
-    icon: '📅',
-    categorie: 'Beweging',
-    tijdsduur: '15-25 minuten',
-    groepsgrootte: 'Hele klas',
-    geschiktVoor: ['groep5-6', 'groep7-8'],
-    vakgebieden: ['wereldoriëntatie', 'nederlands'],
-    instructiemodellen: ['coöperatief_leren', 'onderzoekend_leren'],
-    voorbereiding: 'Gemiddeld',
-    materialen: ['Gebeurteniskaarten', 'Tijdlijn markering'],
-    stappen: [
-      'Geef elke leerling een gebeurtenis',
-      'Laat ze zich chronologisch opstellen',
-      'Bespreek de volgorde',
-      'Corrigeer waar nodig',
-      'Loop de tijdlijn af'
-    ],
-    tips: [
-      'Kies bekende gebeurtenissen',
-      'Help bij moeilijke dateringen',
-      'Maak het visueel',
-      'Bespreek verbanden'
-    ],
-    differentiatie: [
-      'Verschillende complexiteit gebeurtenissen',
-      'Visuele ondersteuning',
-      'Groepswerk mogelijk'
-    ],
-    energieniveau: 'Gemiddeld',
-    doel: ['Chronologie', 'Samenwerking', 'Geschiedenis']
-  },
-  {
-    id: 'beweging_gallery_walk_active',
-    naam: 'Actieve Gallery Walk',
-    beschrijving: 'Gallery walk met bewegingsopdrachten tussen stations',
-    icon: '🚶‍♂️',
-    categorie: 'Beweging',
-    tijdsduur: '25-35 minuten',
-    groepsgrootte: 'Kleine groepjes',
-    geschiktVoor: ['groep3-4', 'groep5-6', 'groep7-8'],
-    vakgebieden: ['alle vakken'],
-    instructiemodellen: ['stations_leren', 'coöperatief_leren'],
-    voorbereiding: 'Hoog',
-    materialen: ['Stations', 'Bewegingsopdrachten', 'Timer'],
-    stappen: [
-      'Stel stations in met inhoud',
-      'Voeg bewegingsopdracht toe tussen stations',
-      'Groepen starten bij verschillende stations',
-      'Na elke ronde: bewegingsopdracht',
-      'Rouleren naar volgend station'
-    ],
-    tips: [
-      'Varieer in bewegingen',
-      'Houd rekening met ruimte',
-      'Maak bewegingen thematisch',
-      'Zorg voor veiligheid'
-    ],
-    differentiatie: [
-      'Verschillende bewegingsintensiteit',
-      'Alternatieve bewegingen',
-      'Keuze in opdrachten'
-    ],
-    energieniveau: 'Hoog',
-    doel: ['Beweging', 'Leren', 'Variatie']
   }
 ]
 
