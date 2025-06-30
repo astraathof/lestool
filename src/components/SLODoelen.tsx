@@ -175,7 +175,7 @@ export default function SLODoelen({ userProfile, onComplete, selectedDoelen }: S
         </div>
       </div>
 
-      {/* Search */}
+      {/* Search - FIXED: Added proper event handling */}
       <div className="mb-6">
         <div className="relative">
           <input
@@ -183,170 +183,205 @@ export default function SLODoelen({ userProfile, onComplete, selectedDoelen }: S
             placeholder="Zoek in doelen, beschrijvingen of kernwoorden..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
         </div>
+        {searchTerm && (
+          <p className="mt-2 text-sm text-gray-600">
+            {relevanteDoelen.length} resultaten gevonden voor "{searchTerm}"
+          </p>
+        )}
       </div>
 
       {/* Doelen Grid */}
       <div className="space-y-4 mb-8">
-        {relevanteDoelen.map((doel) => {
-          const isSelected = geselecteerdeDoelen.some(d => d.id === doel.id)
-          const isHuidigeGroep = doel.groep === userProfile.groep
-          
-          return (
-            <div
-              key={doel.id}
-              className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
-                isSelected
-                  ? 'border-blue-500 bg-blue-50'
-                  : isHuidigeGroep
-                  ? 'border-green-200 hover:border-green-400 bg-green-50'
-                  : 'border-gray-200 hover:border-blue-300'
-              }`}
-              onClick={() => toggleDoel(doel)}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded">
-                      {doel.code}
-                    </span>
-                    <span className={`px-2 py-1 text-xs rounded ${
-                      isHuidigeGroep 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-blue-100 text-blue-700'
-                    }`}>
-                      {getGroepLabel(doel.groep)}
-                    </span>
-                    <h3 className="font-semibold text-gray-900">{doel.titel}</h3>
-                  </div>
-                  
-                  <p className="text-gray-600 mb-3">{doel.beschrijving}</p>
-                  
-                  {/* Kernwoorden */}
-                  <div className="mb-3">
-                    <div className="flex flex-wrap gap-1">
-                      {doel.kernwoorden.map((kernwoord, index) => (
-                        <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">
-                          {kernwoord}
-                        </span>
-                      ))}
+        {relevanteDoelen.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-gray-400 text-4xl mb-4">🔍</div>
+            <p className="text-gray-600">
+              {searchTerm 
+                ? `Geen doelen gevonden voor "${searchTerm}"`
+                : 'Geen doelen beschikbaar voor deze selectie'
+              }
+            </p>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="mt-2 text-blue-600 hover:text-blue-800 underline"
+              >
+                Wis zoekopdracht
+              </button>
+            )}
+          </div>
+        ) : (
+          relevanteDoelen.map((doel) => {
+            const isSelected = geselecteerdeDoelen.some(d => d.id === doel.id)
+            const isHuidigeGroep = doel.groep === userProfile.groep
+            
+            return (
+              <div
+                key={doel.id}
+                className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                  isSelected
+                    ? 'border-blue-500 bg-blue-50'
+                    : isHuidigeGroep
+                    ? 'border-green-200 hover:border-green-400 bg-green-50'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+                onClick={() => toggleDoel(doel)}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded">
+                        {doel.code}
+                      </span>
+                      <span className={`px-2 py-1 text-xs rounded ${
+                        isHuidigeGroep 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        {getGroepLabel(doel.groep)}
+                      </span>
+                      <h3 className="font-semibold text-lg text-gray-900">{doel.titel}</h3>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-gray-700">Subdoelen:</p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      {doel.subdoelen.map((subdoel: string, index: number) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {subdoel}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Doorlopende leerlijn knop */}
-                  <div className="mt-4">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setShowLeerlijn(showLeerlijn === doel.id ? null : doel.id)
-                      }}
-                      className="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center space-x-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>Bekijk doorlopende leerlijn</span>
-                    </button>
-                  </div>
-
-                  {/* Doorlopende leerlijn details */}
-                  {showLeerlijn === doel.id && (
-                    <div className="mt-4 p-4 bg-white border border-purple-200 rounded-lg">
-                      <h4 className="font-medium text-purple-900 mb-3">Doorlopende leerlijn</h4>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {/* Voorafgaand */}
-                        <div>
-                          <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
-                            Eerder geleerd
-                          </h5>
-                          {getVoorafgaandeDoelen(doel.id).length > 0 ? (
-                            <div className="space-y-2">
-                              {getVoorafgaandeDoelen(doel.id).map((voorDoel) => (
-                                <div key={voorDoel.id} className="p-2 bg-orange-50 border border-orange-200 rounded text-xs">
-                                  <div className="font-medium text-orange-900">{voorDoel.code}: {voorDoel.titel}</div>
-                                  <div className="text-orange-700">{getGroepLabel(voorDoel.groep)}</div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-gray-500 text-xs">Geen voorafgaande doelen</p>
-                          )}
-                        </div>
-
-                        {/* Huidig */}
-                        <div>
-                          <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                            Nu aan de beurt
-                          </h5>
-                          <div className="p-2 bg-green-50 border border-green-200 rounded text-xs">
-                            <div className="font-medium text-green-900">{doel.code}: {doel.titel}</div>
-                            <div className="text-green-700">{getGroepLabel(doel.groep)}</div>
-                          </div>
-                        </div>
-
-                        {/* Vervolgend */}
-                        <div>
-                          <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                            Komt later
-                          </h5>
-                          {getVervolgendeDoelen(doel.id).length > 0 ? (
-                            <div className="space-y-2">
-                              {getVervolgendeDoelen(doel.id).map((volgDoel) => (
-                                <div key={volgDoel.id} className="p-2 bg-blue-50 border border-blue-200 rounded text-xs">
-                                  <div className="font-medium text-blue-900">{volgDoel.code}: {volgDoel.titel}</div>
-                                  <div className="text-blue-700">{getGroepLabel(volgDoel.groep)}</div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-gray-500 text-xs">Geen vervolg doelen</p>
-                          )}
-                        </div>
+                    
+                    <p className="text-gray-600 mb-3">{doel.beschrijving}</p>
+                    
+                    {/* Kernwoorden */}
+                    <div className="mb-3">
+                      <div className="flex flex-wrap gap-1">
+                        {doel.kernwoorden.map((kernwoord, index) => (
+                          <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">
+                            {kernwoord}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  )}
-                </div>
-                
-                <div className="ml-4">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                    isSelected
-                      ? 'border-blue-500 bg-blue-500'
-                      : 'border-gray-300'
-                  }`}>
-                    {isSelected && (
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                    
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-gray-700">Subdoelen:</p>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        {doel.subdoelen.map((subdoel: string, index: number) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-blue-500 mr-2">•</span>
+                            {subdoel}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Doorlopende leerlijn knop */}
+                    <div className="mt-4">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setShowLeerlijn(showLeerlijn === doel.id ? null : doel.id)
+                        }}
+                        className="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center space-x-1"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Bekijk doorlopende leerlijn</span>
+                      </button>
+                    </div>
+
+                    {/* Doorlopende leerlijn details */}
+                    {showLeerlijn === doel.id && (
+                      <div className="mt-4 p-4 bg-white border border-purple-200 rounded-lg">
+                        <h4 className="font-medium text-purple-900 mb-3">Doorlopende leerlijn</h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {/* Voorafgaand */}
+                          <div>
+                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                              Eerder geleerd
+                            </h5>
+                            {getVoorafgaandeDoelen(doel.id).length > 0 ? (
+                              <div className="space-y-2">
+                                {getVoorafgaandeDoelen(doel.id).map((voorDoel) => (
+                                  <div key={voorDoel.id} className="p-2 bg-orange-50 border border-orange-200 rounded text-xs">
+                                    <div className="font-medium text-orange-900">{voorDoel.code}: {voorDoel.titel}</div>
+                                    <div className="text-orange-700">{getGroepLabel(voorDoel.groep)}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-gray-500 text-xs">Geen voorafgaande doelen</p>
+                            )}
+                          </div>
+
+                          {/* Huidig */}
+                          <div>
+                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                              <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                              Nu aan de beurt
+                            </h5>
+                            <div className="p-2 bg-green-50 border border-green-200 rounded text-xs">
+                              <div className="font-medium text-green-900">{doel.code}: {doel.titel}</div>
+                              <div className="text-green-700">{getGroepLabel(doel.groep)}</div>
+                            </div>
+                          </div>
+
+                          {/* Vervolgend */}
+                          <div>
+                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                              Komt later
+                            </h5>
+                            {getVervolgendeDoelen(doel.id).length > 0 ? (
+                              <div className="space-y-2">
+                                {getVervolgendeDoelen(doel.id).map((volgDoel) => (
+                                  <div key={volgDoel.id} className="p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                                    <div className="font-medium text-blue-900">{volgDoel.code}: {volgDoel.titel}</div>
+                                    <div className="text-blue-700">{getGroepLabel(volgDoel.groep)}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-gray-500 text-xs">Geen vervolg doelen</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     )}
+                  </div>
+                  
+                  <div className="ml-4">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-500'
+                        : 'border-gray-300'
+                    }`}>
+                      {isSelected && (
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </div>
 
       {/* Selected Summary */}

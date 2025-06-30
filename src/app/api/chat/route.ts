@@ -22,8 +22,8 @@ export async function POST(request: NextRequest) {
       console.error('GEMINI_API_KEY not found in environment variables');
       return NextResponse.json(
         { 
-          error: 'API configuratie ontbreekt. Check Netlify Environment Variables.',
-          hint: 'Voeg GEMINI_API_KEY toe in Netlify Site Settings → Environment Variables',
+          error: 'API configuratie ontbreekt. Check Environment Variables.',
+          hint: 'Voeg GEMINI_API_KEY toe aan je environment variables',
           debug: 'Environment variable GEMINI_API_KEY is not set'
         }, 
         { status: 500 }
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Haal de bericht data op uit de request
     const body = await request.json()
-    console.log('Received request body:', body)
+    console.log('Received request body:', JSON.stringify(body, null, 2))
     
     const { message, image, images, useGrounding = true, aiModel = 'smart' } = body
 
@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
     const modelName = aiModel === 'pro' ? 'gemini-2.5-pro-preview-06-05' :
                      aiModel === 'smart' ? 'gemini-2.5-flash-preview-05-20' :
                      'gemini-2.0-flash-exp' // internet
+    
+    console.log('Using model:', modelName)
+    
     const model = genAI.getGenerativeModel({ model: modelName })
 
     // Configureer tools array - grounding alleen voor Gemini 2.0 (internet model)
@@ -65,8 +68,18 @@ export async function POST(request: NextRequest) {
     // Helper function to generate content with fallback
     const generateWithFallback = async (requestConfig: any) => {
       try {
+        console.log('Generating content with config:', JSON.stringify({
+          ...requestConfig,
+          contents: requestConfig.contents.map((c: any) => ({
+            ...c,
+            parts: c.parts.map((p: any) => p.text ? { text: p.text.substring(0, 100) + '...' } : '[IMAGE]')
+          }))
+        }, null, 2))
+        
         return await model.generateContent(requestConfig)
       } catch (error: any) {
+        console.error('Generation error:', error)
+        
         // If grounding fails, retry without tools
         if (useGrounding && (error.message?.includes('Search Grounding is not supported') || 
                             error.message?.includes('google_search_retrieval is not supported'))) {
@@ -120,6 +133,8 @@ export async function POST(request: NextRequest) {
     const response = await result.response
     const text = response.text()
 
+    console.log('Generated response length:', text.length)
+
     // Extract grounding metadata if available
     const groundingMetadata = response.candidates?.[0]?.groundingMetadata || null
     const searchQueries = groundingMetadata?.webSearchQueries || []
@@ -139,20 +154,28 @@ export async function POST(request: NextRequest) {
       }
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Fout bij het aanroepen van Gemini API:', error)
     
     // Betere error information voor debugging
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace'
+    
+    console.error('Full error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      name: error?.name,
+      cause: error?.cause
+    })
     
     return NextResponse.json(
       { 
         error: 'Er is een fout opgetreden bij het verwerken van je bericht',
         details: errorMessage,
         timestamp: new Date().toISOString(),
-        hint: 'Check Netlify Function logs voor meer details'
+        hint: 'Check de server logs voor meer details'
       },
       { status: 500 }
     )
   }
-} 
+}

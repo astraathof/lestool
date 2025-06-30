@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request data
     const body = await request.json()
-    console.log('Received request body:', body)
+    console.log('Received streaming request body:', JSON.stringify(body, null, 2))
     
     const { message, image, images, useGrounding = true, aiModel = 'smart' } = body
 
@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
     const modelName = aiModel === 'pro' ? 'gemini-2.5-pro-preview-06-05' :
                      aiModel === 'smart' ? 'gemini-2.5-flash-preview-05-20' :
                      'gemini-2.0-flash-exp' // internet
+    
+    console.log('Using streaming model:', modelName)
+    
     const model = genAI.getGenerativeModel({ model: modelName })
 
     // Configureer tools array - grounding alleen voor Gemini 2.0 (internet model)
@@ -69,8 +72,18 @@ export async function POST(request: NextRequest) {
           // Helper function to generate content with fallback
           const generateStreamWithFallback = async (requestConfig: any) => {
             try {
+              console.log('Generating streaming content with config:', JSON.stringify({
+                ...requestConfig,
+                contents: requestConfig.contents.map((c: any) => ({
+                  ...c,
+                  parts: c.parts.map((p: any) => p.text ? { text: p.text.substring(0, 100) + '...' } : '[IMAGE]')
+                }))
+              }, null, 2))
+              
               return await model.generateContentStream(requestConfig)
             } catch (error: any) {
+              console.error('Streaming generation error:', error)
+              
               // If grounding fails, retry without tools
               if (useGrounding && (error.message?.includes('Search Grounding is not supported') || 
                                   error.message?.includes('google_search_retrieval is not supported'))) {
@@ -121,6 +134,8 @@ export async function POST(request: NextRequest) {
             })
           }
 
+          console.log('Streaming started successfully')
+
           // Stream the response token by token
           for await (const chunk of result.stream) {
             const chunkText = chunk.text()
@@ -143,6 +158,8 @@ export async function POST(request: NextRequest) {
             }
           }
 
+          console.log('Streaming completed successfully')
+
           // Send completion signal only if controller is still open
           try {
             controller.enqueue(
@@ -154,20 +171,35 @@ export async function POST(request: NextRequest) {
             console.log('Controller already closed during completion')
           }
 
-        } catch (error) {
+        } catch (error: any) {
           console.error('Streaming error:', error)
+          
+          const errorMessage = error instanceof Error ? error.message : 'Streaming error occurred'
+          const errorStack = error instanceof Error ? error.stack : 'No stack trace'
+          
+          console.error('Full streaming error details:', {
+            message: errorMessage,
+            stack: errorStack,
+            name: error?.name,
+            cause: error?.cause
+          })
           
           // Send error to client
           const errorData = JSON.stringify({
             error: true,
-            message: error instanceof Error ? error.message : 'Streaming error occurred'
+            message: errorMessage,
+            details: 'Check server logs for more information'
           })
           
-          controller.enqueue(
-            new TextEncoder().encode(`data: ${errorData}\n\n`)
-          )
-          
-          controller.close()
+          try {
+            controller.enqueue(
+              new TextEncoder().encode(`data: ${errorData}\n\n`)
+            )
+            
+            controller.close()
+          } catch (controllerError) {
+            console.log('Could not send error to client, controller already closed')
+          }
         }
       }
     })
@@ -184,10 +216,18 @@ export async function POST(request: NextRequest) {
       },
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Streaming API error:', error)
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace'
+    
+    console.error('Full API error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      name: error?.name,
+      cause: error?.cause
+    })
     
     return NextResponse.json(
       { 
@@ -198,4 +238,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-} 
+}
