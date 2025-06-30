@@ -788,6 +788,1142 @@ export const sloKerndoelen: Record<string, Record<string, SLODoel[]>> = {
         kernwoorden: ['statistiek', 'kans', 'onderzoek', 'conclusies']
       }
     ]
+  },
+  burgerschap: {
+    'groep1-2': [
+      {
+        id: 'burg_12_1',
+        code: 'BU.1.1',
+        titel: 'Zelfbeeld en identiteit',
+        beschrijving: 'De leerling ontwikkelt een positief zelfbeeld en bewustzijn van eigen identiteit',
+        subdoelen: [
+          'Eigen naam, leeftijd en adres kennen',
+          'Familieleden en vrienden benoemen',
+          'Gevoelens herkennen en uiten',
+          'Eigen voorkeuren aangeven',
+          'Verschillen tussen mensen accepteren'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'burgerschap',
+        vervolgend: ['burg_34_1'],
+        kernwoorden: ['identiteit', 'zelfbeeld', 'gevoelens', 'verschillen']
+      },
+      {
+        id: 'burg_12_2',
+        code: 'BU.1.2',
+        titel: 'Sociale vaardigheden',
+        beschrijving: 'De leerling leert omgaan met anderen en ontwikkelt sociale vaardigheden',
+        subdoelen: [
+          'Samen spelen en werken',
+          'Conflicten op een goede manier oplossen',
+          'Hulp vragen en aanbieden',
+          'Complimenten geven en ontvangen',
+          'Respect tonen voor anderen'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'burgerschap',
+        vervolgend: ['burg_34_2'],
+        kernwoorden: ['samenwerken', 'conflicten', 'respect', 'hulp']
+      },
+      {
+        id: 'burg_12_3',
+        code: 'BU.1.3',
+        titel: 'Regels en afspraken',
+        beschrijving: 'De leerling leert regels en afspraken begrijpen en naleven',
+        subdoelen: [
+          'Klasregels kennen en naleven',
+          'Afspraken maken en nakomen',
+          'Gevolgen van gedrag begrijpen',
+          'Eerlijk zijn',
+          'Verantwoordelijkheid nemen'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'burgerschap',
+        vervolgend: ['burg_34_3'],
+        kernwoorden: ['regels', 'afspraken', 'eerlijkheid', 'verantwoordelijkheid']
+      }
+    ],
+    'groep3-4': [
+      {
+        id: 'burg_34_1',
+        code: 'BU.2.1',
+        titel: 'Identiteit en diversiteit',
+        beschrijving: 'De leerling ontwikkelt bewustzijn van eigen identiteit en waardering voor diversiteit',
+        subdoelen: [
+          'Eigen culturele achtergrond beschrijven',
+          'Verschillende culturen en tradities respecteren',
+          'Overeenkomsten en verschillen tussen mensen benoemen',
+          'Vooroordelen herkennen',
+          'Inclusief gedrag tonen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_12_1'],
+        vervolgend: ['burg_56_1'],
+        kernwoorden: ['cultuur', 'diversiteit', 'vooroordelen', 'inclusie']
+      },
+      {
+        id: 'burg_34_2',
+        code: 'BU.2.2',
+        titel: 'Democratie en participatie',
+        beschrijving: 'De leerling leert over democratische principes en participatie',
+        subdoelen: [
+          'Meepraten over klassenregels',
+          'Stemmen en verkiezingen begrijpen',
+          'Eigen mening geven en onderbouwen',
+          'Naar anderen luisteren',
+          'Compromissen sluiten'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_12_2'],
+        vervolgend: ['burg_56_2'],
+        kernwoorden: ['democratie', 'stemmen', 'mening', 'compromis']
+      },
+      {
+        id: 'burg_34_3',
+        code: 'BU.2.3',
+        titel: 'Rechten en plichten',
+        beschrijving: 'De leerling leert over rechten en plichten in de samenleving',
+        subdoelen: [
+          'Kinderrechten kennen',
+          'Eigen rechten en plichten benoemen',
+          'Rechtvaardigheid herkennen',
+          'Hulp zoeken bij problemen',
+          'Anderen helpen en beschermen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_12_3'],
+        vervolgend: ['burg_56_3'],
+        kernwoorden: ['rechten', 'plichten', 'rechtvaardigheid', 'bescherming']
+      },
+      {
+        id: 'burg_34_4',
+        code: 'BU.2.4',
+        titel: 'Digitale geletterdheid basis',
+        beschrijving: 'De leerling ontwikkelt basisvaardigheden voor veilig digitaal gedrag',
+        subdoelen: [
+          'Veilig internetgebruik',
+          'Persoonlijke informatie beschermen',
+          'Digitale communicatie begrijpen',
+          'Onderscheid maken tussen echt en nep online',
+          'Hulp vragen bij digitale problemen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'burgerschap',
+        vervolgend: ['burg_56_4'],
+        kernwoorden: ['internet', 'veiligheid', 'privacy', 'digitaal']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'burg_56_1',
+        code: 'BU.3.1',
+        titel: 'Identiteit en wereldburgerschap',
+        beschrijving: 'De leerling ontwikkelt bewustzijn van eigen plaats in de wereld',
+        subdoelen: [
+          'Nederlandse identiteit en waarden begrijpen',
+          'Europese en wereldwijde verbindingen herkennen',
+          'Verschillende levensbeschouwingen respecteren',
+          'Mondiale uitdagingen benoemen',
+          'Eigen rol als wereldburger begrijpen'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_34_1'],
+        vervolgend: ['burg_78_1'],
+        kernwoorden: ['Nederland', 'Europa', 'wereld', 'waarden']
+      },
+      {
+        id: 'burg_56_2',
+        code: 'BU.3.2',
+        titel: 'Democratie en rechtsstaat',
+        beschrijving: 'De leerling leert over democratische instellingen en de rechtsstaat',
+        subdoelen: [
+          'Nederlandse democratie begrijpen',
+          'Verkiezingen en politieke partijen',
+          'Rechten en plichten van burgers',
+          'Rechtssysteem en wetten',
+          'Participatie in de samenleving'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_34_2'],
+        vervolgend: ['burg_78_2'],
+        kernwoorden: ['democratie', 'verkiezingen', 'wetten', 'participatie']
+      },
+      {
+        id: 'burg_56_3',
+        code: 'BU.3.3',
+        titel: 'Sociale cohesie',
+        beschrijving: 'De leerling leert over samenleven en sociale cohesie',
+        subdoelen: [
+          'Sociale ongelijkheid herkennen',
+          'Solidariteit en empathie tonen',
+          'Conflicten constructief oplossen',
+          'Samenwerken aan gemeenschappelijke doelen',
+          'Verantwoordelijkheid nemen voor de gemeenschap'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_34_3'],
+        vervolgend: ['burg_78_3'],
+        kernwoorden: ['cohesie', 'solidariteit', 'gemeenschap', 'samenwerking']
+      },
+      {
+        id: 'burg_56_4',
+        code: 'BU.3.4',
+        titel: 'Digitale geletterdheid gevorderd',
+        beschrijving: 'De leerling ontwikkelt gevorderde digitale vaardigheden en kritisch denken',
+        subdoelen: [
+          'Informatie zoeken en beoordelen',
+          'Nepnieuws en desinformatie herkennen',
+          'Digitale voetafdruk begrijpen',
+          'Online gedrag en netiquette',
+          'Digitale rechten en plichten'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_34_4'],
+        vervolgend: ['burg_78_4'],
+        kernwoorden: ['informatie', 'nepnieuws', 'voetafdruk', 'netiquette']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'burg_78_1',
+        code: 'BU.4.1',
+        titel: 'Burgerschap en identiteit',
+        beschrijving: 'De leerling ontwikkelt een bewuste burgerschapsidentiteit',
+        subdoelen: [
+          'Nederlandse grondwet en waarden',
+          'Mensenrechten en vrijheden',
+          'Culturele diversiteit en integratie',
+          'Nationale en internationale verbindingen',
+          'Actief burgerschap'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_56_1'],
+        kernwoorden: ['grondwet', 'mensenrechten', 'integratie', 'burgerschap']
+      },
+      {
+        id: 'burg_78_2',
+        code: 'BU.4.2',
+        titel: 'Democratie en politieke participatie',
+        beschrijving: 'De leerling begrijpt democratische processen en kan er aan deelnemen',
+        subdoelen: [
+          'Politieke besluitvorming begrijpen',
+          'Invloed uitoefenen op beleid',
+          'Kritisch volgen van politiek',
+          'Debatteren over maatschappelijke kwesties',
+          'Eigen standpunten onderbouwen'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_56_2'],
+        kernwoorden: ['politiek', 'beleid', 'debat', 'standpunten']
+      },
+      {
+        id: 'burg_78_3',
+        code: 'BU.4.3',
+        titel: 'Sociale rechtvaardigheid',
+        beschrijving: 'De leerling ontwikkelt bewustzijn van sociale rechtvaardigheid',
+        subdoelen: [
+          'Ongelijkheid en discriminatie herkennen',
+          'Actie ondernemen tegen onrecht',
+          'Solidariteit tonen met kwetsbare groepen',
+          'Duurzaamheid en toekomstdenken',
+          'Mondiale verantwoordelijkheid'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_56_3'],
+        kernwoorden: ['rechtvaardigheid', 'discriminatie', 'duurzaamheid', 'mondiaal']
+      },
+      {
+        id: 'burg_78_4',
+        code: 'BU.4.4',
+        titel: 'Digitaal burgerschap',
+        beschrijving: 'De leerling wordt een verantwoordelijke digitale burger',
+        subdoelen: [
+          'Kritisch mediagebruik',
+          'Digitale democratie en e-participatie',
+          'Cybersecurity en privacy',
+          'Digitale economie begrijpen',
+          'Ethisch gebruik van technologie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'burgerschap',
+        voorafgaand: ['burg_56_4'],
+        kernwoorden: ['media', 'e-participatie', 'cybersecurity', 'ethiek']
+      }
+    ]
+  },
+  wereldoriëntatie: {
+    'groep1-2': [
+      {
+        id: 'wo_12_1',
+        code: 'WO.1.1',
+        titel: 'Jezelf en je omgeving',
+        beschrijving: 'De leerling leert zichzelf en zijn directe omgeving kennen',
+        subdoelen: [
+          'Eigen lichaam en zintuigen ontdekken',
+          'Familie en vrienden beschrijven',
+          'Huis, school en buurt verkennen',
+          'Dagelijkse routines herkennen',
+          'Seizoenen en weer waarnemen'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'wereldoriëntatie',
+        vervolgend: ['wo_34_1'],
+        kernwoorden: ['lichaam', 'familie', 'buurt', 'seizoenen']
+      },
+      {
+        id: 'wo_12_2',
+        code: 'WO.1.2',
+        titel: 'Dieren en planten',
+        beschrijving: 'De leerling ontdekt de natuur en leert over dieren en planten',
+        subdoelen: [
+          'Huisdieren en wilde dieren herkennen',
+          'Planten in de omgeving benoemen',
+          'Verzorging van dieren en planten',
+          'Groei en verandering waarnemen',
+          'Natuurlijke materialen ontdekken'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'wereldoriëntatie',
+        vervolgend: ['wo_34_2'],
+        kernwoorden: ['dieren', 'planten', 'verzorging', 'groei']
+      },
+      {
+        id: 'wo_12_3',
+        code: 'WO.1.3',
+        titel: 'Vroeger en nu',
+        beschrijving: 'De leerling ontwikkelt tijdsbesef en leert over veranderingen',
+        subdoelen: [
+          'Eigen groei en ontwikkeling',
+          'Dag, week, maand, jaar',
+          'Vroeger en nu vergelijken',
+          'Oude en nieuwe voorwerpen',
+          'Verhalen van vroeger'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'wereldoriëntatie',
+        vervolgend: ['wo_34_3'],
+        kernwoorden: ['tijd', 'groei', 'vroeger', 'verandering']
+      }
+    ],
+    'groep3-4': [
+      {
+        id: 'wo_34_1',
+        code: 'WO.2.1',
+        titel: 'Mens en samenleving',
+        beschrijving: 'De leerling leert over de samenleving en zijn plaats daarin',
+        subdoelen: [
+          'Verschillende beroepen en hun functies',
+          'Organisaties en instellingen in de buurt',
+          'Verkeer en vervoer',
+          'Communicatie en media',
+          'Cultuur en tradities'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_12_1'],
+        vervolgend: ['wo_56_1'],
+        kernwoorden: ['beroepen', 'instellingen', 'verkeer', 'cultuur']
+      },
+      {
+        id: 'wo_34_2',
+        code: 'WO.2.2',
+        titel: 'Natuur en milieu',
+        beschrijving: 'De leerling onderzoekt de natuur en leert over milieu',
+        subdoelen: [
+          'Leefgebieden van dieren en planten',
+          'Voedselketens en ecosystemen',
+          'Weer en klimaat',
+          'Milieuproblemen herkennen',
+          'Duurzaam gedrag ontwikkelen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_12_2'],
+        vervolgend: ['wo_56_2'],
+        kernwoorden: ['leefgebieden', 'voedselketen', 'klimaat', 'duurzaamheid']
+      },
+      {
+        id: 'wo_34_3',
+        code: 'WO.2.3',
+        titel: 'Geschiedenis en erfgoed',
+        beschrijving: 'De leerling leert over het verleden en erfgoed',
+        subdoelen: [
+          'Tijdlijn van eigen leven',
+          'Geschiedenis van de school en buurt',
+          'Historische voorwerpen en gebouwen',
+          'Verhalen uit het verleden',
+          'Tradities en gebruiken'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_12_3'],
+        vervolgend: ['wo_56_3'],
+        kernwoorden: ['tijdlijn', 'geschiedenis', 'erfgoed', 'tradities']
+      },
+      {
+        id: 'wo_34_4',
+        code: 'WO.2.4',
+        titel: 'Aardrijkskunde basis',
+        beschrijving: 'De leerling ontwikkelt ruimtelijk inzicht en geografische kennis',
+        subdoelen: [
+          'Plattegronden en kaarten lezen',
+          'Nederland op de kaart',
+          'Landschappen herkennen',
+          'Steden en dorpen',
+          'Water en land'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'wereldoriëntatie',
+        vervolgend: ['wo_56_4'],
+        kernwoorden: ['kaarten', 'Nederland', 'landschappen', 'geografie']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'wo_56_1',
+        code: 'WO.3.1',
+        titel: 'Nederlandse samenleving',
+        beschrijving: 'De leerling leert over de Nederlandse samenleving en democratie',
+        subdoelen: [
+          'Regering en bestuur in Nederland',
+          'Provincies en gemeenten',
+          'Nederlandse economie',
+          'Multiculturele samenleving',
+          'Nederlandse tradities en feesten'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_34_1'],
+        vervolgend: ['wo_78_1'],
+        kernwoorden: ['regering', 'economie', 'multicultureel', 'tradities']
+      },
+      {
+        id: 'wo_56_2',
+        code: 'WO.3.2',
+        titel: 'Natuur en techniek',
+        beschrijving: 'De leerling onderzoekt natuurverschijnselen en techniek',
+        subdoelen: [
+          'Natuurkrachten en energie',
+          'Materialen en hun eigenschappen',
+          'Technische uitvindingen',
+          'Milieu en duurzaamheid',
+          'Onderzoek en experimenten'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_34_2'],
+        vervolgend: ['wo_78_2'],
+        kernwoorden: ['energie', 'materialen', 'techniek', 'onderzoek']
+      },
+      {
+        id: 'wo_56_3',
+        code: 'WO.3.3',
+        titel: 'Nederlandse geschiedenis',
+        beschrijving: 'De leerling leert over belangrijke perioden in de Nederlandse geschiedenis',
+        subdoelen: [
+          'Prehistorie en Romeinse tijd',
+          'Middeleeuwen',
+          'Gouden Eeuw',
+          'Industriële revolutie',
+          'Twintigste eeuw'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_34_3'],
+        vervolgend: ['wo_78_3'],
+        kernwoorden: ['prehistorie', 'middeleeuwen', 'gouden eeuw', 'industrieel']
+      },
+      {
+        id: 'wo_56_4',
+        code: 'WO.3.4',
+        titel: 'Europa en de wereld',
+        beschrijving: 'De leerling leert over Europa en andere continenten',
+        subdoelen: [
+          'Europese landen en hoofdsteden',
+          'Continenten en oceanen',
+          'Klimaatzones',
+          'Culturen en talen',
+          'Internationale samenwerking'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_34_4'],
+        vervolgend: ['wo_78_4'],
+        kernwoorden: ['Europa', 'continenten', 'klimaat', 'culturen']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'wo_78_1',
+        code: 'WO.4.1',
+        titel: 'Mondiale samenleving',
+        beschrijving: 'De leerling begrijpt mondiale verbindingen en uitdagingen',
+        subdoelen: [
+          'Globalisering en internationale handel',
+          'Migratie en vluchtelingen',
+          'Internationale organisaties',
+          'Mondiale problemen en oplossingen',
+          'Duurzame ontwikkeling'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_56_1'],
+        kernwoorden: ['globalisering', 'migratie', 'internationaal', 'duurzaam']
+      },
+      {
+        id: 'wo_78_2',
+        code: 'WO.4.2',
+        titel: 'Wetenschap en technologie',
+        beschrijving: 'De leerling begrijpt wetenschappelijke principes en technologische ontwikkelingen',
+        subdoelen: [
+          'Wetenschappelijke methode',
+          'Technologische innovaties',
+          'Digitale revolutie',
+          'Biotechnologie en geneeskunde',
+          'Ruimtevaart en astronomie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_56_2'],
+        kernwoorden: ['wetenschap', 'innovatie', 'digitaal', 'ruimtevaart']
+      },
+      {
+        id: 'wo_78_3',
+        code: 'WO.4.3',
+        titel: 'Wereldgeschiedenis',
+        beschrijving: 'De leerling leert over belangrijke gebeurtenissen in de wereldgeschiedenis',
+        subdoelen: [
+          'Oude beschavingen',
+          'Ontdekkingsreizen',
+          'Wereldoorlogen',
+          'Koude Oorlog',
+          'Moderne geschiedenis'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_56_3'],
+        kernwoorden: ['beschavingen', 'ontdekkingen', 'wereldoorlogen', 'modern']
+      },
+      {
+        id: 'wo_78_4',
+        code: 'WO.4.4',
+        titel: 'Mondiale geografie',
+        beschrijving: 'De leerling begrijpt geografische processen en mondiale patronen',
+        subdoelen: [
+          'Natuurrampen en klimaatverandering',
+          'Bevolkingsgroei en verstedelijking',
+          'Natuurlijke hulpbronnen',
+          'Economische ontwikkeling',
+          'Geopolitieke verhoudingen'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'wereldoriëntatie',
+        voorafgaand: ['wo_56_4'],
+        kernwoorden: ['klimaatverandering', 'bevolking', 'hulpbronnen', 'geopolitiek']
+      }
+    ]
+  },
+  engels: {
+    'groep1-2': [
+      {
+        id: 'eng_12_1',
+        code: 'EN.1.1',
+        titel: 'Eerste Engelse woorden',
+        beschrijving: 'De leerling leert eerste Engelse woorden en uitdrukkingen',
+        subdoelen: [
+          'Groeten en afscheid nemen',
+          'Getallen tot 10',
+          'Kleuren benoemen',
+          'Lichaamsdelen',
+          'Eenvoudige liedjes en rijmpjes'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'engels',
+        vervolgend: ['eng_34_1'],
+        kernwoorden: ['groeten', 'getallen', 'kleuren', 'liedjes']
+      }
+    ],
+    'groep3-4': [
+      {
+        id: 'eng_34_1',
+        code: 'EN.2.1',
+        titel: 'Basiswoordenschat Engels',
+        beschrijving: 'De leerling bouwt een basiswoordenschat op in het Engels',
+        subdoelen: [
+          'Familie en vrienden',
+          'Dieren en huisdieren',
+          'Eten en drinken',
+          'Kleding en lichaam',
+          'School en speelgoed'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_12_1'],
+        vervolgend: ['eng_56_1'],
+        kernwoorden: ['familie', 'dieren', 'eten', 'school']
+      },
+      {
+        id: 'eng_34_2',
+        code: 'EN.2.2',
+        titel: 'Luisteren en spreken',
+        beschrijving: 'De leerling ontwikkelt luister- en spreekvaardigheid in het Engels',
+        subdoelen: [
+          'Eenvoudige instructies begrijpen',
+          'Korte gesprekjes voeren',
+          'Vragen stellen en beantwoorden',
+          'Verhalen en liedjes begrijpen',
+          'Uitspraak oefenen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'engels',
+        vervolgend: ['eng_56_2'],
+        kernwoorden: ['luisteren', 'spreken', 'gesprekken', 'uitspraak']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'eng_56_1',
+        code: 'EN.3.1',
+        titel: 'Uitgebreide woordenschat',
+        beschrijving: 'De leerling breidt zijn Engelse woordenschat uit',
+        subdoelen: [
+          'Hobby\'s en vrije tijd',
+          'Weer en seizoenen',
+          'Huis en wonen',
+          'Reizen en transport',
+          'Gevoelens en eigenschappen'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_34_1'],
+        vervolgend: ['eng_78_1'],
+        kernwoorden: ['hobby\'s', 'weer', 'huis', 'reizen']
+      },
+      {
+        id: 'eng_56_2',
+        code: 'EN.3.2',
+        titel: 'Communicatie in het Engels',
+        beschrijving: 'De leerling communiceert in eenvoudige gesprekssituaties',
+        subdoelen: [
+          'Informatie vragen en geven',
+          'Voorkeuren uitdrukken',
+          'Eenvoudige beschrijvingen geven',
+          'Rollenspellen uitvoeren',
+          'Presentaties geven'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_34_2'],
+        vervolgend: ['eng_78_2'],
+        kernwoorden: ['informatie', 'voorkeuren', 'beschrijvingen', 'presentaties']
+      },
+      {
+        id: 'eng_56_3',
+        code: 'EN.3.3',
+        titel: 'Lezen en schrijven basis',
+        beschrijving: 'De leerling ontwikkelt basis lees- en schrijfvaardigheden in het Engels',
+        subdoelen: [
+          'Eenvoudige teksten lezen',
+          'Korte zinnen schrijven',
+          'Woordjes en zinnen kopiëren',
+          'Eenvoudige verhalen begrijpen',
+          'Persoonlijke informatie schrijven'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'engels',
+        vervolgend: ['eng_78_3'],
+        kernwoorden: ['lezen', 'schrijven', 'teksten', 'verhalen']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'eng_78_1',
+        code: 'EN.4.1',
+        titel: 'Gevorderde woordenschat',
+        beschrijving: 'De leerling beheerst een uitgebreide Engelse woordenschat',
+        subdoelen: [
+          'Abstracte begrippen',
+          'Technologie en media',
+          'Natuur en milieu',
+          'Cultuur en tradities',
+          'Toekomst en ambities'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_56_1'],
+        kernwoorden: ['abstract', 'technologie', 'natuur', 'cultuur']
+      },
+      {
+        id: 'eng_78_2',
+        code: 'EN.4.2',
+        titel: 'Vloeiend communiceren',
+        beschrijving: 'De leerling communiceert vloeiend in verschillende situaties',
+        subdoelen: [
+          'Discussies voeren',
+          'Meningen geven en onderbouwen',
+          'Complexere gesprekken',
+          'Telefoongesprekken',
+          'Formele en informele communicatie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_56_2'],
+        kernwoorden: ['discussies', 'meningen', 'gesprekken', 'formeel']
+      },
+      {
+        id: 'eng_78_3',
+        code: 'EN.4.3',
+        titel: 'Gevorderd lezen en schrijven',
+        beschrijving: 'De leerling leest en schrijft verschillende tekstsoorten in het Engels',
+        subdoelen: [
+          'Verschillende tekstsoorten lezen',
+          'Verhalen en artikelen schrijven',
+          'E-mails en brieven opstellen',
+          'Informatie zoeken in teksten',
+          'Creatief schrijven'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'engels',
+        voorafgaand: ['eng_56_3'],
+        kernwoorden: ['tekstsoorten', 'verhalen', 'e-mails', 'creatief']
+      }
+    ]
+  },
+  bewegingsonderwijs: {
+    'groep1-2': [
+      {
+        id: 'bew_12_1',
+        code: 'BW.1.1',
+        titel: 'Basisbeweging en motoriek',
+        beschrijving: 'De leerling ontwikkelt basisbeweging en grove motoriek',
+        subdoelen: [
+          'Lopen, rennen, springen',
+          'Gooien en vangen',
+          'Balans en coördinatie',
+          'Kruipen en klimmen',
+          'Ritme en beweging'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'bewegingsonderwijs',
+        vervolgend: ['bew_34_1'],
+        kernwoorden: ['motoriek', 'balans', 'coördinatie', 'ritme']
+      },
+      {
+        id: 'bew_12_2',
+        code: 'BW.1.2',
+        titel: 'Spel en samenwerking',
+        beschrijving: 'De leerling leert spelen en samenwerken in bewegingssituaties',
+        subdoelen: [
+          'Eenvoudige spelletjes',
+          'Samen bewegen',
+          'Regels begrijpen',
+          'Eerlijk spelen',
+          'Plezier in beweging'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'bewegingsonderwijs',
+        vervolgend: ['bew_34_2'],
+        kernwoorden: ['spel', 'samenwerking', 'regels', 'plezier']
+      }
+    ],
+    'groep3-4': [
+      {
+        id: 'bew_34_1',
+        code: 'BW.2.1',
+        titel: 'Sportieve vaardigheden',
+        beschrijving: 'De leerling ontwikkelt sportieve vaardigheden en technieken',
+        subdoelen: [
+          'Balvaardigheden',
+          'Atletiek basis',
+          'Gymnastiek elementen',
+          'Zwemvaardigheden',
+          'Conditie opbouwen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_12_1'],
+        vervolgend: ['bew_56_1'],
+        kernwoorden: ['bal', 'atletiek', 'gymnastiek', 'zwemmen']
+      },
+      {
+        id: 'bew_34_2',
+        code: 'BW.2.2',
+        titel: 'Teamsporten en samenwerking',
+        beschrijving: 'De leerling leert teamsporten en samenwerking',
+        subdoelen: [
+          'Eenvoudige teamspelen',
+          'Positiespel begrijpen',
+          'Tactiek basis',
+          'Sportiviteit tonen',
+          'Leiderschap ontwikkelen'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_12_2'],
+        vervolgend: ['bew_56_2'],
+        kernwoorden: ['teamsporten', 'tactiek', 'sportiviteit', 'leiderschap']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'bew_56_1',
+        code: 'BW.3.1',
+        titel: 'Gevorderde sportvaardigheden',
+        beschrijving: 'De leerling beheerst gevorderde sportvaardigheden',
+        subdoelen: [
+          'Complexe bewegingen',
+          'Sportspecifieke technieken',
+          'Kracht en lenigheid',
+          'Uithoudingsvermogen',
+          'Bewegingsanalyse'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_34_1'],
+        vervolgend: ['bew_78_1'],
+        kernwoorden: ['complex', 'technieken', 'kracht', 'analyse']
+      },
+      {
+        id: 'bew_56_2',
+        code: 'BW.3.2',
+        titel: 'Competitie en prestatie',
+        beschrijving: 'De leerling leert omgaan met competitie en prestatie',
+        subdoelen: [
+          'Wedstrijden spelen',
+          'Winnen en verliezen',
+          'Prestaties verbeteren',
+          'Doelen stellen',
+          'Zelfvertrouwen opbouwen'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_34_2'],
+        vervolgend: ['bew_78_2'],
+        kernwoorden: ['competitie', 'prestatie', 'doelen', 'vertrouwen']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'bew_78_1',
+        code: 'BW.4.1',
+        titel: 'Specialisatie en expertise',
+        beschrijving: 'De leerling specialiseert zich in bepaalde sporten',
+        subdoelen: [
+          'Sportspecialisatie',
+          'Technische perfectie',
+          'Trainingsplanning',
+          'Blessurepreventie',
+          'Sportcarrière oriëntatie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_56_1'],
+        kernwoorden: ['specialisatie', 'perfectie', 'training', 'preventie']
+      },
+      {
+        id: 'bew_78_2',
+        code: 'BW.4.2',
+        titel: 'Leiderschap en coaching',
+        beschrijving: 'De leerling ontwikkelt leiderschap en coaching vaardigheden',
+        subdoelen: [
+          'Anderen coachen',
+          'Teams leiden',
+          'Scheidsrechteren',
+          'Trainingen geven',
+          'Sportorganisatie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'bewegingsonderwijs',
+        voorafgaand: ['bew_56_2'],
+        kernwoorden: ['coaching', 'leiderschap', 'scheidsrechter', 'organisatie']
+      }
+    ]
+  },
+  expressie: {
+    'groep1-2': [
+      {
+        id: 'exp_12_1',
+        code: 'EX.1.1',
+        titel: 'Creatieve expressie',
+        beschrijving: 'De leerling ontwikkelt creatieve expressie door kunst en muziek',
+        subdoelen: [
+          'Tekenen en schilderen',
+          'Knutselen en maken',
+          'Zingen en muziek maken',
+          'Dansen en bewegen op muziek',
+          'Verhalen vertellen'
+        ],
+        groep: 'groep1-2',
+        vakgebied: 'expressie',
+        vervolgend: ['exp_34_1'],
+        kernwoorden: ['tekenen', 'knutselen', 'zingen', 'dansen']
+      }
+    ],
+    'groep3-4': [
+      {
+        id: 'exp_34_1',
+        code: 'EX.2.1',
+        titel: 'Beeldende vorming',
+        beschrijving: 'De leerling ontwikkelt vaardigheden in beeldende vorming',
+        subdoelen: [
+          'Verschillende materialen gebruiken',
+          'Kleuren en vormen',
+          'Compositie en ontwerp',
+          'Kunstwerken bekijken',
+          'Eigen werk presenteren'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_12_1'],
+        vervolgend: ['exp_56_1'],
+        kernwoorden: ['materialen', 'kleuren', 'compositie', 'kunstwerken']
+      },
+      {
+        id: 'exp_34_2',
+        code: 'EX.2.2',
+        titel: 'Muzikale vorming',
+        beschrijving: 'De leerling ontwikkelt muzikale vaardigheden',
+        subdoelen: [
+          'Ritme en melodie',
+          'Instrumenten bespelen',
+          'Muziek luisteren',
+          'Liedjes leren',
+          'Muziek maken'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'expressie',
+        vervolgend: ['exp_56_2'],
+        kernwoorden: ['ritme', 'instrumenten', 'luisteren', 'liedjes']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'exp_56_1',
+        code: 'EX.3.1',
+        titel: 'Gevorderde beeldende kunst',
+        beschrijving: 'De leerling beheerst gevorderde technieken in beeldende kunst',
+        subdoelen: [
+          'Verschillende kunststromingen',
+          'Perspectief en diepte',
+          'Digitale kunst',
+          'Kunstgeschiedenis',
+          'Eigen stijl ontwikkelen'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_34_1'],
+        vervolgend: ['exp_78_1'],
+        kernwoorden: ['kunststromingen', 'perspectief', 'digitaal', 'geschiedenis']
+      },
+      {
+        id: 'exp_56_2',
+        code: 'EX.3.2',
+        titel: 'Muziektheorie en praktijk',
+        beschrijving: 'De leerling leert muziektheorie en past deze toe',
+        subdoelen: [
+          'Noten lezen',
+          'Akkoorden en harmonie',
+          'Componeren',
+          'Ensemble spelen',
+          'Muziekstijlen'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_34_2'],
+        vervolgend: ['exp_78_2'],
+        kernwoorden: ['noten', 'akkoorden', 'componeren', 'ensemble']
+      },
+      {
+        id: 'exp_56_3',
+        code: 'EX.3.3',
+        titel: 'Drama en theater',
+        beschrijving: 'De leerling ontwikkelt drama en theatervaardigheden',
+        subdoelen: [
+          'Rollenspel en acteren',
+          'Stemgebruik en uitspraak',
+          'Beweging en expressie',
+          'Toneelstukken opvoeren',
+          'Kostuums en decor'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'expressie',
+        vervolgend: ['exp_78_3'],
+        kernwoorden: ['acteren', 'stem', 'beweging', 'toneel']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'exp_78_1',
+        code: 'EX.4.1',
+        titel: 'Kunstzinnige ontwikkeling',
+        beschrijving: 'De leerling ontwikkelt zich kunstzinnig en cultureel',
+        subdoelen: [
+          'Persoonlijke kunstvisie',
+          'Cultureel erfgoed',
+          'Kunstkritiek',
+          'Tentoonstellingen organiseren',
+          'Kunstzinnige loopbaan'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_56_1'],
+        kernwoorden: ['kunstvisie', 'erfgoed', 'kritiek', 'tentoonstellingen']
+      },
+      {
+        id: 'exp_78_2',
+        code: 'EX.4.2',
+        titel: 'Muzikale excellentie',
+        beschrijving: 'De leerling streeft naar muzikale excellentie',
+        subdoelen: [
+          'Gevorderde instrumentbeheersing',
+          'Muziekproductie',
+          'Concerten geven',
+          'Muziekbusiness',
+          'Muzikale innovatie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_56_2'],
+        kernwoorden: ['instrument', 'productie', 'concerten', 'business']
+      },
+      {
+        id: 'exp_78_3',
+        code: 'EX.4.3',
+        titel: 'Podiumkunsten',
+        beschrijving: 'De leerling beheerst verschillende podiumkunsten',
+        subdoelen: [
+          'Professioneel acteren',
+          'Regisseren',
+          'Theaterproducties',
+          'Film en media',
+          'Podiumcarrière'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'expressie',
+        voorafgaand: ['exp_56_3'],
+        kernwoorden: ['professioneel', 'regisseren', 'producties', 'film']
+      }
+    ]
+  },
+  ict: {
+    'groep3-4': [
+      {
+        id: 'ict_34_1',
+        code: 'ICT.2.1',
+        titel: 'Digitale vaardigheden basis',
+        beschrijving: 'De leerling ontwikkelt basisvaardigheden met computers en tablets',
+        subdoelen: [
+          'Computer en tablet bedienen',
+          'Toetsenbord en muis gebruiken',
+          'Bestanden openen en opslaan',
+          'Eenvoudige programma\'s gebruiken',
+          'Internet veilig gebruiken'
+        ],
+        groep: 'groep3-4',
+        vakgebied: 'ict',
+        vervolgend: ['ict_56_1'],
+        kernwoorden: ['computer', 'toetsenbord', 'bestanden', 'internet']
+      }
+    ],
+    'groep5-6': [
+      {
+        id: 'ict_56_1',
+        code: 'ICT.3.1',
+        titel: 'Informatievaardigheden',
+        beschrijving: 'De leerling leert informatie zoeken, beoordelen en gebruiken',
+        subdoelen: [
+          'Zoeken op internet',
+          'Bronnen beoordelen',
+          'Informatie verwerken',
+          'Presentaties maken',
+          'Digitale communicatie'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'ict',
+        voorafgaand: ['ict_34_1'],
+        vervolgend: ['ict_78_1'],
+        kernwoorden: ['zoeken', 'bronnen', 'verwerken', 'presentaties']
+      },
+      {
+        id: 'ict_56_2',
+        code: 'ICT.3.2',
+        titel: 'Programmeren basis',
+        beschrijving: 'De leerling leert de basis van programmeren en computational thinking',
+        subdoelen: [
+          'Algoritmes begrijpen',
+          'Visueel programmeren',
+          'Problemen oplossen',
+          'Logisch denken',
+          'Debugging'
+        ],
+        groep: 'groep5-6',
+        vakgebied: 'ict',
+        vervolgend: ['ict_78_2'],
+        kernwoorden: ['algoritmes', 'programmeren', 'problemen', 'logisch']
+      }
+    ],
+    'groep7-8': [
+      {
+        id: 'ict_78_1',
+        code: 'ICT.4.1',
+        titel: 'Gevorderde ICT-vaardigheden',
+        beschrijving: 'De leerling beheerst gevorderde ICT-vaardigheden',
+        subdoelen: [
+          'Complexe software gebruiken',
+          'Databases en spreadsheets',
+          'Multimedia producties',
+          'Webdesign basis',
+          'Digitale projecten'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'ict',
+        voorafgaand: ['ict_56_1'],
+        kernwoorden: ['software', 'databases', 'multimedia', 'webdesign']
+      },
+      {
+        id: 'ict_78_2',
+        code: 'ICT.4.2',
+        titel: 'Programmeren en robotica',
+        beschrijving: 'De leerling leert programmeren en werken met robotica',
+        subdoelen: [
+          'Tekstueel programmeren',
+          'Robotica en sensoren',
+          'Apps ontwikkelen',
+          'Artificial Intelligence basis',
+          'Technische innovatie'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'ict',
+        voorafgaand: ['ict_56_2'],
+        kernwoorden: ['programmeren', 'robotica', 'apps', 'AI']
+      },
+      {
+        id: 'ict_78_3',
+        code: 'ICT.4.3',
+        titel: 'Digitaal burgerschap',
+        beschrijving: 'De leerling wordt een verantwoordelijke digitale burger',
+        subdoelen: [
+          'Privacy en veiligheid',
+          'Digitale voetafdruk',
+          'Cyberpesten voorkomen',
+          'Auteursrecht respecteren',
+          'Ethisch ICT-gebruik'
+        ],
+        groep: 'groep7-8',
+        vakgebied: 'ict',
+        kernwoorden: ['privacy', 'voetafdruk', 'cyberpesten', 'auteursrecht']
+      }
+    ]
   }
 }
 
