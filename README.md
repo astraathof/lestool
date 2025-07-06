@@ -23,7 +23,16 @@ Een moderne AI-assistent gebouwd met Next.js en Gemini AI.
 
 ## Deployment
 
-Deploy naar Netlify of Vercel met je environment variables.
+### Netlify Deployment
+
+1. Deploy de app naar Netlify
+2. Ga naar je Netlify dashboard → Site settings → Environment variables
+3. Voeg de volgende environment variabele toe:
+   - **Key**: `GEMINI_API_KEY`
+   - **Value**: Je Gemini API key (krijg je van https://aistudio.google.com/app/apikey)
+4. Redeploy de site na het toevoegen van de environment variabele
+
+**Belangrijk**: Gebruik NOOIT je API key in de frontend code. Deze moet alleen in de environment variabelen staan.
 
 ## Tech Stack
 
