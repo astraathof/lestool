@@ -7,11 +7,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 export async function POST(request: NextRequest) {
   try {
     // Check if Gemini API key is configured
-    if (!process.env.GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
+    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
       console.error('GEMINI_API_KEY not found in environment variables')
       return NextResponse.json(
         { 
-          error: 'Gemini API key niet geconfigureerd. Voeg GEMINI_API_KEY toe aan je environment variables.',
+          error: 'Gemini API key niet geconfigureerd.',
           hint: 'Voor audio transcriptie is een Gemini API key vereist',
           debug: 'Environment variable GEMINI_API_KEY is not set'
         }, 

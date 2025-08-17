@@ -18,12 +18,13 @@ const googleSearchTool = {
 export async function POST(request: NextRequest) {
   try {
     // Betere error handling voor Netlify
-    if (!process.env.GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
+    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
       console.error('GEMINI_API_KEY not found in environment variables');
       return NextResponse.json(
         { 
-          error: 'API configuratie ontbreekt. Check Environment Variables.',
-          hint: 'Voeg GEMINI_API_KEY toe aan je environment variables',
+          error: 'Gemini API key niet geconfigureerd.',
+          hint: 'Stel je API key in via next.config.js of environment variables',
           debug: 'Environment variable GEMINI_API_KEY is not set'
         }, 
         { status: 500 }
