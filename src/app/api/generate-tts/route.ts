@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextRequest, NextResponse } from 'next/server'
-
-// Initialize Gemini AI client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+import { getGeminiApiKey } from '@/lib/env'
 
 // Available voice options with descriptions
 const GEMINI_VOICES = [
@@ -101,14 +99,17 @@ function createWAVBuffer(pcmBuffer: Buffer, sampleRate: number = 24000, channels
 
 export async function POST(request: NextRequest) {
   try {
-    // Check API key
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      console.error('GEMINI_API_KEY not found in environment variables')
+    // Veilig ophalen van API key via server-only module
+    let apiKey: string
+    try {
+      apiKey = getGeminiApiKey()
+    } catch (error) {
+      console.error('GEMINI_API_KEY configuration error:', error)
       return NextResponse.json(
         { 
           error: 'Gemini API key niet geconfigureerd.',
-          hint: 'Stel je API key in via next.config.js of environment variables'
+          hint: 'Stel GEMINI_API_KEY in via .env bestand of environment variabelen',
+          debug: error instanceof Error ? error.message : 'API key configuration error'
         }, 
         { status: 500 }
       )
@@ -154,7 +155,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use direct REST API call for TTS since SDK doesn't support TTS yet
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${process.env.GEMINI_API_KEY}`
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`
     
     // Apply style to text if provided
     const styledText = applyStylePrompt(text, style)

@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI, Tool } from '@google/generative-ai'
 import { NextRequest, NextResponse } from 'next/server'
-
-// Initialiseer de Gemini AI client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+import { getGeminiApiKey } from '@/lib/env'
 
 // Helper functie om base64 naar buffer te converteren
 function base64ToBuffer(base64: string): Buffer {
@@ -17,19 +15,24 @@ const googleSearchTool = {
 
 export async function POST(request: NextRequest) {
   try {
-    // Betere error handling voor Netlify
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      console.error('GEMINI_API_KEY not found in environment variables');
+    // Veilig ophalen van API key via server-only module
+    let apiKey: string
+    try {
+      apiKey = getGeminiApiKey()
+    } catch (error) {
+      console.error('GEMINI_API_KEY configuration error:', error)
       return NextResponse.json(
         { 
           error: 'Gemini API key niet geconfigureerd.',
-          hint: 'Stel je API key in via next.config.js of environment variables',
-          debug: 'Environment variable GEMINI_API_KEY is not set'
+          hint: 'Stel GEMINI_API_KEY in via .env bestand of environment variabelen',
+          debug: error instanceof Error ? error.message : 'API key configuration error'
         }, 
         { status: 500 }
       )
     }
+
+    // Initialiseer de Gemini AI client met veilige API key
+    const genAI = new GoogleGenerativeAI(apiKey)
 
     // Haal de bericht data op uit de request
     const body = await request.json()

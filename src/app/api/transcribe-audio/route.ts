@@ -1,24 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-
-// Initialize Gemini AI client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+import { getGeminiApiKey } from '@/lib/env'
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Gemini API key is configured
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY
-    if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-      console.error('GEMINI_API_KEY not found in environment variables')
+    // Veilig ophalen van API key via server-only module
+    let apiKey: string
+    try {
+      apiKey = getGeminiApiKey()
+    } catch (error) {
+      console.error('GEMINI_API_KEY configuration error:', error)
       return NextResponse.json(
         { 
           error: 'Gemini API key niet geconfigureerd.',
-          hint: 'Voor audio transcriptie is een Gemini API key vereist',
-          debug: 'Environment variable GEMINI_API_KEY is not set'
+          hint: 'Stel GEMINI_API_KEY in via .env bestand of environment variabelen',
+          debug: error instanceof Error ? error.message : 'API key configuration error'
         }, 
         { status: 500 }
       )
     }
+
+    // Initialize Gemini AI client met veilige API key
+    const genAI = new GoogleGenerativeAI(apiKey)
 
     // Parse form data
     const formData = await request.formData()
