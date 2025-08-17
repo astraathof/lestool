@@ -57,6 +57,36 @@ Voor andere platforms (Vercel, Railway, etc.):
 2. De waarde is je Gemini API key
 3. Redeploy de applicatie
 
+## Environment & Secrets
+Plaats je sleutel in `.env` (Bolt/StackBlitz) of `.env.local` (lokaal):
+
+```
+GEMINI_API_KEY=your_actual_api_key_here
+```
+
+### Voor verschillende omgevingen:
+
+**Bolt/StackBlitz:**
+- Gebruik `.env` (persistenter dan `.env.local`)
+- Kopieer `.env.example` naar `.env`
+- Vul je echte API key in
+
+**Lokale development:**
+- Gebruik `.env.local` (wordt niet gecommit)
+- Kopieer `.env.example` naar `.env.local`
+- Vul je echte API key in
+
+**Netlify deployment:**
+- Ga naar Site Settings → Environment Variables
+- Voeg toe: `GEMINI_API_KEY` met je API key als waarde
+- Redeploy de site
+
+**API key verkrijgen:**
+- Ga naar https://aistudio.google.com/app/apikey
+- Maak gratis account aan
+- Genereer nieuwe API key
+- Kopieer en gebruik in je environment bestand
+
 ## Environment Variabelen
 
 | Variabele | Vereist | Beschrijving | Waar te krijgen |
