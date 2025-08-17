@@ -1,24 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { getGeminiApiKey } from '@/lib/env'
+import { env, requireEnv } from '@/lib/env'
 
 export async function POST(request: NextRequest) {
   try {
-    // Veilig ophalen van API key via server-only module
-    let apiKey: string
-    try {
-      apiKey = getGeminiApiKey()
-    } catch (error) {
-      console.error('GEMINI_API_KEY configuration error:', error)
-      return NextResponse.json(
-        { 
-          error: 'Gemini API key niet geconfigureerd.',
-          hint: 'Stel GEMINI_API_KEY in via .env bestand of environment variabelen',
-          debug: error instanceof Error ? error.message : 'API key configuration error'
-        }, 
-        { status: 500 }
-      )
-    }
+    requireEnv();
+    const apiKey = env.GEMINI_API_KEY;
 
     // Initialize Gemini AI client met veilige API key
     const genAI = new GoogleGenerativeAI(apiKey)
