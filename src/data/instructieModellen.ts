@@ -1302,6 +1302,7 @@ export const instructieModellen: InstructieModel[] = [
       beginner: ['Eenvoudige verhalen', 'Veel visuele ondersteuning', 'Korte activiteiten'],
       gevorderd: ['Complexere verhalen', 'Meer analyse', 'Langere projecten'],
       expert: ['Eigen verhalen creëren', 'Diepgaande analyse', 'Verhaal als leermiddel'
+      ]
     }
   },
   {
