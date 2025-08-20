@@ -277,7 +277,7 @@ export default function LesWizard() {
           </div>
           
           <div className="flex items-center justify-between py-4 overflow-x-auto">
-            {(showCompactMode ? compactSteps : normalSteps).map((step, index) => (
+            {steps.map((step, index) => (
               <div key={step.id} className="flex items-center flex-shrink-0">
                 <button
                   onClick={() => goToStep(step.id)}
@@ -303,7 +303,7 @@ export default function LesWizard() {
                   </div>
                 </button>
                 
-                {index < (showCompactMode ? compactSteps : normalSteps).length - 1 && (
+                {index < steps.length - 1 && (
                   <div className={`w-8 h-1 mx-3 rounded-full transition-all duration-200 flex-shrink-0 ${
                     currentStep > step.id ? 'bg-gradient-to-r from-green-300 to-emerald-300' : 'bg-gray-200'
                   }`} />
@@ -465,9 +465,9 @@ export default function LesWizard() {
             <div className="flex items-center space-x-4 text-sm text-gray-500">
               <span>Powered by AI</span>
               <span>•</span>
-              <span>Gebaseerd op SLO-kerndoelen</span>
+              <span>SLO-kerndoelen</span>
               <span>•</span>
-              <span>Wetenschappelijk onderbouwd</span>
+              <span>Modus: {showCompactMode ? 'Snel (3 stappen)' : 'Uitgebreid (6 stappen)'}</span>
             </div>
           </div>
         </div>
