@@ -118,6 +118,13 @@ export default function LesWizard() {
   const steps = showCompactMode ? compactSteps : normalSteps
   const maxSteps = steps.length
 
+  console.log('🔍 Current mode and steps:', {
+    showCompactMode,
+    currentStep,
+    stepsLength: steps.length,
+    stepTitles: steps.map(s => s.title)
+  })
+
   const handleProfileComplete = (profile: UserProfile) => {
     console.log('✅ Profile completed:', profile)
     setLesplanData(prev => ({ ...prev, profiel: profile }))
@@ -241,7 +248,7 @@ export default function LesWizard() {
                 🔄 Reset
               </button>
               <div className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg">
-                Stap {currentStep} van {maxSteps} {showCompactMode ? '(Snel)' : '(Uitgebreid)'}
+                Stap {currentStep} van {showCompactMode ? compactSteps.length : normalSteps.length} {showCompactMode ? '(Snel)' : '(Uitgebreid)'}
               </div>
             </div>
           </div>
@@ -270,7 +277,7 @@ export default function LesWizard() {
           </div>
           
           <div className="flex items-center justify-between py-4 overflow-x-auto">
-            {steps.map((step, index) => (
+            {(showCompactMode ? compactSteps : normalSteps).map((step, index) => (
               <div key={step.id} className="flex items-center flex-shrink-0">
                 <button
                   onClick={() => goToStep(step.id)}
@@ -296,7 +303,7 @@ export default function LesWizard() {
                   </div>
                 </button>
                 
-                {index < steps.length - 1 && (
+                {index < (showCompactMode ? compactSteps : normalSteps).length - 1 && (
                   <div className={`w-8 h-1 mx-3 rounded-full transition-all duration-200 flex-shrink-0 ${
                     currentStep > step.id ? 'bg-gradient-to-r from-green-300 to-emerald-300' : 'bg-gray-200'
                   }`} />
