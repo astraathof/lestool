@@ -17,21 +17,10 @@ export default function InstructieModellen({ userProfile, onComplete, selectedMo
 
   // Filter modellen op basis van profiel
   const getRelevanteModellen = () => {
-    // ALTIJD alle modellen tonen die geschikt zijn voor de groep
-    // Vakgebied filter alleen als suggestie, niet als harde eis
     let gefilterd = instructieModellen.filter(model => {
       const geschiktVoorGroep = model.geschiktVoor.includes(userProfile.groep)
-      return geschiktVoorGroep
-    })
-
-    // Sorteer: eerst modellen die passen bij vakgebied, dan de rest
-    gefilterd.sort((a, b) => {
-      const aMatchesVak = a.vakgebieden.some(vak => userProfile.vakgebied.includes(vak)) || a.vakgebieden.includes('alle vakken')
-      const bMatchesVak = b.vakgebieden.some(vak => userProfile.vakgebied.includes(vak)) || b.vakgebieden.includes('alle vakken')
-      
-      if (aMatchesVak && !bMatchesVak) return -1
-      if (!aMatchesVak && bMatchesVak) return 1
-      return 0
+      const geschiktVoorVak = model.vakgebieden.some(vak => userProfile.vakgebied.includes(vak))
+      return geschiktVoorGroep && geschiktVoorVak
     })
 
     // Filter op voorkeuren als gewenst
@@ -62,29 +51,9 @@ export default function InstructieModellen({ userProfile, onComplete, selectedMo
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Kies je instructiemodel</h2>
         <p className="text-gray-600">
-          Alle instructiemodellen die geschikt zijn voor {userProfile.groep} staan hieronder. 
-          Modellen die goed passen bij je vakgebieden ({userProfile.vakgebied.join(', ')}) staan bovenaan.
-          <strong> Je kunt altijd elk model kiezen - variatie is belangrijk!</strong>
+          Selecteer het instructiemodel dat het beste past bij je les en leerlingen. 
+          Deze modellen zijn gefilterd op basis van je profiel en voorkeuren.
         </p>
-      </div>
-      
-      {/* Uitleg over variatie */}
-      <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <h3 className="font-medium text-yellow-900 mb-2 flex items-center">
-          <span className="text-lg mr-2">🎨</span>
-          Waarom variatie in instructiemodellen belangrijk is
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-yellow-800">
-          <div>
-            <p><strong>🧠 Verschillende leerlingen:</strong> Elk kind leert anders. Variatie zorgt ervoor dat je alle leerlingen bereikt.</p>
-          </div>
-          <div>
-            <p><strong>📚 Verschillende content:</strong> Sommige stof leent zich beter voor directe instructie, andere voor onderzoek.</p>
-          </div>
-          <div>
-            <p><strong>⚡ Motivatie:</strong> Afwisseling houdt lessen interessant en leerlingen betrokken.</p>
-          </div>
-        </div>
       </div>
 
       {/* Voorkeur Filter */}
@@ -116,7 +85,6 @@ export default function InstructieModellen({ userProfile, onComplete, selectedMo
         {relevanteModellen.map((model) => {
           const isVoorkeur = userProfile.voorkeuren.instructiemodel.includes(model.id)
           const isSelected = geselecteerdModel?.id === model.id
-          const matchesVakgebied = model.vakgebieden.some(vak => userProfile.vakgebied.includes(vak)) || model.vakgebieden.includes('alle vakken')
           
           return (
             <div
@@ -124,22 +92,11 @@ export default function InstructieModellen({ userProfile, onComplete, selectedMo
               className={`p-6 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:shadow-lg relative ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50'
-                  : matchesVakgebied
-                  ? 'border-green-300 bg-green-50 hover:border-green-400'
                   : isVoorkeur
                   ? 'border-purple-300 bg-purple-50 hover:border-purple-400'
                   : 'border-gray-200 hover:border-blue-300'
               }`}
             >
-              {/* Vakgebied match indicator */}
-              {matchesVakgebied && !isSelected && (
-                <div className="absolute top-2 left-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    ✨ Past goed
-                  </span>
-                </div>
-              )}
-              
               {/* Voorkeur indicator */}
               {isVoorkeur && (
                 <div className="absolute top-2 right-2">
@@ -184,7 +141,7 @@ export default function InstructieModellen({ userProfile, onComplete, selectedMo
                       <span
                         key={vak}
                         className={`px-2 py-1 text-xs rounded ${
-                          userProfile.vakgebied.includes(vak) || vak === 'alle vakken'
+                          userProfile.vakgebied.includes(vak)
                             ? 'bg-blue-100 text-blue-800'
                             : 'bg-gray-100 text-gray-600'
                         }`}
