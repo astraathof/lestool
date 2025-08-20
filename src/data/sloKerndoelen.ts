@@ -12,6 +12,9 @@ export interface SLODoel {
   vakgebied: string
   voorafgaand?: string[]
   vervolgend?: string[]
+  jaarVerwachting?: string
+  minimumNiveau?: string
+  uitbreidingNiveau?: string
 }
 
 // Nederlands kerndoelen
@@ -29,7 +32,11 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['luisteren', 'verhalen', 'aandacht', 'begrip'],
       groep: 'groep1',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      jaarVerwachting: 'Eind groep 1: 10-15 minuten aandachtig luisteren',
+      minimumNiveau: 'Kan 5 minuten stil zitten en luisteren',
+      uitbreidingNiveau: 'Kan details onthouden en verhaal navertellen',
+      vervolgend: ['nl_2_1']
     },
     {
       id: 'nl_1_2',
@@ -43,7 +50,11 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['spreken', 'kring', 'luisteren', 'beurt'],
       groep: 'groep1',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      jaarVerwachting: 'Eind groep 1: Actief deelnemen aan kringgesprekken',
+      minimumNiveau: 'Kan wachten op beurt en kort antwoorden',
+      uitbreidingNiveau: 'Kan eigen ervaringen delen en vragen stellen',
+      vervolgend: ['nl_2_2']
     }
   ],
   groep2: [
@@ -59,7 +70,31 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['letters', 'klanken', 'herkennen', 'naam'],
       groep: 'groep2',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_1_1'],
+      vervolgend: ['nl_3_1'],
+      jaarVerwachting: 'Eind groep 2: Alle letters herkennen en benoemen',
+      minimumNiveau: 'Herkent 15 letters en eigen naam',
+      uitbreidingNiveau: 'Kan eenvoudige woorden "lezen" door letters te benoemen'
+    },
+    {
+      id: 'nl_2_2',
+      code: 'NL.2.2',
+      titel: 'Woordenschat uitbreiden',
+      beschrijving: 'Leerlingen breiden hun woordenschat uit',
+      subdoelen: [
+        'Kunnen nieuwe woorden leren',
+        'Begrijpen van eenvoudige instructies',
+        'Kunnen vragen stellen'
+      ],
+      kernwoorden: ['woordenschat', 'woorden', 'instructies', 'vragen'],
+      groep: 'groep2',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_1_2'],
+      vervolgend: ['nl_3_2'],
+      jaarVerwachting: 'Eind groep 2: 500+ woorden actieve woordenschat',
+      minimumNiveau: 'Begrijpt eenvoudige instructies en kan basiswoorden gebruiken',
+      uitbreidingNiveau: 'Kan complexere zinnen maken en nieuwe woorden uitleggen'
     }
   ],
   groep3: [
@@ -76,7 +111,30 @@ const nederlandsDoelen = {
       kernwoorden: ['technisch lezen', 'woorden', 'zinnen', 'AVI'],
       groep: 'groep3',
       vakgebied: 'nederlands',
-      vervolgend: ['nl_4_1']
+      voorafgaand: ['nl_2_1'],
+      vervolgend: ['nl_4_1'],
+      jaarVerwachting: 'Eind groep 3: AVI 3 niveau bereiken',
+      minimumNiveau: 'AVI start - eenvoudige woordjes lezen',
+      uitbreidingNiveau: 'AVI 4 - vloeiend korte zinnen lezen'
+    },
+    {
+      id: 'nl_3_2',
+      code: 'NL.3.2',
+      titel: 'Eerste schrijfvaardigheden',
+      beschrijving: 'Leerlingen leren eerste woorden en zinnen schrijven',
+      subdoelen: [
+        'Kunnen letters schrijven',
+        'Kunnen eenvoudige woorden schrijven',
+        'Kunnen korte zinnen maken'
+      ],
+      kernwoorden: ['schrijven', 'letters', 'woorden', 'zinnen'],
+      groep: 'groep3',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_2_2'],
+      vervolgend: ['nl_4_2'],
+      jaarVerwachting: 'Eind groep 3: Korte zinnen kunnen schrijven',
+      minimumNiveau: 'Kan eigen naam en bekende woorden schrijven',
+      uitbreidingNiveau: 'Kan verhaaljes van 3-4 zinnen schrijven'
     }
   ],
   groep4: [
@@ -94,7 +152,29 @@ const nederlandsDoelen = {
       groep: 'groep4',
       vakgebied: 'nederlands',
       voorafgaand: ['nl_3_1'],
-      vervolgend: ['nl_5_1']
+      vervolgend: ['nl_5_1'],
+      jaarVerwachting: 'Eind groep 4: AVI 6 niveau, vloeiend lezen',
+      minimumNiveau: 'AVI 4 - korte teksten begrijpen',
+      uitbreidingNiveau: 'AVI 7+ - complexere teksten met plezier lezen'
+    },
+    {
+      id: 'nl_4_2',
+      code: 'NL.4.2',
+      titel: 'Spelling en schrijfvaardigheid',
+      beschrijving: 'Leerlingen kunnen correct spellen en verhalen schrijven',
+      subdoelen: [
+        'Kunnen basisspelling toepassen',
+        'Kunnen verhalen schrijven',
+        'Gebruiken van leestekens'
+      ],
+      kernwoorden: ['spelling', 'schrijven', 'verhalen', 'leestekens'],
+      groep: 'groep4',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_3_2'],
+      vervolgend: ['nl_5_2'],
+      jaarVerwachting: 'Eind groep 4: Verhalen van 1 pagina kunnen schrijven',
+      minimumNiveau: 'Kan eenvoudige zinnen correct spellen',
+      uitbreidingNiveau: 'Kan creatieve verhalen met dialoog schrijven'
     }
   ],
   groep5: [
@@ -111,7 +191,30 @@ const nederlandsDoelen = {
       kernwoorden: ['begrijpend lezen', 'informatief', 'hoofdgedachte', 'details'],
       groep: 'groep5',
       vakgebied: 'nederlands',
-      voorafgaand: ['nl_4_1']
+      voorafgaand: ['nl_4_1'],
+      vervolgend: ['nl_6_1'],
+      jaarVerwachting: 'Eind groep 5: Schoolboeken zelfstandig kunnen lezen',
+      minimumNiveau: 'Kan eenvoudige informatieve teksten begrijpen',
+      uitbreidingNiveau: 'Kan complexe teksten analyseren en samenvatten'
+    },
+    {
+      id: 'nl_5_2',
+      code: 'NL.5.2',
+      titel: 'Argumentatief schrijven basis',
+      beschrijving: 'Leerlingen leren hun mening onderbouwen',
+      subdoelen: [
+        'Kunnen mening geven',
+        'Kunnen redenen noemen',
+        'Kunnen voorbeelden geven'
+      ],
+      kernwoorden: ['mening', 'argumenten', 'redenen', 'voorbeelden'],
+      groep: 'groep5',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_4_2'],
+      vervolgend: ['nl_6_2'],
+      jaarVerwachting: 'Eind groep 5: Mening kunnen onderbouwen met 2-3 argumenten',
+      minimumNiveau: 'Kan eigen mening uiten met 1 reden',
+      uitbreidingNiveau: 'Kan overtuigende teksten schrijven met voorbeelden'
     }
   ],
   groep6: [
@@ -127,15 +230,58 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['verhalen', 'gedichten', 'personages', 'mening'],
       groep: 'groep6',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_5_1'],
+      vervolgend: ['nl_7_1'],
+      jaarVerwachting: 'Eind groep 6: Jeugdboeken zelfstandig lezen en begrijpen',
+      minimumNiveau: 'Kan eenvoudige verhalen begrijpen en hoofdpersonen benoemen',
+      uitbreidingNiveau: 'Kan thema\'s en boodschappen in verhalen herkennen'
+    },
+    {
+      id: 'nl_6_2',
+      code: 'NL.6.2',
+      titel: 'Creatief en informatief schrijven',
+      beschrijving: 'Leerlingen kunnen verschillende tekstsoorten schrijven',
+      subdoelen: [
+        'Kunnen verhalen schrijven',
+        'Kunnen informatieve teksten maken',
+        'Kunnen brieven schrijven'
+      ],
+      kernwoorden: ['creatief', 'informatief', 'tekstsoorten', 'brieven'],
+      groep: 'groep6',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_5_2'],
+      vervolgend: ['nl_7_2'],
+      jaarVerwachting: 'Eind groep 6: Verschillende tekstsoorten kunnen schrijven',
+      minimumNiveau: 'Kan eenvoudige verhalen en brieven schrijven',
+      uitbreidingNiveau: 'Kan informatieve artikelen en creatieve verhalen schrijven'
     }
   ],
   groep7: [
     {
       id: 'nl_7_1',
       code: 'NL.7.1',
-      titel: 'Schrijven van verhalen',
-      beschrijving: 'Leerlingen kunnen creatieve verhalen schrijven',
+      titel: 'Kritisch lezen en analyseren',
+      beschrijving: 'Leerlingen kunnen teksten kritisch lezen en analyseren',
+      subdoelen: [
+        'Kunnen bronnen beoordelen',
+        'Kunnen impliciete informatie herkennen',
+        'Kunnen verschillende perspectieven herkennen'
+      ],
+      kernwoorden: ['kritisch lezen', 'bronnen', 'analyse', 'perspectieven'],
+      groep: 'groep7',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_6_1'],
+      vervolgend: ['nl_8_1'],
+      jaarVerwachting: 'Eind groep 7: Kan nieuwsartikelen en websites kritisch lezen',
+      minimumNiveau: 'Kan betrouwbare van onbetrouwbare informatie onderscheiden',
+      uitbreidingNiveau: 'Kan verschillende standpunten in teksten herkennen en vergelijken'
+    },
+    {
+      id: 'nl_7_2',
+      code: 'NL.7.2',
+      titel: 'Gevorderd schrijven',
+      beschrijving: 'Leerlingen kunnen complexere teksten schrijven',
       subdoelen: [
         'Kunnen verhaalstructuur toepassen',
         'Gebruiken van beschrijvende taal',
@@ -143,13 +289,36 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['schrijven', 'verhalen', 'creativiteit', 'dialoog'],
       groep: 'groep7',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_6_2'],
+      vervolgend: ['nl_8_2'],
+      jaarVerwachting: 'Eind groep 7: Kan verhalen van 2-3 pagina\'s schrijven',
+      minimumNiveau: 'Kan verhalen met begin, midden en eind schrijven',
+      uitbreidingNiveau: 'Kan spannende verhalen met dialoog en beschrijvingen schrijven'
     }
   ],
   groep8: [
     {
       id: 'nl_8_1',
-      code: 'NL.8.1',
+      code: 'NL.8.1', 
+      titel: 'Gevorderd kritisch lezen',
+      beschrijving: 'Leerlingen kunnen complexe teksten kritisch analyseren',
+      subdoelen: [
+        'Kunnen auteursperspectief herkennen',
+        'Kunnen impliciete boodschappen begrijpen',
+        'Kunnen teksten vergelijken en evalueren'
+      ],
+      kernwoorden: ['kritisch', 'analyse', 'perspectief', 'evalueren'],
+      groep: 'groep8',
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_7_1'],
+      jaarVerwachting: 'Eind groep 8: Klaar voor voortgezet onderwijs leesniveau',
+      minimumNiveau: 'Kan schoolteksten begrijpen en samenvatten',
+      uitbreidingNiveau: 'Kan complexe teksten analyseren en kritisch beoordelen'
+    },
+    {
+      id: 'nl_8_2',
+      code: 'NL.8.2',
       titel: 'Argumentatief schrijven',
       beschrijving: 'Leerlingen kunnen argumentatieve teksten schrijven',
       subdoelen: [
@@ -159,7 +328,11 @@ const nederlandsDoelen = {
       ],
       kernwoorden: ['argumenteren', 'standpunt', 'overtuigen', 'onderbouwen'],
       groep: 'groep8',
-      vakgebied: 'nederlands'
+      vakgebied: 'nederlands',
+      voorafgaand: ['nl_7_2'],
+      jaarVerwachting: 'Eind groep 8: Kan overtuigende teksten schrijven',
+      minimumNiveau: 'Kan mening onderbouwen met 2-3 argumenten',
+      uitbreidingNiveau: 'Kan complexe argumentatieve essays schrijven'
     }
   ]
 }
@@ -179,7 +352,11 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['tellen', 'getallen', 'hoeveelheid', 'cijfers'],
       groep: 'groep1',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      vervolgend: ['re_2_1'],
+      jaarVerwachting: 'Eind groep 1: Kan tot 10 tellen en getallen herkennen',
+      minimumNiveau: 'Kan tot 5 tellen en getallen 1-5 herkennen',
+      uitbreidingNiveau: 'Kan tot 20 tellen en eenvoudige optellingen doen'
     }
   ],
   groep2: [
@@ -195,7 +372,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['tellen', 'getallen', 'optellen', 'cijfers'],
       groep: 'groep2',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_1_1'],
+      vervolgend: ['re_3_1'],
+      jaarVerwachting: 'Eind groep 2: Kan tot 20 tellen en eenvoudige sommen maken',
+      minimumNiveau: 'Kan tot 10 vooruit en achteruit tellen',
+      uitbreidingNiveau: 'Kan tot 100 tellen en sommen tot 10 maken'
     }
   ],
   groep3: [
@@ -211,7 +393,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['optellen', 'aftrekken', 'hoofdrekenen', 'woordsommen'],
       groep: 'groep3',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_2_1'],
+      vervolgend: ['re_4_1'],
+      jaarVerwachting: 'Eind groep 3: Vlot hoofdrekenen tot 20',
+      minimumNiveau: 'Kan sommen tot 10 maken',
+      uitbreidingNiveau: 'Kan sommen tot 100 en eenvoudige woordsommen'
     }
   ],
   groep4: [
@@ -227,7 +414,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['optellen', 'aftrekken', 'honderd', 'tientallen'],
       groep: 'groep4',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_3_1'],
+      vervolgend: ['re_5_1'],
+      jaarVerwachting: 'Eind groep 4: Vlot rekenen tot 100, tafels 1-5',
+      minimumNiveau: 'Kan hoofdrekenen tot 20 en cijferend tot 100',
+      uitbreidingNiveau: 'Kan alle tafels en rekenen tot 1000'
     }
   ],
   groep5: [
@@ -243,7 +435,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['vermenigvuldigen', 'delen', 'tafels', 'verhoudingen'],
       groep: 'groep5',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_4_1'],
+      vervolgend: ['re_6_1'],
+      jaarVerwachting: 'Eind groep 5: Alle tafels automatisch, delen tot 100',
+      minimumNiveau: 'Kent tafels 1-5 en kan eenvoudig delen',
+      uitbreidingNiveau: 'Kent alle tafels en kan complexe deelsommen'
     }
   ],
   groep6: [
@@ -259,7 +456,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['breuken', 'kommagetallen', 'vergelijken', 'decimalen'],
       groep: 'groep6',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_5_1'],
+      vervolgend: ['re_7_1'],
+      jaarVerwachting: 'Eind groep 6: Kan breuken en kommagetallen gebruiken',
+      minimumNiveau: 'Begrijpt halve en kwart, kan kommagetallen lezen',
+      uitbreidingNiveau: 'Kan breuken optellen en kommagetallen rekenen'
     }
   ],
   groep7: [
@@ -275,7 +477,12 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['procenten', 'verhoudingen', 'berekenen', 'praktijk'],
       groep: 'groep7',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_6_1'],
+      vervolgend: ['re_8_1'],
+      jaarVerwachting: 'Eind groep 7: Kan procenten en verhoudingen in praktijk toepassen',
+      minimumNiveau: 'Begrijpt 50%, 25% en eenvoudige verhoudingen',
+      uitbreidingNiveau: 'Kan complexe percentage berekeningen en schaalverhoudingen'
     }
   ],
   groep8: [
@@ -291,7 +498,11 @@ const rekenenDoelen = {
       ],
       kernwoorden: ['complex', 'meerstaps', 'strategieën', 'controleren'],
       groep: 'groep8',
-      vakgebied: 'rekenen'
+      vakgebied: 'rekenen',
+      voorafgaand: ['re_7_1'],
+      jaarVerwachting: 'Eind groep 8: Klaar voor voortgezet onderwijs rekenvaardigheden',
+      minimumNiveau: 'Kan alle basisbewerkingen en eenvoudige woordproblemen',
+      uitbreidingNiveau: 'Kan complexe meerstappe problemen zelfstandig oplossen'
     }
   ]
 }

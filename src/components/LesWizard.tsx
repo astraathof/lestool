@@ -57,6 +57,7 @@ export default function LesWizard() {
     lesdoelen: [],
     tijdsduur: 45
   })
+  const [showCompactMode, setShowCompactMode] = useState(false)
 
   // Load saved state on mount
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function LesWizard() {
         const parsed = JSON.parse(savedState)
         setLesplanData(parsed.lesplanData || lesplanData)
         setCurrentStep(parsed.currentStep || 1)
+        setShowCompactMode(parsed.showCompactMode || false)
         console.log('✅ Loaded saved state:', parsed)
       }
     } catch (error) {
@@ -78,16 +80,24 @@ export default function LesWizard() {
     try {
       const stateToSave = {
         currentStep,
-        lesplanData
+        lesplanData,
+        showCompactMode
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave))
       console.log('💾 Saved state:', stateToSave)
     } catch (error) {
       console.error('Error saving state:', error)
     }
-  }, [currentStep, lesplanData])
+  }, [currentStep, lesplanData, showCompactMode])
 
-  const steps = [
+  // Compacte modus: minder stappen
+  const compactSteps = [
+    { id: 1, title: 'Setup', icon: '⚙️', description: 'Profiel + Basis', completed: !!lesplanData.profiel && lesplanData.sloDoelen.length > 0 },
+    { id: 2, title: 'Methode', icon: '📚', description: 'Model + Werkvormen', completed: !!lesplanData.instructiemodel && lesplanData.werkvormen.length > 0 },
+    { id: 3, title: 'Lesplan', icon: '🚀', description: 'Genereer direct', completed: false }
+  ]
+
+  const normalSteps = [
     { id: 1, title: 'Profiel', icon: '👤', description: 'Stel je profiel in', completed: !!lesplanData.profiel },
     { id: 2, title: 'SLO-doelen', icon: '🎯', description: 'Selecteer leerdoelen', completed: lesplanData.sloDoelen.length > 0 },
     { id: 3, title: 'Instructiemodel', icon: '📚', description: 'Kies je aanpak', completed: !!lesplanData.instructiemodel },
@@ -96,34 +106,57 @@ export default function LesWizard() {
     { id: 6, title: 'Lesplan', icon: '📋', description: 'Genereer je lesplan', completed: false }
   ]
 
+  const steps = showCompactMode ? compactSteps : normalSteps
+
   const handleProfileComplete = (profile: UserProfile) => {
     console.log('✅ Profile completed:', profile)
     setLesplanData(prev => ({ ...prev, profiel: profile }))
-    setCurrentStep(2)
+    if (showCompactMode) {
+      // In compacte modus: ga naar stap 2 (Methode)
+      setCurrentStep(2)
+    } else {
+      // Normale modus: ga naar SLO-doelen
+      setCurrentStep(2)
+    }
   }
 
   const handleSLOComplete = (doelen: any[]) => {
     console.log('✅ SLO doelen completed:', doelen.length)
     setLesplanData(prev => ({ ...prev, sloDoelen: doelen }))
-    setCurrentStep(3)
+    if (showCompactMode) {
+      // In compacte modus: ga direct naar methode (stap 2)
+      setCurrentStep(2)
+    } else {
+      setCurrentStep(3)
+    }
   }
 
   const handleInstructieComplete = (model: any) => {
     console.log('✅ Instructiemodel completed:', model?.naam)
     setLesplanData(prev => ({ ...prev, instructiemodel: model }))
-    setCurrentStep(4)
+    if (showCompactMode) {
+      // In compacte modus: ga direct naar lesplan (stap 3)
+      setCurrentStep(3)
+    } else {
+      setCurrentStep(4)
+    }
   }
 
   const handleWerkvormenComplete = (werkvormen: any[]) => {
     console.log('✅ Werkvormen completed:', werkvormen.length)
     setLesplanData(prev => ({ ...prev, werkvormen }))
-    setCurrentStep(5)
+    if (showCompactMode) {
+      // In compacte modus: ga direct naar lesplan (stap 3)
+      setCurrentStep(3)
+    } else {
+      setCurrentStep(5)
+    }
   }
 
   const handleSELComplete = (activiteiten: any[]) => {
     console.log('✅ SEL activiteiten completed:', activiteiten.length)
     setLesplanData(prev => ({ ...prev, selActiviteiten: activiteiten }))
-    setCurrentStep(6)
+    setCurrentStep(showCompactMode ? 3 : 6)
   }
 
   const goToStep = (step: number) => {
@@ -153,6 +186,12 @@ export default function LesWizard() {
     }
   }
 
+  // Compacte modus toggle
+  const toggleCompactMode = () => {
+    setShowCompactMode(!showCompactMode)
+    setCurrentStep(1) // Reset naar begin bij mode wissel
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
@@ -171,6 +210,17 @@ export default function LesWizard() {
             
             <div className="flex items-center space-x-4">
               <button
+                onClick={toggleCompactMode}
+                className={`px-3 py-2 text-sm rounded-lg transition-all duration-200 ${
+                  showCompactMode 
+                    ? 'bg-green-100 text-green-700 border border-green-200' 
+                    : 'bg-blue-100 text-blue-700 border border-blue-200'
+                }`}
+                title={showCompactMode ? 'Schakel naar uitgebreide modus' : 'Schakel naar snelle modus'}
+              >
+                {showCompactMode ? '🚀 Snel' : '📋 Uitgebreid'}
+              </button>
+              <button
                 onClick={resetWizard}
                 className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
                 title="Opnieuw beginnen"
@@ -188,6 +238,24 @@ export default function LesWizard() {
       {/* Progress Bar */}
       <div className="bg-white border-b border-gray-200 shadow-sm sticky top-20 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Mode indicator */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <div className="flex items-center space-x-4">
+              <span className={`text-xs font-medium ${showCompactMode ? 'text-green-600' : 'text-blue-600'}`}>
+                {showCompactMode ? '🚀 Snelle Modus' : '📋 Uitgebreide Modus'}
+              </span>
+              <span className="text-xs text-gray-500">
+                {showCompactMode ? '3 stappen - Snel aan de slag' : '6 stappen - Volledig maatwerk'}
+              </span>
+            </div>
+            <button
+              onClick={toggleCompactMode}
+              className="text-xs text-gray-500 hover:text-blue-600"
+            >
+              Wissel modus
+            </button>
+          </div>
+          
           <div className="flex items-center justify-between py-4 overflow-x-auto">
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center flex-shrink-0">
@@ -259,14 +327,15 @@ export default function LesWizard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-          {currentStep === 1 && (
+          {/* Normale modus */}
+          {!showCompactMode && currentStep === 1 && (
             <ProfielSelector 
               onComplete={handleProfileComplete} 
               currentProfile={lesplanData.profiel} 
             />
           )}
           
-          {currentStep === 2 && lesplanData.profiel && (
+          {!showCompactMode && currentStep === 2 && lesplanData.profiel && (
             <SLODoelen 
               userProfile={lesplanData.profiel} 
               onComplete={handleSLOComplete}
@@ -274,7 +343,7 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 3 && lesplanData.profiel && (
+          {!showCompactMode && currentStep === 3 && lesplanData.profiel && (
             <InstructieModellen 
               userProfile={lesplanData.profiel}
               onComplete={handleInstructieComplete}
@@ -282,7 +351,7 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 4 && lesplanData.profiel && (
+          {!showCompactMode && currentStep === 4 && lesplanData.profiel && (
             <Werkvormen 
               userProfile={lesplanData.profiel}
               onComplete={handleWerkvormenComplete}
@@ -290,7 +359,7 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 5 && lesplanData.profiel && (
+          {!showCompactMode && currentStep === 5 && lesplanData.profiel && (
             <SELActiviteiten 
               userProfile={lesplanData.profiel}
               onComplete={handleSELComplete}
@@ -298,10 +367,69 @@ export default function LesWizard() {
             />
           )}
           
-          {currentStep === 6 && (
+          {!showCompactMode && currentStep === 6 && (
             <LesplanGenerator 
               lesplanData={lesplanData}
               onBack={() => setCurrentStep(5)}
+            />
+          )}
+
+          {/* Compacte modus */}
+          {showCompactMode && currentStep === 1 && (
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">🚀 Snelle Setup</h2>
+              
+              {/* Profiel in compacte vorm */}
+              <div className="mb-6">
+                <ProfielSelector 
+                  onComplete={handleProfileComplete} 
+                  currentProfile={lesplanData.profiel} 
+                />
+              </div>
+              
+              {/* SLO-doelen in compacte vorm als profiel compleet is */}
+              {lesplanData.profiel && (
+                <div className="border-t border-gray-200 pt-6">
+                  <SLODoelen 
+                    userProfile={lesplanData.profiel} 
+                    onComplete={handleSLOComplete}
+                    selectedDoelen={lesplanData.sloDoelen}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          
+          {showCompactMode && currentStep === 2 && lesplanData.profiel && (
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">📚 Methode & Werkvormen</h2>
+              
+              {/* Instructiemodel */}
+              <div className="mb-6">
+                <InstructieModellen 
+                  userProfile={lesplanData.profiel}
+                  onComplete={handleInstructieComplete}
+                  selectedModel={lesplanData.instructiemodel}
+                />
+              </div>
+              
+              {/* Werkvormen als instructiemodel gekozen is */}
+              {lesplanData.instructiemodel && (
+                <div className="border-t border-gray-200 pt-6">
+                  <Werkvormen 
+                    userProfile={lesplanData.profiel}
+                    onComplete={handleWerkvormenComplete}
+                    selectedWerkvormen={lesplanData.werkvormen}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+          
+          {showCompactMode && currentStep === 3 && (
+            <LesplanGenerator 
+              lesplanData={lesplanData}
+              onBack={() => setCurrentStep(2)}
             />
           )}
         </div>

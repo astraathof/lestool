@@ -263,6 +263,27 @@ export default function SLODoelen({ userProfile, onComplete, selectedDoelen }: S
                     
                     <p className="text-gray-600 mb-3">{doel.beschrijving}</p>
                     
+                    {/* Jaar verwachting en niveaus */}
+                    {(doel.jaarVerwachting || doel.minimumNiveau || doel.uitbreidingNiveau) && (
+                      <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        {doel.jaarVerwachting && (
+                          <div className="text-sm text-blue-800 mb-2">
+                            <strong>📅 Jaaruitkomst:</strong> {doel.jaarVerwachting}
+                          </div>
+                        )}
+                        {doel.minimumNiveau && (
+                          <div className="text-sm text-green-700 mb-1">
+                            <strong>✅ Minimum:</strong> {doel.minimumNiveau}
+                          </div>
+                        )}
+                        {doel.uitbreidingNiveau && (
+                          <div className="text-sm text-purple-700">
+                            <strong>🚀 Uitbreiding:</strong> {doel.uitbreidingNiveau}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
                     {/* Kernwoorden */}
                     <div className="mb-3">
                       <div className="flex flex-wrap gap-1">
@@ -293,71 +314,119 @@ export default function SLODoelen({ userProfile, onComplete, selectedDoelen }: S
                           e.stopPropagation()
                           setShowLeerlijn(showLeerlijn === doel.id ? null : doel.id)
                         }}
-                        className="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center space-x-1"
+                        className="text-sm text-purple-600 hover:text-purple-800 font-medium flex items-center space-x-1 bg-purple-50 px-3 py-2 rounded-lg hover:bg-purple-100 transition-all duration-200"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>Bekijk doorlopende leerlijn</span>
+                        <span>📈 Doorlopende leerlijn</span>
                       </button>
                     </div>
 
                     {/* Doorlopende leerlijn details */}
                     {showLeerlijn === doel.id && (
-                      <div className="mt-4 p-4 bg-white border border-purple-200 rounded-lg">
-                        <h4 className="font-medium text-purple-900 mb-3">Doorlopende leerlijn</h4>
+                      <div className="mt-4 p-6 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                        <h4 className="font-bold text-purple-900 mb-4 flex items-center">
+                          <span className="text-lg mr-2">📈</span>
+                          Doorlopende leerlijn voor {doel.titel}
+                        </h4>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           {/* Voorafgaand */}
                           <div>
-                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
-                              Eerder geleerd
+                            <h5 className="text-sm font-bold text-orange-800 mb-3 flex items-center">
+                              <span className="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>
+                              📚 Vorig jaar behaald
                             </h5>
                             {getVoorafgaandeDoelen(doel.id).length > 0 ? (
                               <div className="space-y-2">
                                 {getVoorafgaandeDoelen(doel.id).map((voorDoel) => (
-                                  <div key={voorDoel.id} className="p-2 bg-orange-50 border border-orange-200 rounded text-xs">
-                                    <div className="font-medium text-orange-900">{voorDoel.code}: {voorDoel.titel}</div>
-                                    <div className="text-orange-700">{getGroepLabel(voorDoel.groep)}</div>
+                                  <div key={voorDoel.id} className="p-3 bg-white border border-orange-300 rounded-lg shadow-sm">
+                                    <div className="font-bold text-orange-900 text-sm">{voorDoel.code}</div>
+                                    <div className="font-medium text-orange-800 text-xs mb-1">{voorDoel.titel}</div>
+                                    <div className="text-orange-700 text-xs">{getGroepLabel(voorDoel.groep)}</div>
+                                    {voorDoel.jaarVerwachting && (
+                                      <div className="text-orange-600 text-xs mt-1 italic">
+                                        ✅ {voorDoel.jaarVerwachting}
+                                      </div>
+                                    )}
                                   </div>
                                 ))}
                               </div>
                             ) : (
-                              <p className="text-gray-500 text-xs">Geen voorafgaande doelen</p>
+                              <div className="p-3 bg-white border border-orange-200 rounded-lg">
+                                <p className="text-orange-600 text-xs">🌟 Dit is een startdoel - geen voorkennis vereist</p>
+                              </div>
                             )}
                           </div>
 
                           {/* Huidig */}
                           <div>
-                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                              <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                              Nu aan de beurt
+                            <h5 className="text-sm font-bold text-green-800 mb-3 flex items-center">
+                              <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                              🎯 Dit jaar leren
                             </h5>
-                            <div className="p-2 bg-green-50 border border-green-200 rounded text-xs">
-                              <div className="font-medium text-green-900">{doel.code}: {doel.titel}</div>
-                              <div className="text-green-700">{getGroepLabel(doel.groep)}</div>
+                            <div className="p-4 bg-white border-2 border-green-400 rounded-lg shadow-md">
+                              <div className="font-bold text-green-900 text-sm">{doel.code}</div>
+                              <div className="font-bold text-green-800 text-sm mb-2">{doel.titel}</div>
+                              <div className="text-green-700 text-xs mb-2">{getGroepLabel(doel.groep)}</div>
+                              {doel.jaarVerwachting && (
+                                <div className="text-green-600 text-xs bg-green-50 p-2 rounded border border-green-200">
+                                  <strong>🎯 Doel dit jaar:</strong> {doel.jaarVerwachting}
+                                </div>
+                              )}
                             </div>
                           </div>
 
                           {/* Vervolgend */}
                           <div>
-                            <h5 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                              <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
-                              Komt later
+                            <h5 className="text-sm font-bold text-blue-800 mb-3 flex items-center">
+                              <span className="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                              🚀 Volgend jaar
                             </h5>
                             {getVervolgendeDoelen(doel.id).length > 0 ? (
                               <div className="space-y-2">
                                 {getVervolgendeDoelen(doel.id).map((volgDoel) => (
-                                  <div key={volgDoel.id} className="p-2 bg-blue-50 border border-blue-200 rounded text-xs">
-                                    <div className="font-medium text-blue-900">{volgDoel.code}: {volgDoel.titel}</div>
-                                    <div className="text-blue-700">{getGroepLabel(volgDoel.groep)}</div>
+                                  <div key={volgDoel.id} className="p-3 bg-white border border-blue-300 rounded-lg shadow-sm">
+                                    <div className="font-bold text-blue-900 text-sm">{volgDoel.code}</div>
+                                    <div className="font-medium text-blue-800 text-xs mb-1">{volgDoel.titel}</div>
+                                    <div className="text-blue-700 text-xs">{getGroepLabel(volgDoel.groep)}</div>
+                                    {volgDoel.jaarVerwachting && (
+                                      <div className="text-blue-600 text-xs mt-1 italic">
+                                        🎯 {volgDoel.jaarVerwachting}
+                                      </div>
+                                    )}
                                   </div>
                                 ))}
                               </div>
                             ) : (
-                              <p className="text-gray-500 text-xs">Geen vervolg doelen</p>
+                              <div className="p-3 bg-white border border-blue-200 rounded-lg">
+                                <p className="text-blue-600 text-xs">🏆 Dit is een einddoel - leerlingen zijn klaar voor vervolgonderwijs</p>
+                              </div>
                             )}
+                          </div>
+                        </div>
+                        
+                        {/* Praktische tips voor doorlopende leerlijn */}
+                        <div className="mt-6 p-4 bg-white border border-purple-200 rounded-lg">
+                          <h6 className="font-bold text-purple-900 text-sm mb-2">💡 Praktische tips voor leerkrachten:</h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div>
+                              <p className="text-purple-800"><strong>🔍 Voorkennis checken:</strong></p>
+                              <p className="text-purple-700">Toets of leerlingen de voorafgaande doelen beheersen voordat je start</p>
+                            </div>
+                            <div>
+                              <p className="text-purple-800"><strong>🎯 Vooruitblikken:</strong></p>
+                              <p className="text-purple-700">Laat leerlingen weten waar ze naartoe werken en waarom dit belangrijk is</p>
+                            </div>
+                            <div>
+                              <p className="text-purple-800"><strong>📊 Differentiëren:</strong></p>
+                              <p className="text-purple-700">Gebruik minimum en uitbreidingsniveaus voor maatwerk</p>
+                            </div>
+                            <div>
+                              <p className="text-purple-800"><strong>🔄 Herhaling:</strong></p>
+                              <p className="text-purple-700">Herhaal voorafgaande doelen regelmatig om basis te verstevigen</p>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -403,18 +472,36 @@ export default function SLODoelen({ userProfile, onComplete, selectedDoelen }: S
         </div>
       )}
 
-      {/* Info box over doorlopende leerlijn */}
-      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h4 className="font-medium text-blue-900 mb-2 flex items-center">
+      {/* Verbeterde info box over doorlopende leerlijn */}
+      <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+        <h4 className="font-bold text-blue-900 mb-3 flex items-center">
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          Doorlopende leerlijn
+          📈 Doorlopende leerlijn - Waarom belangrijk?
         </h4>
-        <p className="text-blue-800 text-sm">
-          Klik op "Bekijk doorlopende leerlijn" bij een doel om te zien wat leerlingen eerder hebben geleerd en wat er later komt. 
-          Dit helpt je om aan te sluiten bij voorkennis en vooruit te blikken naar vervolgstappen.
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-blue-800 mb-2">
+              <strong>🔍 Voorkennis checken:</strong> Zie wat leerlingen vorig jaar hadden moeten leren. 
+              Test dit voordat je start met nieuwe stof.
+            </p>
+            <p className="text-blue-800">
+              <strong>🎯 Vooruitblikken:</strong> Toon leerlingen waar ze naartoe werken. 
+              Dit verhoogt motivatie en begrip.
+            </p>
+          </div>
+          <div>
+            <p className="text-purple-800 mb-2">
+              <strong>📊 Differentiëren:</strong> Gebruik minimum/uitbreidingsniveaus voor maatwerk. 
+              Niet alle leerlingen hoeven hetzelfde niveau te bereiken.
+            </p>
+            <p className="text-purple-800">
+              <strong>🔄 Herhaling:</strong> Bouw regelmatig herhaling van eerdere doelen in je lessen. 
+              Leren is cumulatief!
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Navigation */}
