@@ -65,15 +65,23 @@ export default function LesWizard() {
       const savedState = localStorage.getItem(STORAGE_KEY)
       if (savedState) {
         const parsed = JSON.parse(savedState)
+        // Only load if the saved mode matches current URL or default
+        const savedMode = parsed.showCompactMode || false
+        setShowCompactMode(savedMode)
         setLesplanData(parsed.lesplanData || lesplanData)
         setCurrentStep(parsed.currentStep || 1)
-        setShowCompactMode(parsed.showCompactMode || false)
         console.log('✅ Loaded saved state:', parsed)
+      } else {
+        // Default to compact mode for new users
+        setShowCompactMode(true)
+        console.log('🚀 New user - defaulting to compact mode')
       }
     } catch (error) {
       console.error('Error loading saved state:', error)
+      // Fallback to compact mode on error
+      setShowCompactMode(true)
     }
-  }, [])
+  }, []) // Only run once on mount
 
   // Save state whenever it changes
   useEffect(() => {
@@ -92,9 +100,9 @@ export default function LesWizard() {
 
   // Compacte modus: minder stappen
   const compactSteps = [
-    { id: 1, title: 'Setup', icon: '⚙️', description: 'Profiel + Basis', completed: !!lesplanData.profiel && lesplanData.sloDoelen.length > 0 },
-    { id: 2, title: 'Methode', icon: '📚', description: 'Model + Werkvormen', completed: !!lesplanData.instructiemodel && lesplanData.werkvormen.length > 0 },
-    { id: 3, title: 'Lesplan', icon: '🚀', description: 'Genereer direct', completed: false }
+    { id: 1, title: 'Setup', icon: '⚙️', description: 'Profiel + SLO-doelen', completed: !!lesplanData.profiel && lesplanData.sloDoelen.length > 0 },
+    { id: 2, title: 'Methode', icon: '📚', description: 'Instructie + Werkvormen', completed: !!lesplanData.instructiemodel && lesplanData.werkvormen.length > 0 },
+    { id: 3, title: 'Lesplan', icon: '🚀', description: 'AI Generator', completed: false }
   ]
 
   const normalSteps = [
@@ -106,7 +114,9 @@ export default function LesWizard() {
     { id: 6, title: 'Lesplan', icon: '📋', description: 'Genereer je lesplan', completed: false }
   ]
 
+  // CRITICAL: Use the correct steps based on mode
   const steps = showCompactMode ? compactSteps : normalSteps
+  const maxSteps = steps.length
 
   const handleProfileComplete = (profile: UserProfile) => {
     console.log('✅ Profile completed:', profile)
@@ -188,8 +198,11 @@ export default function LesWizard() {
 
   // Compacte modus toggle
   const toggleCompactMode = () => {
+    console.log('🔄 Toggling compact mode from', showCompactMode, 'to', !showCompactMode)
     setShowCompactMode(!showCompactMode)
-    setCurrentStep(1) // Reset naar begin bij mode wissel
+    // Reset naar stap 1 en clear localStorage om fresh start te forceren
+    setCurrentStep(1)
+    localStorage.removeItem(STORAGE_KEY)
   }
 
   return (
@@ -228,7 +241,7 @@ export default function LesWizard() {
                 🔄 Reset
               </button>
               <div className="text-sm text-gray-600 bg-gray-100 px-3 py-2 rounded-lg">
-                Stap {currentStep} van {steps.length}
+                Stap {currentStep} van {maxSteps} {showCompactMode ? '(Snel)' : '(Uitgebreid)'}
               </div>
             </div>
           </div>
